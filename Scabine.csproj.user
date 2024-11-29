@@ -1,0 +1,60 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup />
+  <ItemGroup>
+    <Compile Update="App\Dialogs\BaseDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="App\Dialogs\BigCheckBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="App\Dialogs\EngineGroup.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="App\Dialogs\EngineMatchDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="App\Dialogs\EnginesDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="App\Dialogs\FenDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="App\Dialogs\EditTextDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="App\Dialogs\PgnDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="App\Dialogs\PgnHeaderDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="App\Dialogs\PresetDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="App\Dialogs\PromotionDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="App\Dialogs\QualityDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="App\Dialogs\PlayEngineDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="App\Dialogs\PositionSetupDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="App\Dialogs\SettingsDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="App\Dialogs\StartEngineDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="App\Dialogs\ThinkingLimitDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Scenes\SceneWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
+  </ItemGroup>
+</Project>

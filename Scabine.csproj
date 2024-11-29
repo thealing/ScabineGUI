@@ -1,0 +1,141 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <OutputType>WinExe</OutputType>
+        <TargetFramework>net6.0-windows</TargetFramework>
+        <Nullable>enable</Nullable>
+        <UseWindowsForms>true</UseWindowsForms>
+        <PublishSingleFile>true</PublishSingleFile>
+    </PropertyGroup>
+    <ItemGroup>
+      <Compile Remove="Resources\Themes\**" />
+      <Compile Remove="_scrap\**" />
+      <EmbeddedResource Remove="Resources\Themes\**" />
+      <EmbeddedResource Remove="_scrap\**" />
+      <None Remove="Resources\Themes\**" />
+      <None Remove="_scrap\**" />
+    </ItemGroup>
+    <ItemGroup>
+      <None Remove="Resources\Boards\Blue\Board.png" />
+      <None Remove="Resources\Boards\Brown\Board.png" />
+      <None Remove="Resources\Boards\Gray\Board.png" />
+      <None Remove="Resources\Boards\Green\Board.png" />
+      <None Remove="Resources\Boards\Orange\Board.png" />
+      <None Remove="Resources\Boards\Purple\Board.png" />
+      <None Remove="Resources\Boards\Red\Board.png" />
+      <None Remove="Resources\Buttons\Backward.png" />
+      <None Remove="Resources\Buttons\Forward.png" />
+      <None Remove="Resources\Buttons\Pause.png" />
+      <None Remove="Resources\Buttons\Play.png" />
+      <None Remove="Resources\Buttons\ToEnd.png" />
+      <None Remove="Resources\Buttons\ToStart.png" />
+      <None Remove="Resources\Menus\Close.png" />
+      <None Remove="Resources\Menus\Collapse.png" />
+      <None Remove="Resources\Menus\Delete.png" />
+      <None Remove="Resources\Menus\Down.png" />
+      <None Remove="Resources\Menus\Expand.png" />
+      <None Remove="Resources\Menus\Promote.png" />
+      <None Remove="Resources\Menus\Up.png" />
+      <None Remove="Resources\Pieces\Alpha\bb.png" />
+      <None Remove="Resources\Pieces\Alpha\bk.png" />
+      <None Remove="Resources\Pieces\Alpha\bn.png" />
+      <None Remove="Resources\Pieces\Alpha\bp.png" />
+      <None Remove="Resources\Pieces\Alpha\bq.png" />
+      <None Remove="Resources\Pieces\Alpha\br.png" />
+      <None Remove="Resources\Pieces\Alpha\wb.png" />
+      <None Remove="Resources\Pieces\Alpha\wk.png" />
+      <None Remove="Resources\Pieces\Alpha\wn.png" />
+      <None Remove="Resources\Pieces\Alpha\wp.png" />
+      <None Remove="Resources\Pieces\Alpha\wq.png" />
+      <None Remove="Resources\Pieces\Alpha\wr.png" />
+      <None Remove="Resources\Pieces\Cases\bb.png" />
+      <None Remove="Resources\Pieces\Cases\bk.png" />
+      <None Remove="Resources\Pieces\Cases\bn.png" />
+      <None Remove="Resources\Pieces\Cases\bp.png" />
+      <None Remove="Resources\Pieces\Cases\bq.png" />
+      <None Remove="Resources\Pieces\Cases\br.png" />
+      <None Remove="Resources\Pieces\Cases\wb.png" />
+      <None Remove="Resources\Pieces\Cases\wk.png" />
+      <None Remove="Resources\Pieces\Cases\wn.png" />
+      <None Remove="Resources\Pieces\Cases\wp.png" />
+      <None Remove="Resources\Pieces\Cases\wq.png" />
+      <None Remove="Resources\Pieces\Cases\wr.png" />
+      <None Remove="Resources\Pieces\Classic\bb.png" />
+      <None Remove="Resources\Pieces\Classic\bk.png" />
+      <None Remove="Resources\Pieces\Classic\bn.png" />
+      <None Remove="Resources\Pieces\Classic\bp.png" />
+      <None Remove="Resources\Pieces\Classic\bq.png" />
+      <None Remove="Resources\Pieces\Classic\br.png" />
+      <None Remove="Resources\Pieces\Classic\wb.png" />
+      <None Remove="Resources\Pieces\Classic\wk.png" />
+      <None Remove="Resources\Pieces\Classic\wn.png" />
+      <None Remove="Resources\Pieces\Classic\wp.png" />
+      <None Remove="Resources\Pieces\Classic\wq.png" />
+      <None Remove="Resources\Pieces\Classic\wr.png" />
+      <None Remove="Resources\Sounds\Capture.wav" />
+      <None Remove="Resources\Sounds\GameOver.wav" />
+      <None Remove="Resources\Sounds\Move.wav" />
+    </ItemGroup>
+    <ItemGroup>
+      <EmbeddedResource Include="Resources\Boards\Blue\Board.png" />
+      <EmbeddedResource Include="Resources\Boards\Brown\Board.png" />
+      <EmbeddedResource Include="Resources\Boards\Gray\Board.png" />
+      <EmbeddedResource Include="Resources\Boards\Green\Board.png" />
+      <EmbeddedResource Include="Resources\Boards\Orange\Board.png" />
+      <EmbeddedResource Include="Resources\Boards\Purple\Board.png" />
+      <EmbeddedResource Include="Resources\Boards\Red\Board.png" />
+      <EmbeddedResource Include="Resources\Buttons\Backward.png" />
+      <EmbeddedResource Include="Resources\Buttons\Forward.png" />
+      <EmbeddedResource Include="Resources\Buttons\Pause.png" />
+      <EmbeddedResource Include="Resources\Buttons\Play.png" />
+      <EmbeddedResource Include="Resources\Buttons\ToEnd.png" />
+      <EmbeddedResource Include="Resources\Buttons\ToStart.png" />
+      <EmbeddedResource Include="Resources\Buttons\Erase.png" />
+      <EmbeddedResource Include="Resources\Buttons\Move.png" />
+      <EmbeddedResource Include="Resources\Menus\Close.png" />
+      <EmbeddedResource Include="Resources\Menus\Collapse.png" />
+      <EmbeddedResource Include="Resources\Menus\Delete.png" />
+      <EmbeddedResource Include="Resources\Menus\Down.png" />
+      <EmbeddedResource Include="Resources\Menus\Expand.png" />
+      <EmbeddedResource Include="Resources\Menus\Promote.png" />
+      <EmbeddedResource Include="Resources\Menus\Up.png" />
+      <EmbeddedResource Include="Resources\Pieces\Alpha\bb.png" />
+      <EmbeddedResource Include="Resources\Pieces\Alpha\bk.png" />
+      <EmbeddedResource Include="Resources\Pieces\Alpha\bn.png" />
+      <EmbeddedResource Include="Resources\Pieces\Alpha\bp.png" />
+      <EmbeddedResource Include="Resources\Pieces\Alpha\bq.png" />
+      <EmbeddedResource Include="Resources\Pieces\Alpha\br.png" />
+      <EmbeddedResource Include="Resources\Pieces\Alpha\wb.png" />
+      <EmbeddedResource Include="Resources\Pieces\Alpha\wk.png" />
+      <EmbeddedResource Include="Resources\Pieces\Alpha\wn.png" />
+      <EmbeddedResource Include="Resources\Pieces\Alpha\wp.png" />
+      <EmbeddedResource Include="Resources\Pieces\Alpha\wq.png" />
+      <EmbeddedResource Include="Resources\Pieces\Alpha\wr.png" />
+      <EmbeddedResource Include="Resources\Pieces\Cases\bb.png" />
+      <EmbeddedResource Include="Resources\Pieces\Cases\bk.png" />
+      <EmbeddedResource Include="Resources\Pieces\Cases\bn.png" />
+      <EmbeddedResource Include="Resources\Pieces\Cases\bp.png" />
+      <EmbeddedResource Include="Resources\Pieces\Cases\bq.png" />
+      <EmbeddedResource Include="Resources\Pieces\Cases\br.png" />
+      <EmbeddedResource Include="Resources\Pieces\Cases\wb.png" />
+      <EmbeddedResource Include="Resources\Pieces\Cases\wk.png" />
+      <EmbeddedResource Include="Resources\Pieces\Cases\wn.png" />
+      <EmbeddedResource Include="Resources\Pieces\Cases\wp.png" />
+      <EmbeddedResource Include="Resources\Pieces\Cases\wq.png" />
+      <EmbeddedResource Include="Resources\Pieces\Cases\wr.png" />
+      <EmbeddedResource Include="Resources\Pieces\Classic\bb.png" />
+      <EmbeddedResource Include="Resources\Pieces\Classic\bk.png" />
+      <EmbeddedResource Include="Resources\Pieces\Classic\bn.png" />
+      <EmbeddedResource Include="Resources\Pieces\Classic\bp.png" />
+      <EmbeddedResource Include="Resources\Pieces\Classic\bq.png" />
+      <EmbeddedResource Include="Resources\Pieces\Classic\br.png" />
+      <EmbeddedResource Include="Resources\Pieces\Classic\wb.png" />
+      <EmbeddedResource Include="Resources\Pieces\Classic\wk.png" />
+      <EmbeddedResource Include="Resources\Pieces\Classic\wn.png" />
+      <EmbeddedResource Include="Resources\Pieces\Classic\wp.png" />
+      <EmbeddedResource Include="Resources\Pieces\Classic\wq.png" />
+      <EmbeddedResource Include="Resources\Pieces\Classic\wr.png" />
+      <EmbeddedResource Include="Resources\Sounds\Capture.wav" />
+      <EmbeddedResource Include="Resources\Sounds\GameOver.wav" />
+      <EmbeddedResource Include="Resources\Sounds\Move.wav" />
+    </ItemGroup>
+</Project>
