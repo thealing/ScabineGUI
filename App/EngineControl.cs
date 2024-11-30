@@ -34,6 +34,7 @@ internal class EngineControl : Container
 		_presetName = presetName;
 		_game = new Game();
 		_depthMoves = new Dictionary<int, IEnumerable<string>>();
+		_depthUciMoves = new Dictionary<int, IEnumerable<string>>();
 		_columnsDirty = true;
 		_moveNumber = -1;
 	}
@@ -106,6 +107,7 @@ internal class EngineControl : Container
 			_analysisTime = Time.GetTime();
 			_game.SetFen(game.GetFen());
 			_depthMoves.Clear();
+			_depthUciMoves.Clear();
 			Array.Fill(_columnValues, null);
 			_moveList.ScrollHeight = 0;
 			StartThinking();
@@ -149,10 +151,11 @@ internal class EngineControl : Container
 			}
 			string moveList = _engine.GetBestMoves(depth);
 			string[] uciMoves = moveList.Split(' ');
-			if (uciMoves.Length > 0)
+			if (!_depthUciMoves.ContainsKey(depth) || !uciMoves.SequenceEqual(_depthUciMoves[depth]))
 			{
+				_depthUciMoves[depth] = uciMoves;
 				IEnumerable<string> sanMoves = ConvertMovesToSan(uciMoves);
-				if (sanMoves.Count() > _depthMoves[depth].Count())
+				if (sanMoves.Count() == uciMoves.Length)
 				{
 					_depthMoves[depth] = sanMoves;
 					_columnsDirty = true;
@@ -431,6 +434,7 @@ internal class EngineControl : Container
 	private readonly string _presetName;
 	private readonly Game _game;
 	private readonly Dictionary<int, IEnumerable<string>> _depthMoves;
+	private readonly Dictionary<int, IEnumerable<string>> _depthUciMoves;
 	private bool _columnsDirty;
 	private int _reachedDepth;
 	private int _nonEmptyRowCount;
