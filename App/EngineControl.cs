@@ -39,6 +39,12 @@ internal class EngineControl : Container
 		_moveNumber = -1;
 	}
 
+	public void SetEngine(IEngine engine)
+	{
+		_engine = engine;
+		_moveNumber = -1;
+	}
+
 	public void Remove()
 	{
 		if (Parent is EngineContainer engineContainer)
@@ -245,6 +251,7 @@ internal class EngineControl : Container
 			MenuCreator.AddMenuItem(menu, "Move down", MenuIcons.Down, () => SwapWithSibling(1));
 			if (!MatchManager.IsEnginePlaying(_engine))
 			{
+				MenuCreator.AddMenuItem(menu, "Reload", MenuIcons.Reload, () => EngineManager.ReloadEngine(_engine, _presetName));
 				MenuCreator.AddMenuItem(menu, "Close", MenuIcons.Close, () => EngineManager.StopEngine(_engine));
 			}
 			menu.Show(Cursor.Position);
@@ -430,11 +437,11 @@ internal class EngineControl : Container
 	private readonly int[] _columnPositions;
 	private readonly int[] _columnWidths;
 	private readonly string[][] _columnValues;
-	private readonly IEngine _engine;
 	private readonly string _presetName;
 	private readonly Game _game;
 	private readonly Dictionary<int, IEnumerable<string>> _depthMoves;
 	private readonly Dictionary<int, IEnumerable<string>> _depthUciMoves;
+	private IEngine _engine;
 	private bool _columnsDirty;
 	private int _reachedDepth;
 	private int _nonEmptyRowCount;

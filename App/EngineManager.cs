@@ -79,8 +79,9 @@ internal static class EngineManager
 		return null;
 	}
 
-	public static bool StartEngine(EngineInfo engineInfo, string presetName)
+	public static bool StartEngine(EngineInfo engineInfo, string presetName, out IEngine? engine)
 	{
+		engine = null;
 		if (!engineInfo.Presets.ContainsKey(presetName))
 		{
 			DialogHelper.ShowMessageBox("Invalid engine preset!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -111,20 +112,31 @@ internal static class EngineManager
 				return false;
 			}
 		}
-		IEngine engine = new ExternalEngine(engineInfo);
+		engine = new ExternalEngine(engineInfo);
 		if (!engine.IsRunning())
 		{
 			DialogHelper.ShowMessageBox("Failed to start engine!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
 			return false;
 		}
+		foreach (var (option, value) in preset.Options)
+		{
+			engine.SetOption(option, value);
+		}
+		return true;
+	}
+
+	public static bool StartEngine(EngineInfo engineInfo, string presetName)
+	{
+		if (!StartEngine(engineInfo, presetName, out IEngine? engine) || engine == null)
+		{
+			return false;
+		}
+		EngineOptions preset = engineInfo.Presets[presetName];
+		EngineConfig config = new EngineConfig() { Info = engineInfo, Options = preset };
 		EngineContainer? engineContainer = GetEngineContainer();
 		if (engineContainer == null)
 		{
 			return false;
-		}
-		foreach (var (option, value) in preset.Options)
-		{
-			engine.SetOption(option, value);
 		}
 		_runningEngines[config] = new EngineInstance()
 		{ 
@@ -132,6 +144,30 @@ internal static class EngineManager
 			Control = engineContainer.AddEngine(engine, presetName) 
 		};
 		return true;
+	}
+
+	public static void ReloadEngine(IEngine engine, string presetName)
+	{
+		foreach (KeyValuePair<EngineConfig, EngineInstance> pair in _runningEngines)
+		{
+			if (pair.Value.Engine == engine)
+			{
+				_runningEngines.Remove(pair.Key);
+				if (!StartEngine(pair.Key.Info, presetName, out IEngine? newEngine) || newEngine == null)
+				{
+					_runningEngines.Add(pair.Key, pair.Value);
+					break;
+				}
+				engine.Dispose();
+				pair.Value.Control.SetEngine(newEngine);
+				_runningEngines[pair.Key] = new EngineInstance()
+				{
+					Engine = newEngine,
+					Control = pair.Value.Control
+				};
+				break;
+			}
+		}
 	}
 
 	public static void StopEngine(IEngine engine)
