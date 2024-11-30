@@ -62,8 +62,8 @@ internal static class PgnManager
 			int increment = matchDefinition.PlayerIncrement;
 			_values["TimeControl"] = $"{time}+{increment}";
 		}
-		_values["EnginePreset"] = matchDefinition.PresetName;
-		_values["EngineLimit"] = matchDefinition.ThinkingLimit.ToString();
+		_values[GetEnginePresetTag(matchDefinition.PlayerSide ^ 1)] = matchDefinition.PresetName;
+		_values[GetEngineLimitTag(matchDefinition.PlayerSide ^ 1)] = matchDefinition.ThinkingLimit.ToString();
 	}
 
 	public static void SetEngineMatch(EngineMatchDefinition matchDefinition)
@@ -86,10 +86,38 @@ internal static class PgnManager
 		{
 			_values["TimeControl"] = "-";
 		}
-		_values["WhiteEnginePreset"] = matchDefinition.PresetNames[White];
-		_values["WhiteEngineLimit"] = matchDefinition.ThinkingLimits[White].ToString();
-		_values["BlackEnginePreset"] = matchDefinition.PresetNames[Black];
-		_values["BlackEngineLimit"] = matchDefinition.ThinkingLimits[Black].ToString();
+		for (int color = 0; color < ColorCount; color++)
+		{
+			_values[GetEnginePresetTag(color)] = matchDefinition.PresetNames[color];
+			_values[GetEngineLimitTag(color)] = matchDefinition.ThinkingLimits[color].ToString();
+		}
+	}
+
+	public static string GetTitle()
+	{
+		StringBuilder title = new StringBuilder();
+		title.Append(GetValue("Event"));
+		if (HasValue("White") && HasValue("Black") && HasValue("Result"))
+		{
+			title.Append(" | ");
+			for (int color = 0; color < ColorCount; color++)
+			{
+				title.Append(GetValue(_colorNames[color]));
+				if (_values.TryGetValue(GetEnginePresetTag(color), out string? enginePreset) && enginePreset != null)
+				{
+					title.Append(" [");
+					title.Append(enginePreset);
+					title.Append("]");
+				}
+				if (color + 1 < ColorCount)
+				{
+					title.Append(" - ");
+				}
+			}
+			title.Append(" | ");
+			title.Append(GetValue("Result"));
+		}
+		return title.ToString();
 	}
 
 	public static void SetWinner(int winner)
@@ -450,13 +478,25 @@ internal static class PgnManager
 		}
 	}
 
+	private static string GetEnginePresetTag(int color)
+	{
+		return _colorNames[color] + "EnginePreset";
+	}
+
+	private static string GetEngineLimitTag(int color)
+	{
+		return _colorNames[color] + "EngineLimit";
+	}
+
 	static PgnManager()
 	{
+		_colorNames = new string[] { "White", "Black" };
 		_entries = new List<string>() { "Event", "Site", "Date", "Round", "White", "Black", "Result" };
 		_values = new Dictionary<string, string>();
 		_dirty = false;
 	}
 
+	private static readonly string[] _colorNames;
 	private static readonly List<string> _entries;
 	private static Dictionary<string, string> _values;
 	private static bool _dirty;

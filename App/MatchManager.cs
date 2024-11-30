@@ -229,47 +229,6 @@ internal static class MatchManager
 		return _boardDisabled;
 	}
 
-	public static string GetTitle()
-	{
-		StringBuilder title = new StringBuilder();
-		if (_lastPlayerMatch != null)
-		{
-			for (int color = 0; color < ColorCount; color++)
-			{
-				if (color == _lastPlayerMatch.PlayerSide)
-				{
-					title.Append(General.Name);
-				}
-				else
-				{
-					title.Append(_lastPlayerMatch.EngineInfo.Name);
-					title.Append(" [");
-					title.Append(_lastPlayerMatch.PresetName);
-					title.Append("]");
-				}
-				title.Append(" - ");
-			}
-			title.Append(PgnManager.GetValue("Result"));
-		}
-		else if (_lastEngineMatch != null)
-		{
-			for (int color = 0; color < ColorCount; color++)
-			{
-				title.Append(_lastEngineMatch.EngineInfos[color].Name);
-				title.Append(" [");
-				title.Append(_lastEngineMatch.PresetNames[color]);
-				title.Append("]");
-				title.Append(" - ");
-			}
-			title.Append(PgnManager.GetValue("Result"));
-		}
-		else
-		{
-			title.Append(PgnManager.GetValue("Event"));
-		}
-		return title.ToString();
-	}
-
 	private static void StartPlayerMatch(bool playerUnlimited, int playerTime, int playerIncrement, int playerSide, EngineInfo engineInfo, string presetName, ThinkingLimit engineLimit)
 	{
 		ConfigurePlayerMatch(playerUnlimited, playerTime, playerIncrement, playerSide, engineInfo, presetName, engineLimit);
@@ -427,7 +386,6 @@ internal static class MatchManager
 	static MatchManager()
 	{
 		RuntimeHelpers.RunClassConstructor(typeof(EngineManager).TypeHandle);
-		PgnManager.NewGame();
 		SaveManager.Save += () =>
 		{
 			SaveManager.Sync(nameof(_times), ref _times);

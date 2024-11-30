@@ -28,7 +28,7 @@ internal class MainScene : Scene
 
 	public override string GetTitle()
 	{
-		return MatchManager.GetTitle();
+		return PgnManager.GetTitle();
 	}
 
 	public override bool CanExit()
