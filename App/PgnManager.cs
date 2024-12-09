@@ -99,7 +99,7 @@ internal static class PgnManager
 		title.Append(GetValue("Event"));
 		if (HasValue("White") && HasValue("Black") && HasValue("Result"))
 		{
-			title.Append(" | ");
+			title.Append("  |  ");
 			for (int color = 0; color < ColorCount; color++)
 			{
 				title.Append(GetValue(_colorNames[color]));
@@ -114,7 +114,7 @@ internal static class PgnManager
 					title.Append(" - ");
 				}
 			}
-			title.Append(" | ");
+			title.Append("  |  ");
 			title.Append(GetValue("Result"));
 		}
 		return title.ToString();
