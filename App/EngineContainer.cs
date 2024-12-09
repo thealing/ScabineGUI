@@ -38,4 +38,10 @@ internal class EngineContainer : Container
 		}
 		base.Update();
 	}
+
+	protected override void UpdatePosition()
+	{
+		base.UpdatePosition();
+		Size = ParentSize;
+	}
 }

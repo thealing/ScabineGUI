@@ -174,6 +174,18 @@ internal static class MatchManager
 		_lastEngineMatch = null;
 	}
 
+	public static void ReplaceEngine(IEngine oldEngine, IEngine newEngine)
+	{
+		for (int color = 0; color < ColorCount; color++)
+		{
+			if (_engines[color] == oldEngine)
+			{
+				_engines[color] = newEngine;
+				_enginesThinking[color] = false;
+			}
+		}
+	}
+
 	public static void SetPaused(bool paused)
 	{
 		_paused = _playing && paused;

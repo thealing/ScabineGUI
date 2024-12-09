@@ -61,6 +61,7 @@ internal class EngineControl : Container
 	public override void Leave()
 	{
 		base.Leave();
+		_engineFailed = true;
 		_engine.StopThinking();
 		_engine.Dispose();
 	}
@@ -105,6 +106,15 @@ internal class EngineControl : Container
 
 	private void UpdateEngine()
 	{
+		if (!_engine.IsRunning() && !_engineFailed)
+		{
+			_engineFailed = true;
+			DialogResult result = SceneManager.ShowMessageBox($"{_engine.GetName()} has failed. Reload it?", "Engine error", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+			if (result == DialogResult.Yes)
+			{
+				_engineFailed = !EngineManager.ReloadEngine(_engine, _presetName);
+			}
+		}
 		Game game = GameManager.GetGame();
 		int moveNumber = game.GetStartingColor() + game.GetPly();
 		if (_moveNumber != moveNumber && (IsAnalyzing() || MatchManager.IsEngineThinking(_engine)))
@@ -148,6 +158,7 @@ internal class EngineControl : Container
 				{
 					_columnsDirty = true;
 					_depthMoves.Remove(depth);
+					_depthUciMoves.Remove(depth);
 				}
 				_columnValues[depth][column] = value;
 			}
@@ -249,9 +260,9 @@ internal class EngineControl : Container
 			MenuCreator.AddMenuSeparator(menu);
 			MenuCreator.AddMenuItem(menu, "Move up", MenuIcons.Up, () => SwapWithSibling(-1));
 			MenuCreator.AddMenuItem(menu, "Move down", MenuIcons.Down, () => SwapWithSibling(1));
+			MenuCreator.AddMenuItem(menu, "Reload", MenuIcons.Reload, () => EngineManager.ReloadEngine(_engine, _presetName));
 			if (!MatchManager.IsEnginePlaying(_engine))
 			{
-				MenuCreator.AddMenuItem(menu, "Reload", MenuIcons.Reload, () => EngineManager.ReloadEngine(_engine, _presetName));
 				MenuCreator.AddMenuItem(menu, "Close", MenuIcons.Close, () => EngineManager.StopEngine(_engine));
 			}
 			menu.Show(Cursor.Position);
@@ -451,4 +462,5 @@ internal class EngineControl : Container
 	private int _hoveredRow;
 	private int _moveNumber;
 	private double _analysisTime;
+	private bool _engineFailed;
 }

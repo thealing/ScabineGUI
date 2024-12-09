@@ -45,10 +45,11 @@ internal class MainScene : Scene
 	{
 		AddChild(_boardContainer);
 		_rightContainer.FirstChild = new FlowLayout(Direction.Vertical);
+		_rightContainer.SecondChild = new FlowLayout(Direction.Vertical);
 		_boardContainer.SecondChild = _rightContainer;
 		_rightContainer.FirstChild.AddChild(_playerDisplay);
 		_rightContainer.FirstChild.AddChild(_moveListControl);
-		_rightContainer.SecondChild = _engineContainer;
+		_rightContainer.SecondChild.AddChild(_engineContainer);
 		_boardContainer.FirstChild = new SceneNode();
 		_boardContainer.FirstChild.AddChild(_boardControl);
 		base.Enter();

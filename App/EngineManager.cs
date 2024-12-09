@@ -146,8 +146,9 @@ internal static class EngineManager
 		return true;
 	}
 
-	public static void ReloadEngine(IEngine engine, string presetName)
+	public static bool ReloadEngine(IEngine engine, string presetName)
 	{
+		bool result = false;
 		foreach (KeyValuePair<EngineConfig, EngineInstance> pair in _runningEngines)
 		{
 			if (pair.Value.Engine == engine)
@@ -158,6 +159,7 @@ internal static class EngineManager
 					_runningEngines.Add(pair.Key, pair.Value);
 					break;
 				}
+				MatchManager.ReplaceEngine(engine, newEngine);
 				engine.Dispose();
 				pair.Value.Control.SetEngine(newEngine);
 				_runningEngines[pair.Key] = new EngineInstance()
@@ -165,9 +167,11 @@ internal static class EngineManager
 					Engine = newEngine,
 					Control = pair.Value.Control
 				};
+				result = true;
 				break;
 			}
 		}
+		return result;
 	}
 
 	public static void StopEngine(IEngine engine)
