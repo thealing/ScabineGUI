@@ -8,6 +8,7 @@ using System.Windows.Forms;
 using static Scabine.Core.Pieces;
 using static Scabine.Core.Game;
 using static Scabine.App.GraphicsHelper;
+using Scabine.App.Prefs;
 
 internal class MoveListControl : ScrollableContainer
 {
@@ -167,7 +168,7 @@ internal class MoveListControl : ScrollableContainer
 		double time = Time.GetTime();
 		if (_autoPlay)
 		{
-			if (_autoPlayTime + 0.5 < time)
+			if (_autoPlayTime + Play.AutoPlayInterval / 1000.0 < time)
 			{
 				_autoPlayTime = time;
 				GameManager.StepForward(1);

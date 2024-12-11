@@ -11,6 +11,8 @@ using static Scabine.Core.Pieces;
 
 internal class PromotionDialog : Form
 {
+	public Move? PlayedMove { get; private set; }
+
 	public PromotionDialog(int size, int color, int sourceSquare, int targetSquare)
 	{
 		FormBorderStyle = FormBorderStyle.None;
@@ -45,7 +47,7 @@ internal class PromotionDialog : Form
 				};
 				pieceButton.Click += (s, e) =>
 				{
-					GameManager.TryPlayMove(sourceSquare, targetSquare, promotionType);
+					PlayedMove = GameManager.TryPlayMove(sourceSquare, targetSquare, promotionType);
 					Close();
 				};
 				Controls.Add(pieceButton);

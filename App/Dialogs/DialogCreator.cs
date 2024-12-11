@@ -225,7 +225,9 @@ internal static partial class DialogCreator
 	{
 		TabControl tabControl = new TabControl()
 		{
-			Bounds = new Rectangle(x, y, width, height)
+			Bounds = new Rectangle(x, y, width, height),
+			SizeMode = TabSizeMode.Fixed,
+			ItemSize = new Size(90, 30),
 		};
 		collection.Add(tabControl);
 		return tabControl;

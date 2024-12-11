@@ -15,7 +15,7 @@ internal class SettingsDialog : BaseDialog
 
 	public SettingsDialog()
 	{
-		ClientSize = new Size(500, 540);
+		ClientSize = new Size(500, 480);
 		Text = "Settings";
 		Font = new Font("Segoe UI", 14);
 		_tabControl = AddTabControl(Controls, 0, 0, ClientSize.Width + 2, ClientSize.Height - 80);
@@ -25,11 +25,16 @@ internal class SettingsDialog : BaseDialog
 		AddValue(page, nameof(General.Name));
 		AddValue(page, nameof(General.PlaySounds));
 		AddValue(page, nameof(General.ConfirmExit));
+		//AddValue(page, nameof(General.AutoSaveInterval), "Auto-save interval (ms)");
 		page = AddTab(typeof(Themes));
 		AddValue(page, nameof(Themes.Pieces));
 		AddValue(page, nameof(Themes.Board));
+		page = AddTab(typeof(Play));
+		AddValue(page, nameof(Play.AutoQueen));
+		AddValue(page, nameof(Play.MoveMethod));
+		AddValue(page, nameof(Play.MoveAnimation));
+		AddValue(page, nameof(Play.AutoPlayInterval), "Auto-play interval (ms)");
 		page = AddTab(typeof(Board));
-		AddValue(page, nameof(Board.AutoQueen));
 		AddValue(page, nameof(Board.ShowCoordinates));
 		AddValue(page, nameof(Board.ShowLegalMoves));
 		AddValue(page, nameof(Board.HighlightSelection));
@@ -39,6 +44,14 @@ internal class SettingsDialog : BaseDialog
 		AddValue(page, nameof(Engines.ResetBeforeEveryMove));
 		AddValue(page, nameof(Engines.PauseWhenInBackground));
 		AddValue(page, nameof(Engines.MaxAnalysisTime), "Max analysis time (ms)");
+		_tabControl.Selected += (sender, e) => _currentTab = _tabControl.SelectedTab.Text;
+		foreach (TabPage tabPage in _tabControl.TabPages)
+		{
+			if (tabPage.Text == _currentTab)
+			{
+				_tabControl.SelectedTab = tabPage;
+			}
+		}
 	}
 
 	private void Ok(object? sender, EventArgs e)
@@ -120,5 +133,12 @@ internal class SettingsDialog : BaseDialog
 		return char.ToUpper(result[0]) + result.Substring(1);
 	}
 
+	static SettingsDialog()
+	{
+		_currentTab = "";
+		SaveManager.Save += () => SaveManager.Sync(nameof(_currentTab), ref _currentTab);
+	}
+
+	private static string _currentTab;
 	private readonly TabControl _tabControl;
 }

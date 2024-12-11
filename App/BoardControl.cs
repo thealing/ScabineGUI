@@ -31,6 +31,8 @@ internal class BoardControl : SceneNode
 
 	public override void Update()
 	{
+		bool canClick = Play.CanMoveByClicking();
+		bool canDrag = Play.CanMoveByDragging();
 		int square = GetSquareUnderMouse();
 		if (square != NoSquare && InputManager.IsLeftButtonPressed())
 		{
@@ -42,17 +44,18 @@ internal class BoardControl : SceneNode
 				{
 					_hoveredSquare = _selectedSquare;
 				}
-				_selectedSquare = square;
-				_dragging = true;
+				_selectedSquare = _selectedSquare == square && !canDrag ? NoSquare : square;
+				_dragging = canDrag;
 				_draggedLocation = InputManager.GetMousePosition();
 			}
 			else if (_selectedSquare != NoSquare)
 			{
-				PlayMove(_selectedSquare, square);
+				Move? move = PlayMove(_selectedSquare, square);
+				AnimationManager.AnimateMove(move, AnimationDirection.Forward);
 				_selectedSquare = NoSquare;
 			}
 		}
-		if (InputManager.IsLeftButtonReleased())
+		if (InputManager.IsLeftButtonReleased() && canDrag)
 		{
 			if (square == _hoveredSquare && square != _selectedSquare)
 			{
@@ -64,16 +67,20 @@ internal class BoardControl : SceneNode
 			}
 			_dragging = false;
 		}
+		if (InputManager.IsLeftButtonReleased() && !canClick)
+		{
+			_selectedSquare = NoSquare;
+		}
 		if (ContainsMouse())
 		{
 			int scroll = InputManager.GetMouseScroll();
-			if (scroll > 0)
-			{
-				GameManager.StepBackward(1);
-			}
 			if (scroll < 0)
 			{
 				GameManager.StepForward(1);
+			}
+			if (scroll > 0)
+			{
+				GameManager.StepBackward(1);
 			}
 		}
 		if (square != _selectedSquare)
@@ -197,6 +204,10 @@ internal class BoardControl : SceneNode
 					{
 						continue;
 					}
+					if (AnimationManager.IsAnimating() && (square == AnimationManager.AnimatedMove?.SourceSquare || square == AnimationManager.AnimatedMove?.TargetSquare))
+					{
+						continue;
+					}
 					int piece = GameManager.GetGame().GetPiece(square);
 					if (IsPiece(piece))
 					{
@@ -208,6 +219,36 @@ internal class BoardControl : SceneNode
 							g.DrawImage(pieceImage, rectangle);
 						}
 					}
+				}
+			}
+			if (AnimationManager.IsAnimating() && AnimationManager.AnimatedMove != null)
+			{
+				Move move = AnimationManager.AnimatedMove.Value;
+				double progress = AnimationManager.GetAnimationProgress();
+				Rectangle sourceRectangle = GetSquareRectangle(move.SourceSquare);
+				Rectangle targetRectangle = GetSquareRectangle(move.TargetSquare);
+				double pieceX = 0;
+				double pieceY = 0;
+				switch (AnimationManager.AnimationDirection)
+				{
+					case AnimationDirection.Forward:
+						pieceX = targetRectangle.X * progress + sourceRectangle.X * (1 - progress);
+						pieceY = targetRectangle.Y * progress + sourceRectangle.Y * (1 - progress);
+						break;
+					case AnimationDirection.Backward:
+						pieceX = sourceRectangle.X * progress + targetRectangle.X * (1 - progress);
+						pieceY = sourceRectangle.Y * progress + targetRectangle.Y * (1 - progress);
+						break;
+				}
+				Image? pieceImage = PieceImages.GetScaledImage(move.TargetPiece);
+				if (pieceImage != null)
+				{
+					g.DrawImage(pieceImage, targetRectangle);
+				}
+				pieceImage = PieceImages.GetScaledImage(move.SourcePiece);
+				if (pieceImage != null)
+				{
+					g.DrawImage(pieceImage, (float)pieceX, (float)pieceY);
 				}
 			}
 		}
@@ -338,30 +379,30 @@ internal class BoardControl : SceneNode
 		}
 	}
 
-	private void PlayMove(int sourceSquare, int targetSquare)
+	private Move? PlayMove(int sourceSquare, int targetSquare)
 	{
 		if (sourceSquare < 0 || sourceSquare >= SquareCount || targetSquare < 0 || targetSquare >= SquareCount)
 		{
-			return;
+			return null;
 		}
 		int movingPiece = GameManager.GetGame().GetPiece(sourceSquare);
 		for (int color = 0; color < ColorCount; color++)
 		{
 			if (movingPiece == MakePiece(color, Pawn) && GetSquareRank(targetSquare) == GetPromotionRank(color))
 			{
-				if (Board.AutoQueen)
+				if (Play.AutoQueen)
 				{
-					GameManager.TryPlayMove(sourceSquare, targetSquare, Queen);
+					return GameManager.TryPlayMove(sourceSquare, targetSquare, Queen);
 				}
 				else
 				{
 					PromotionDialog dialog = new PromotionDialog(_squareSize * 5 / 6, color, sourceSquare, targetSquare);
 					DialogHelper.ShowCancellableDialog(dialog);
+					return dialog.PlayedMove;
 				}
-				return;
 			}
 		}
-		GameManager.TryPlayMove(sourceSquare, targetSquare, None);
+		return GameManager.TryPlayMove(sourceSquare, targetSquare, None);
 	}
 
 	private readonly Pen _borderPen;

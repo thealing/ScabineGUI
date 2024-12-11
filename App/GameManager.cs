@@ -61,6 +61,7 @@ internal static class GameManager
 		{
 			if (move.StartsWith(_game.FormatMoveToUci(legalMove)))
 			{
+				AnimationManager.AnimateMove(legalMove, AnimationDirection.Forward);
 				return PlayMove(legalMove);
 			}
 		}
@@ -143,6 +144,7 @@ internal static class GameManager
 			}
 			if (amount == 1)
 			{
+				AnimationManager.AnimateMove(_game.GetLastMove(), AnimationDirection.Forward);
 				PlayMoveSound(move.Value);
 			}
 			amount--;
@@ -157,6 +159,16 @@ internal static class GameManager
 	{
 		while (amount > 0)
 		{
+			if (amount == 1)
+			{
+				Move? move = _game.GetLastMove();
+				if (move != null)
+				{
+					_game.UndoMove(move.Value);
+					AnimationManager.AnimateMove(move, AnimationDirection.Backward);
+					break;
+				}
+			}
 			if (!TryUndoMove())
 			{
 				break;
