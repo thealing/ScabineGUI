@@ -76,7 +76,10 @@ internal class PlayEngineDialog : BaseDialog
 			}
 		}
 		PlayerMatchDefinition matchDefinition = new PlayerMatchDefinition(_playerUnlimited, _playerTime, _playerIncrement, side, _engineGroup.SelectedEngine, _engineGroup.PresetName, _engineGroup.ThinkingLimit);
-		MatchManager.StartPlayerMatch(matchDefinition);
+		if (!MatchManager.StartPlayerMatch(matchDefinition))
+		{
+			return;
+		}
 		Board.Flipped = side == Black;
 		Close();
 	}

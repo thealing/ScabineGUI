@@ -11,7 +11,7 @@ using Scabine.App;
 using static Scabine.Core.Game;
 using static Scabine.Core.Scores;
 
-public sealed class ExternalEngine : IEngine
+public sealed class ExternalEngine : AbstractEngine
 {
 	public ExternalEngine(EngineParams engineParams)
 	{
@@ -71,7 +71,7 @@ public sealed class ExternalEngine : IEngine
 		}
 	}
 
-	public void Dispose()
+	public override void Dispose()
 	{
 		if (!IsRunning())
 		{
@@ -86,36 +86,36 @@ public sealed class ExternalEngine : IEngine
 		_process.Dispose();
 	}
 
-	public bool IsRunning()
+	public override bool IsRunning()
 	{
 		return !_failed && !_disposed && !_process.HasExited;
 	}
 
-	public bool IsThinking()
+	public override bool IsThinking()
 	{
 		Update();
 		return _thinking;
 	}
 
-	public string GetName()
+	public override string GetName()
 	{
 		Update();
 		return _name;
 	}
 
-	public string GetAuthor()
+	public override string GetAuthor()
 	{
 		Update();
 		return _author;
 	}
 
-	public void NewGame()
+	public override void NewGame()
 	{
 		StopThinking();
 		SendCommand("ucinewgame");
 	}
 
-	public void SetPosition(string? position, string[] moves)
+	public override void SetPosition(string? position, string[] moves)
 	{
 		StopThinking();
 		StringBuilder command = new StringBuilder("position ");
@@ -134,25 +134,12 @@ public sealed class ExternalEngine : IEngine
 		SendCommand(command.ToString());
 	}
 
-	private void StartThinking(string command)
-	{
-		ResumeThinking();
-		StopThinking();
-		_thinking = true;
-		_restarted = _stopped;
-		_bestDepth = 0;
-		Array.Fill(_bestMoves, "");
-		Array.Fill(_bestScores, UnknownScore);
-		_playedMove = null;
-		SendCommand(command);
-	}
-
-	public void StartThinking(int moveTime)
+	public override void StartThinking(int moveTime)
 	{
 		StartThinking($"go movetime {moveTime}");
 	}
 
-	public void StartThinking(int depthLimit, int nodeLimit, int whiteTimeLeft, int blackTimeLeft, int whiteIncrement, int blackIncrement)
+	public override void StartThinking(int depthLimit, int nodeLimit, int whiteTimeLeft, int blackTimeLeft, int whiteIncrement, int blackIncrement)
 	{
 		StringBuilder command = new StringBuilder("go");
 		if (depthLimit > 0)
@@ -186,12 +173,7 @@ public sealed class ExternalEngine : IEngine
 		StartThinking(command.ToString());
 	}
 
-	public void StartThinking()
-	{
-		StartThinking(0, 0, 0, 0, 0, 0);
-	}
-
-	public void StopThinking()
+	public override void StopThinking()
 	{
 		if (!_thinking)
 		{
@@ -203,7 +185,7 @@ public sealed class ExternalEngine : IEngine
 		SendCommand("stop");
 	}
 
-	public void PauseThinking()
+	public override void PauseThinking()
 	{
 		if (!IsRunning())
 		{
@@ -217,7 +199,7 @@ public sealed class ExternalEngine : IEngine
 		NtSuspendProcess(_process.Handle);
 	}
 
-	public void ResumeThinking()
+	public override void ResumeThinking()
 	{
 		if (!IsRunning())
 		{
@@ -231,52 +213,55 @@ public sealed class ExternalEngine : IEngine
 		NtResumeProcess(_process.Handle);
 	}
 
-	public string? GetPlayedMove()
+	public override string? GetPlayedMove()
 	{
 		Update();
 		return _playedMove;
 	}
 
-	public int GetReachedDepth()
+	public override int GetReachedDepth()
 	{
 		Update();
 		return _bestDepth;
 	}
 
-	public string GetBestMoves(int depth)
+	public override string GetBestMoves(int depth)
 	{
 		Update();
 		return _bestMoves[depth].Trim();
 	}
 
-	public string GetBestMoves()
-	{
-		return GetBestMoves(GetReachedDepth());
-	}
-
-	public int GetBestScore(int depth)
+	public override int GetBestScore(int depth)
 	{
 		Update();
 		return _bestScores[depth];
 	}
 
-	public int GetBestScore()
-	{
-		return GetBestScore(GetReachedDepth());
-	}
-
-	public UciOption[] GetOptions()
+	public override UciOption[] GetOptions()
 	{
 		return _options.ToArray();
 	}
 
-	public void SetOption(UciOption option, object value)
+	public override void SetOption(UciOption option, object value)
 	{
 		string? valueString = option.FormatValue(value);
 		if (valueString != null)
 		{
 			SendCommand($"setoption name {option.Name} value {valueString}");
 		}
+	}
+
+	private void StartThinking(string command)
+	{
+		ResumeThinking();
+		StopThinking();
+		_thinking = true;
+		_restarted = _stopped;
+		_bestDepth = 0;
+		Array.Fill(_bestMoves, "");
+		Array.Fill(_bestScores, UnknownScore);
+		_playedMove = null;
+		SendCommand(command);
 	}
 
 	private void SendCommand(string command)

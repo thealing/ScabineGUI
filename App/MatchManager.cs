@@ -109,20 +109,28 @@ internal static class MatchManager
 		}
 	}
 
-	public static void StartPlayerMatch(PlayerMatchDefinition matchDefinition)
+	public static bool StartPlayerMatch(PlayerMatchDefinition matchDefinition)
 	{
-		_lastPlayerMatch = matchDefinition;
-		_lastEngineMatch = null;
-		StartPlayerMatch(matchDefinition.PlayerUnlimited, matchDefinition.PlayerTime, matchDefinition.PlayerIncrement, matchDefinition.PlayerSide, matchDefinition.EngineInfo, matchDefinition.PresetName, matchDefinition.ThinkingLimit);
-		PgnManager.SetPlayerMatch(matchDefinition);
+		bool result = StartPlayerMatch(matchDefinition.PlayerUnlimited, matchDefinition.PlayerTime, matchDefinition.PlayerIncrement, matchDefinition.PlayerSide, matchDefinition.EngineInfo, matchDefinition.PresetName, matchDefinition.ThinkingLimit);
+		if (result)
+		{
+			_lastPlayerMatch = matchDefinition;
+			_lastEngineMatch = null;
+			PgnManager.SetPlayerMatch(matchDefinition);
+		}
+		return result;
 	}
 
-	public static void StartEngineMatch(EngineMatchDefinition matchDefinition)
+	public static bool StartEngineMatch(EngineMatchDefinition matchDefinition)
 	{
-		_lastPlayerMatch = null;
-		_lastEngineMatch = matchDefinition;
-		StartEngineMatch(matchDefinition.EngineInfos, matchDefinition.PresetNames, matchDefinition.ThinkingLimits);
-		PgnManager.SetEngineMatch(matchDefinition);
+		bool result = StartEngineMatch(matchDefinition.EngineInfos, matchDefinition.PresetNames, matchDefinition.ThinkingLimits);
+		if (result)
+		{
+			_lastPlayerMatch = null;
+			_lastEngineMatch = matchDefinition;
+			PgnManager.SetEngineMatch(matchDefinition);
+		}
+		return result;
 	}
 
 	public static void ResetMatch()
@@ -137,34 +145,39 @@ internal static class MatchManager
 		Array.Clear(_engineLimits);
 	}
 
-	public static void RestartMatch()
+	public static bool RestartMatch()
 	{
 		if (_lastPlayerMatch != null)
 		{
-			StartPlayerMatch(_lastPlayerMatch);
+			return StartPlayerMatch(_lastPlayerMatch);
 		}
 		if (_lastEngineMatch != null)
 		{
-			StartEngineMatch(_lastEngineMatch);
+			return StartEngineMatch(_lastEngineMatch);
 		}
+		return false;
 	}
 
-	public static void StartRematch()
+	public static bool StartRematch()
 	{
+		bool result = false;
 		if (_lastPlayerMatch != null)
 		{
 			_lastPlayerMatch.PlayerSide ^= 1;
-			Board.Flipped ^= true;
-			StartPlayerMatch(_lastPlayerMatch);
+			result = StartPlayerMatch(_lastPlayerMatch);
 		}
 		if (_lastEngineMatch != null)
 		{
 			Array.Reverse(_lastEngineMatch.EngineInfos);
 			Array.Reverse(_lastEngineMatch.PresetNames);
 			Array.Reverse(_lastEngineMatch.ThinkingLimits);
-			Board.Flipped ^= true;
-			StartEngineMatch(_lastEngineMatch);
+			result = StartEngineMatch(_lastEngineMatch);
 		}
+		if (result)
+		{
+			Board.Flipped ^= true;
+		}
+		return result;
 	}
 
 	public static void ClearMatch()
@@ -241,24 +254,28 @@ internal static class MatchManager
 		return _boardDisabled;
 	}
 
-	private static void StartPlayerMatch(bool playerUnlimited, int playerTime, int playerIncrement, int playerSide, EngineInfo engineInfo, string presetName, ThinkingLimit engineLimit)
+	private static bool StartPlayerMatch(bool playerUnlimited, int playerTime, int playerIncrement, int playerSide, EngineInfo engineInfo, string presetName, ThinkingLimit engineLimit)
 	{
-		ConfigurePlayerMatch(playerUnlimited, playerTime, playerIncrement, playerSide, engineInfo, presetName, engineLimit);
+		if (!ConfigurePlayerMatch(playerUnlimited, playerTime, playerIncrement, playerSide, engineInfo, presetName, engineLimit))
+		{
+			return false;
+		}
 		if (_engines[playerSide ^ 1] != null)
 		{
 			_lastRank = 1;
 			_engines[playerSide ^ 1]?.NewGame();
 			GameManager.Restart();
 		}
+		return true;
 	}
 
-	private static void ConfigurePlayerMatch(bool playerUnlimited, int playerTime, int playerIncrement, int playerSide, EngineInfo engineInfo, string presetName, ThinkingLimit engineLimit)
+	private static bool ConfigurePlayerMatch(bool playerUnlimited, int playerTime, int playerIncrement, int playerSide, EngineInfo engineInfo, string presetName, ThinkingLimit engineLimit)
 	{
 		ResetMatch();
 		IEngine? engine = EngineManager.GetOrStartEngine(engineInfo, presetName);
 		if (engine == null)
 		{
-			return;
+			return false;
 		}
 		if (playerUnlimited)
 		{
@@ -295,11 +312,15 @@ internal static class MatchManager
 		Array.Clear(_enginesThinking);
 		_lastUpdateTime = Time.GetTime();
 		_lastRank = GameManager.GetGame().GetLastNode().Rank;
+		return true;
 	}
 
-	private static void StartEngineMatch(EngineInfo[] engineInfos, string[] presetNames, ThinkingLimit[] thinkingLimits)
+	private static bool StartEngineMatch(EngineInfo[] engineInfos, string[] presetNames, ThinkingLimit[] thinkingLimits)
 	{
-		ConfigureEngineMatch(engineInfos, presetNames, thinkingLimits);
+		if (!ConfigureEngineMatch(engineInfos, presetNames, thinkingLimits))
+		{
+			return false;
+		}
 		if (!_engines.Contains(null))
 		{
 			_lastRank = 1;
@@ -309,9 +330,10 @@ internal static class MatchManager
 			}
 			GameManager.Restart();
 		}
+		return true;
 	}
 
-	private static void ConfigureEngineMatch(EngineInfo[] engineInfos, string[] presetNames, ThinkingLimit[] thinkingLimits)
+	private static bool ConfigureEngineMatch(EngineInfo[] engineInfos, string[] presetNames, ThinkingLimit[] thinkingLimits)
 	{
 		ResetMatch();
 		IEngine[] engines = new IEngine[2];
@@ -320,7 +342,7 @@ internal static class MatchManager
 			IEngine? engine = EngineManager.GetOrStartEngine(engineInfos[i], presetNames[i]);
 			if (engine == null)
 			{
-				return;
+				return false;
 			}
 			engines[i] = engine;
 		}
@@ -346,6 +368,7 @@ internal static class MatchManager
 		StopLastEngines();
 		Array.Clear(_enginesThinking);
 		_lastUpdateTime = Time.GetTime();
+		return true;
 	}
 
 	private static void StopLastEngines()

@@ -102,7 +102,7 @@ internal static class EngineManager
 		string hash = GetFileHash(engineInfo.Path);
 		if (hash != engineInfo.Hash)
 		{
-			DialogResult result = DialogHelper.ShowMessageBox("Engine has been modified! Continue?", "Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+			DialogResult result = DialogHelper.ShowMessageBox("Engine file has been modified! Continue?", "Warning", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
 			if (result == DialogResult.Yes)
 			{
 				engineInfo.Hash = hash;

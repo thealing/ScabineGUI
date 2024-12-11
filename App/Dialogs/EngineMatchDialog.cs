@@ -50,7 +50,10 @@ internal class EngineMatchDialog : BaseDialog
 			return;
 		}
 		EngineMatchDefinition matchDefinition = new EngineMatchDefinition(whiteEngine, _engineGroups[White].PresetName, _engineGroups[White].ThinkingLimit, blackEngine, _engineGroups[Black].PresetName, _engineGroups[Black].ThinkingLimit);
-		MatchManager.StartEngineMatch(matchDefinition);
+		if (!MatchManager.StartEngineMatch(matchDefinition))
+		{ 
+			return; 
+		}
 		Board.Flipped = _engineGroups[White].Location.Y < _engineGroups[Black].Location.Y;
 		Close();
 	}
