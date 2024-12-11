@@ -56,6 +56,7 @@ internal static class GameMenu
 	private static void CancelGame()
 	{
 		MatchManager.ResetMatch();
+		UpdatePausedState();
 	}
 
 	private static void TogglePausedState()
