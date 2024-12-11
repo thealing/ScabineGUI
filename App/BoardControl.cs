@@ -10,6 +10,7 @@ using System.Drawing.Drawing2D;
 using System.Windows.Forms;
 using static Scabine.Core.Pieces;
 using static Scabine.Core.Squares;
+using static Scabine.Core.Move;
 
 internal class BoardControl : SceneNode
 {
@@ -204,9 +205,35 @@ internal class BoardControl : SceneNode
 					{
 						continue;
 					}
-					if (AnimationManager.IsAnimating() && (square == AnimationManager.AnimatedMove?.SourceSquare || square == AnimationManager.AnimatedMove?.TargetSquare))
+					if (AnimationManager.IsAnimating() && AnimationManager.AnimatedMove is Move move)
 					{
-						continue;
+						if (square == move.SourceSquare || square == move.TargetSquare)
+						{
+							continue;
+						}
+						if (move.Type == CastlingMove)
+						{
+							bool skipSquare = false;
+							switch (move.TargetSquare)
+							{
+								case G1:
+									skipSquare = square == H1 || square == F1;
+									break;
+								case C1:
+									skipSquare = square == A1 || square == D1;
+									break;
+								case G8:
+									skipSquare = square == H8 || square == F8;
+									break;
+								case C8:
+									skipSquare = square == A8 || square == D8;
+									break;
+							}
+							if (skipSquare)
+							{
+								continue;
+							}
+						}
 					}
 					int piece = GameManager.GetGame().GetPiece(square);
 					if (IsPiece(piece))
@@ -225,31 +252,66 @@ internal class BoardControl : SceneNode
 			{
 				Move move = AnimationManager.AnimatedMove.Value;
 				double progress = AnimationManager.GetAnimationProgress();
-				Rectangle sourceRectangle = GetSquareRectangle(move.SourceSquare);
-				Rectangle targetRectangle = GetSquareRectangle(move.TargetSquare);
-				double pieceX = 0;
-				double pieceY = 0;
-				switch (AnimationManager.AnimationDirection)
+				void DrawPiece(int piece, PointF point)
 				{
-					case AnimationDirection.Forward:
-						pieceX = targetRectangle.X * progress + sourceRectangle.X * (1 - progress);
-						pieceY = targetRectangle.Y * progress + sourceRectangle.Y * (1 - progress);
+					PieceImages.SetScaledSize(_squareSize);
+					Image? pieceImage = PieceImages.GetScaledImage(piece);
+					if (pieceImage != null)
+					{
+						g.DrawImage(pieceImage, point);
+					}
+				}
+				void DrawAnimatedPiece(int piece, int sourceSquare, int targetSquare)
+				{
+					Rectangle sourceRectangle = GetSquareRectangle(sourceSquare);
+					Rectangle targetRectangle = GetSquareRectangle(targetSquare);
+					double pieceX = 0;
+					double pieceY = 0;
+					switch (AnimationManager.AnimationDirection)
+					{
+						case AnimationDirection.Forward:
+							pieceX = targetRectangle.X * progress + sourceRectangle.X * (1 - progress);
+							pieceY = targetRectangle.Y * progress + sourceRectangle.Y * (1 - progress);
+							break;
+						case AnimationDirection.Backward:
+							pieceX = sourceRectangle.X * progress + targetRectangle.X * (1 - progress);
+							pieceY = sourceRectangle.Y * progress + targetRectangle.Y * (1 - progress);
+							break;
+					}
+					DrawPiece(piece, new PointF((float)pieceX, (float)pieceY));
+				}
+				switch (move.Type)
+				{
+					case EnPassantMove:
+						int capturedColor = GetPieceColor(move.SourcePiece) ^ 1;
+						int capturedPawn = MakePiece(capturedColor, Pawn);
+						int capturedSquare = move.TargetSquare + GetMoveDirection(capturedColor);
+						DrawPiece(capturedPawn, GetSquareRectangle(capturedSquare).Location);
 						break;
-					case AnimationDirection.Backward:
-						pieceX = sourceRectangle.X * progress + targetRectangle.X * (1 - progress);
-						pieceY = sourceRectangle.Y * progress + targetRectangle.Y * (1 - progress);
+					case CastlingMove:
+						int moveColor = GetPieceColor(move.SourcePiece);
+						int castlingRook = MakePiece(moveColor, Rook);
+						switch (move.TargetSquare)
+						{
+							case G1:
+								DrawAnimatedPiece(castlingRook, H1, F1);
+								break;
+							case C1:
+								DrawAnimatedPiece(castlingRook, A1, D1);
+								break;
+							case G8:
+								DrawAnimatedPiece(castlingRook, H8, F8);
+								break;
+							case C8:
+								DrawAnimatedPiece(castlingRook, A8, D8);
+								break;
+						}
+						break;
+					default:
+						DrawPiece(move.TargetPiece, GetSquareRectangle(move.TargetSquare).Location);
 						break;
 				}
-				Image? pieceImage = PieceImages.GetScaledImage(move.TargetPiece);
-				if (pieceImage != null)
-				{
-					g.DrawImage(pieceImage, targetRectangle);
-				}
-				pieceImage = PieceImages.GetScaledImage(move.SourcePiece);
-				if (pieceImage != null)
-				{
-					g.DrawImage(pieceImage, (float)pieceX, (float)pieceY);
-				}
+				DrawAnimatedPiece(move.SourcePiece, move.SourceSquare, move.TargetSquare);
 			}
 		}
 	}
