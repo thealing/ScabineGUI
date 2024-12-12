@@ -1,5 +1,6 @@
 ﻿namespace Scabine.Scenes;
 
+using Scabine.App.Dialogs;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -86,6 +87,11 @@ public static class SceneManager
 		_window.Focus();
 	}
 
+	private static bool IsMinimized()
+	{
+		return _window.WindowState == FormWindowState.Minimized;
+	}
+
 	private static void Loop()
 	{
 		uint timerResolution = 1;
@@ -104,9 +110,8 @@ public static class SceneManager
 			}
 			if (time > renderTime + RenderDelta)
 			{
-				if (_window.WindowState != FormWindowState.Minimized)
+				if (!IsMinimized())
 				{
-					_window.Text = _scene?.GetTitle();
 					_window.Refresh();
 				}
 				renderTime = time;
@@ -123,15 +128,18 @@ public static class SceneManager
 
 	private static void UpdateScene()
 	{
-		Point position = new Point(0, _menu == null ? 0 : _menu.Bottom);
-		_scene?.Resize(new Rectangle(position, _window.ClientSize - (Size)position));
+		if (!IsMinimized())
+		{
+			Point position = new Point(0, _menu == null ? 0 : _menu.Bottom);
+			_scene?.Resize(new Rectangle(position, _window.ClientSize - (Size)position));
+		}
 		_scene?.Update();
 		_updateCount++;
 	}
 
 	private static void BeforeUpdate()
 	{
-		if (_window.WindowState != FormWindowState.Minimized && _scene != null)
+		if (!IsMinimized() && _scene != null)
 		{
 			_window.MinimumSize = _scene.GetMinSize() + _window.Size - _window.ClientSize;
 			_window.Text = _scene.GetTitle();

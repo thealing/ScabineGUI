@@ -64,6 +64,10 @@ public class Scene
 
 	internal virtual void Resize(Rectangle rectangle)
 	{
+		if (rectangle.Width <= 0 || rectangle.Height <= 0)
+		{
+			return;
+		}
 		_root.Bounds = rectangle;
 		foreach (SceneNode child in _root.Children)
 		{
