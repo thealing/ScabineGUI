@@ -88,7 +88,8 @@ public sealed class ExternalEngine : AbstractEngine
 
 	public override bool IsRunning()
 	{
-		return !_failed && !_disposed && !_process.HasExited;
+		// using "_process.HasExited" causes the main window to be stuck in minimized state
+		return !_failed && !_disposed && WaitForSingleObject(_process.Handle, 0) != 0;
 	}
 
 	public override bool IsThinking()
@@ -270,7 +271,7 @@ public sealed class ExternalEngine : AbstractEngine
 		{
 			return;
 		}
-		// using WriteLine() occasionally freezes the application in RandomAccess.WriteAtOffset()
+		// using "_process.StandardInput.WriteLine()" occasionally freezes the application in RandomAccess.WriteAtOffset()
 		_process.StandardInput.WriteLineAsync(command).Wait();
 		_process.StandardInput.FlushAsync().Wait();
 	}
@@ -406,6 +407,9 @@ public sealed class ExternalEngine : AbstractEngine
 	private bool _disposed;
 	private string? _playedMove;
 	private int _bestDepth;
+
+	[DllImport("kernel32.dll", SetLastError = true)]
+	private static extern int WaitForSingleObject(IntPtr hHandle, uint dwMilliseconds);
 
 	[DllImport("ntdll.dll", EntryPoint = "NtSuspendProcess", ExactSpelling = false)]
 	private static extern UIntPtr NtSuspendProcess(IntPtr processHandle);
