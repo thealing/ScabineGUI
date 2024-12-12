@@ -48,15 +48,57 @@ internal static class MatchManager
 				}
 				else if (_times[White] < 0 ^ _times[Black] < 0)
 				{
-					PgnManager.SetWinner(Array.FindIndex(_times, time => time >= 0));
+					int winner = Array.FindIndex(_times, time => time >= 0);
+					string[] colorNames = { "White", "Black" };
+					if (game.GetCurrentPosition().HasSufficientMaterial(winner))
+					{
+						lastNode.Comment = colorNames[winner] + " won on time.";
+						PgnManager.SetWinner(winner);
+					}
+					else
+					{
+						lastNode.Comment = "Draw by timeout vs insufficient material.";
+						PgnManager.SetWinner(winner);
+					}
 				}
 				else
 				{
-					PgnManager.SetResult(game.GetResult());
+					Result result = game.GetResult();
+					switch (result)
+					{
+						case Result.WhiteWon:
+							lastNode.Comment = "White won by checkmate.";
+							break;
+						case Result.BlackWon:
+							lastNode.Comment = "Black won by checkmate.";
+							break;
+						case Result.Draw:
+							lastNode.Comment = "Draw.";
+							Position position = game.GetCurrentPosition();
+							if (position.IsDrawByFiftyMoveRule())
+							{
+								lastNode.Comment = "Draw by fifty-move rule.";
+							}
+							if (position.IsDrawByInsufficientMaterial())
+							{
+								lastNode.Comment = "Draw by insufficient material.";
+							}
+							if (game.IsDrawByRepetition())
+							{
+								lastNode.Comment = "Draw by repetition.";
+							}
+							if (game.IsStalemate())
+							{
+								lastNode.Comment = "Draw by stalemate.";
+							}
+							break;
+					}
+					PgnManager.SetResult(result);
 				}
 			}
 			else
 			{
+				_wasFinished = false;
 				PgnManager.SetResult(Result.Ongoing);
 				if (lastNode != game.GetRootNode() && GameManager.IsDirty())
 				{

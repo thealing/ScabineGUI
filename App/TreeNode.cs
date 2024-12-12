@@ -22,6 +22,7 @@ internal class TreeNode
 	internal bool IsMainLine;
 	internal bool IsCollapsed;
 	internal int Time;
+	internal string? Comment;
 
 	public TreeNode AddChild(Move move, string uci, string san)
 	{
@@ -91,6 +92,8 @@ internal class TreeNode
 			writer.WriteBooleanValue(value.IsCollapsed);
 			writer.WritePropertyName(nameof(Time));
 			writer.WriteNumberValue(value.Time);
+			writer.WritePropertyName(nameof(Comment));
+			writer.WriteStringValue(value.Comment);
 			writer.WritePropertyName(nameof(Children));
 			writer.WriteStartArray();
 			foreach (TreeNode child in value.Children)
@@ -99,7 +102,7 @@ internal class TreeNode
 			}
 			writer.WriteEndArray();
 			writer.WritePropertyName(nameof(CurrentChild));
-			writer.WriteNumberValue(value.Children.IndexOf(value.CurrentChild!));
+			writer.WriteNumberValue(value.CurrentChild == null ? -1 : value.Children.IndexOf(value.CurrentChild));
 			writer.WriteEndObject();
 		}
 
@@ -114,6 +117,7 @@ internal class TreeNode
 			node.IsMainLine = obj[nameof(IsMainLine)]?.GetValue<bool>() ?? false;
 			node.IsCollapsed = obj[nameof(IsCollapsed)]?.GetValue<bool>() ?? false;
 			node.Time = obj[nameof(Time)]?.GetValue<int>() ?? 0;
+			node.Comment = obj[nameof(Comment)]?.GetValue<string>();
 			JsonNode? childrenNode = obj[nameof(Children)];
 			if (childrenNode != null)
 			{

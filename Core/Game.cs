@@ -794,6 +794,11 @@ public class Game
 		{
 			return Result.Draw;
 		}
+		return IsDrawByRepetition() ? Result.Draw : Result.Ongoing;
+	}
+
+	public bool IsDrawByRepetition()
+	{
 		int repetitionCount = 0;
 		for (int i = 0; i <= _ply; i++)
 		{
@@ -802,7 +807,7 @@ public class Game
 				repetitionCount++;
 			}
 		}
-		return repetitionCount >= 3 ? Result.Draw : Result.Ongoing;
+		return repetitionCount >= 3;
 	}
 
 	public long Perft(int depth)

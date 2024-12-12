@@ -386,8 +386,12 @@ internal static class PgnManager
 			int minutes = time / 60000 % 60;
 			int seconds = time / 1000 % 60;
 			int milliseconds = time % 1000;
-			pgn.Append($"[%clk {hour}:{minutes:D2}:{seconds:D2}.{milliseconds:D3}] ");
-			pgn.Append('}');
+			pgn.Append($"[%clk {hour}:{minutes:D2}:{seconds:D2}.{milliseconds:D3}]");
+			pgn.Append(" }");
+		}
+		if (comment && node.Comment != null)
+		{
+			pgn.Append(" { " + node.Comment + " }");
 		}
 	}
 
@@ -432,27 +436,33 @@ internal static class PgnManager
 			if (token.StartsWith('{') && token.EndsWith('}'))
 			{
 				TreeNode node = GameManager.GetGame().GetCurrentNode();
-				Match timeMatch = timeRegex.Match(token);
-				if (timeMatch.Success)
+				do
 				{
-					node.Time = 1;
-					if (int.TryParse(timeMatch.Groups[1].Value, out int hours))
+					Match timeMatch = timeRegex.Match(token);
+					if (timeMatch.Success)
 					{
-						node.Time += hours * 3600000;
+						node.Time = 1;
+						if (int.TryParse(timeMatch.Groups[1].Value, out int hours))
+						{
+							node.Time += hours * 3600000;
+						}
+						if (int.TryParse(timeMatch.Groups[2].Value, out int minutes))
+						{
+							node.Time += minutes * 60000;
+						}
+						if (int.TryParse(timeMatch.Groups[3].Value, out int seconds))
+						{
+							node.Time += seconds * 1000;
+						}
+						if (timeMatch.Groups[5].Success && int.TryParse(timeMatch.Groups[5].Value, out int milliseconds))
+						{
+							node.Time += milliseconds;
+						}
+						break;
 					}
-					if (int.TryParse(timeMatch.Groups[2].Value, out int minutes))
-					{
-						node.Time += minutes * 60000;
-					}
-					if (int.TryParse(timeMatch.Groups[3].Value, out int seconds))
-					{
-						node.Time += seconds * 1000;
-					}
-					if (timeMatch.Groups[5].Success && int.TryParse(timeMatch.Groups[5].Value, out int milliseconds))
-					{
-						node.Time += milliseconds;
-					}
+					node.Comment = token.Substring(1, token.Length - 2).Trim();
 				}
+				while (false);
 			}
 			Move? move = null;
 			ReadOnlySpan<Move> legalMoves = GameManager.GetLegalMoves();

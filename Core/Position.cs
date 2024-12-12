@@ -145,19 +145,22 @@ public sealed class Position
 
 	public bool IsDraw()
 	{
-		if (HalfmoveClock >= 100)
-		{
-			return true;
-		}
-		if (PopCount(Colors[White]) >= 3 || Pieces[WhitePawn] != 0 || Pieces[WhiteRook] != 0 || Pieces[WhiteQueen] != 0)
-		{
-			return false;
-		}
-		if (PopCount(Colors[Black]) >= 3 || Pieces[BlackPawn] != 0 || Pieces[BlackRook] != 0 || Pieces[BlackQueen] != 0)
-		{
-			return false;
-		}
-		return true;
+		return IsDrawByFiftyMoveRule() || IsDrawByInsufficientMaterial();
+	}
+
+	public bool IsDrawByFiftyMoveRule()
+	{
+		return HalfmoveClock >= 100;
+	}
+
+	public bool IsDrawByInsufficientMaterial()
+	{
+		return !HasSufficientMaterial(White) && !HasSufficientMaterial(Black);
+	}
+
+	public bool HasSufficientMaterial(int color)
+	{
+		return PopCount(Colors[color]) >= 3 || Pieces[MakePiece(color, Pawn)] != 0 || Pieces[MakePiece(color, Rook)] != 0 || Pieces[MakePiece(color, Queen)] != 0;
 	}
 
 	public int GetKingPosition()
