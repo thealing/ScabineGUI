@@ -37,6 +37,31 @@ internal static class SaveManager
 
 	private static event SaveHandler? _save;
 
+	public static string GetObjectTag(object obj)
+	{
+		return obj.GetType().Name + "::";
+	}
+
+	public static bool Sync<T>(object obj, string tag, T value) where T : notnull
+	{
+		return Sync(GetObjectTag(obj) + tag, value);
+	}
+
+	public static bool Sync<T>(object obj, string tag, ref T value) where T : notnull
+	{
+		return Sync(GetObjectTag(obj) + tag, ref value);
+	}
+
+	public static T? GetValue<T>(object obj, string tag)
+	{
+		return GetValue<T>(GetObjectTag(obj) + tag);
+	}
+
+	public static object? GetValue(object obj, string tag)
+	{
+		return GetValue(GetObjectTag(obj) + tag);
+	}
+
 	public static bool Sync<T>(string tag, T value) where T : notnull
 	{
 		T temp = value;

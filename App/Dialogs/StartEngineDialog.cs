@@ -1,10 +1,12 @@
 ﻿namespace Scabine.App.Dialogs;
 
 using Scabine.App;
+using Scabine.App.Prefs;
 using Scabine.Engines;
 using Scabine.Scenes;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.Linq;
@@ -24,6 +26,19 @@ internal class StartEngineDialog : BaseDialog
 		_programList.SelectedIndexChanged += (sender, e) => UpdatePresets();
 		UpdateEngines();
 		_presetList = AddDropDownList(Controls, 270, 80, 280, 200);
+		Paint += (sender, e) =>
+		{
+			if (_programList.SelectedItem is string programName && !string.IsNullOrEmpty(programName))
+			{
+				SaveManager.Sync(this, nameof(programName), programName);
+			}
+			if (_presetList.SelectedItem is string presetName && !string.IsNullOrEmpty(presetName))
+			{
+				SaveManager.Sync(this, nameof(presetName), presetName);
+			}
+			_programList.SelectedItem = SaveManager.GetValue<string>(this, nameof(programName));
+			_presetList.SelectedItem = SaveManager.GetValue<string>(this, nameof(presetName));
+		};
 		Button startButton = AddButton(Controls, "Start", 210, 140, 150, 50, Start);
 	}
 
