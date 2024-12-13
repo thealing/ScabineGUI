@@ -28,7 +28,7 @@ internal static class SoundManager
 		while (true)
 		{
 			_signal.WaitOne();
-			while (_queue.TryDequeue(out SoundPlayer? sound) && sound != null)
+			if (_queue.TryDequeue(out SoundPlayer? sound) && sound != null)
 			{
 				sound.PlaySync();
 			}

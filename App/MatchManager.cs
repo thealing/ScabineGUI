@@ -20,10 +20,10 @@ internal static class MatchManager
 		double deltaTime = Time.GetTime() - _lastUpdateTime;
 		_lastUpdateTime += deltaTime;
 		TreeGame game = GameManager.GetGame();
+		TreeNode lastNode = game.GetLastNode();
 		_boardDisabled = game.IsFinished();
 		if (_playing && !_paused)
 		{
-			TreeNode lastNode = game.GetLastNode();
 			int turn = lastNode.Color ^ 1;
 			if (game.GetResult() != Result.Ongoing)
 			{
@@ -58,7 +58,7 @@ internal static class MatchManager
 					else
 					{
 						lastNode.Comment = "Draw by timeout vs insufficient material.";
-						PgnManager.SetWinner(winner);
+						PgnManager.SetResult(Result.Draw);
 					}
 				}
 				else
@@ -102,7 +102,7 @@ internal static class MatchManager
 				PgnManager.SetResult(Result.Ongoing);
 				if (lastNode != game.GetRootNode() && GameManager.IsDirty())
 				{
-					lastNode.Time = ConvertTime(_times[lastNode.Color]) + 1;
+					lastNode.Time = ConvertTime(_times[lastNode.Color]);
 				}
 				IEngine? engine = _engines[turn];
 				ThinkingLimit? limit = _engineLimits[turn];
@@ -469,6 +469,7 @@ internal static class MatchManager
 			SaveManager.Sync(nameof(_playing), ref _playing);
 			SaveManager.Sync(nameof(_paused), ref _paused);
 			SaveManager.Sync(nameof(_finished), ref _finished);
+			SaveManager.Sync(nameof(_wasFinished), ref _wasFinished);
 			SaveManager.Sync(nameof(_boardDisabled), ref _boardDisabled);
 			SaveManager.Sync(nameof(_lastPlayerMatch), ref _lastPlayerMatch!);
 			SaveManager.Sync(nameof(_lastEngineMatch), ref _lastEngineMatch!);
@@ -509,7 +510,7 @@ internal static class MatchManager
 						}
 					}
 				}
-				if (_lastPlayerMatch != null || _lastEngineMatch != null)
+				if (GameManager.GetGame().GetResult() == Result.Ongoing && !Array.Exists(_times, time => time < 0) && (_lastPlayerMatch != null || _lastEngineMatch != null))
 				{
 					double[] times = new double[2];
 					Array.Copy(_times, times, 2);

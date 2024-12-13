@@ -274,6 +274,15 @@ internal class TreeGame : UciGame
 		_result = base.GetResult();
 	}
 
+	private TreeGame(string fen, TreeNode root, Result result)
+	{
+		base.SetFen(fen);
+		_fen = fen;
+		_root = root;
+		_node = root;
+		_result = result;
+	}
+
 	private string _fen;
 	private TreeNode _root;
 	private TreeNode _node;
@@ -304,7 +313,8 @@ internal class TreeGame : UciGame
 			{
 				return null;
 			}
-			TreeGame game = new TreeGame(fenString, root);
+			Result result = (Result?)obj?[nameof(_result)]?.GetValue<int>() ?? Result.Ongoing;
+			TreeGame game = new TreeGame(fenString, root, result);
 			game._fen = fenString;
 			List<int>? path = JsonSerializer.Deserialize<List<int>>(pathString, options);
 			if (path != null)
@@ -339,6 +349,8 @@ internal class TreeGame : UciGame
 			writer.WriteStartObject();
 			writer.WritePropertyName(nameof(_fen));
 			JsonSerializer.Serialize(writer, value._fen, options);
+			writer.WritePropertyName(nameof(_result));
+			JsonSerializer.Serialize(writer, value._result, options);
 			writer.WritePropertyName(nameof(_root));
 			JsonSerializer.Serialize(writer, value._root, options);
 			writer.WritePropertyName(nameof(_node));

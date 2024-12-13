@@ -146,12 +146,36 @@ public static class SceneManager
 		}
 		Application.DoEvents();
 		CursorManager.Commit();
-		_showFps ^= InputManager.IsKeyPressed(Keys.B);
+		ToolTipManager.Commit();
 	}
 
 	private static void AfterUpdate()
 	{
+		UpdateToolTip();
+		UpdateFpsDisplay();
 		InputManager.Commit();
+	}
+
+	private static void UpdateToolTip()
+	{
+		if (_window.IsDisposed)
+		{
+			return;
+		}
+		string? toolTipText = ToolTipManager.GetToolTipText();
+		if (toolTipText == null)
+		{
+			_toolTip.Hide(_window);
+		}
+		else if (ToolTipManager.IsDirty() || !InputManager.GetMouseDelta().IsEmpty)
+		{
+			_toolTip.Show(toolTipText, _window, InputManager.GetMousePosition() + new Size(0, 50));
+		}
+	}
+
+	private static void UpdateFpsDisplay()
+	{
+		_showFps ^= InputManager.IsKeyPressed(Keys.B);
 	}
 
 	private static void RenderScene(Graphics g)
@@ -166,6 +190,11 @@ public static class SceneManager
 	}
 
 	private static void AfterRender(Graphics g)
+	{
+		RenderFpsDisplay(g);
+	}
+
+	private static void RenderFpsDisplay(Graphics g)
 	{
 		if (_showFps)
 		{
@@ -217,6 +246,7 @@ public static class SceneManager
 	static SceneManager()
 	{
 		_window = new SceneWindow();
+		_toolTip = new ToolTip();
 		_disposed = false;
 		_scene = null;
 		_updateCount = 0;
@@ -228,6 +258,7 @@ public static class SceneManager
 	}
 
 	private static SceneWindow _window;
+	private static ToolTip _toolTip;
 	private static MenuStrip? _menu;
 	private static bool _disposed;
 	private static Scene? _scene;

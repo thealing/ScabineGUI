@@ -79,7 +79,7 @@ internal static class EngineManager
 		return null;
 	}
 
-	public static bool StartEngine(EngineInfo engineInfo, string presetName, out IEngine? engine)
+	public static bool StartEngine(EngineInfo engineInfo, string presetName, out IEngine? engine, bool background = false)
 	{
 		engine = null;
 		if (!engineInfo.Presets.ContainsKey(presetName))
@@ -89,7 +89,7 @@ internal static class EngineManager
 		}
 		EngineOptions preset = engineInfo.Presets[presetName];
 		EngineConfig config = new EngineConfig() { Info = engineInfo, Options = preset };
-		if (_runningEngines.ContainsKey(config))
+		if (!background && _runningEngines.ContainsKey(config))
 		{
 			DialogHelper.ShowMessageBox("Engine is already running!", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
 			return false;
@@ -127,17 +127,17 @@ internal static class EngineManager
 
 	public static bool StartEngine(EngineInfo engineInfo, string presetName)
 	{
+		EngineContainer? engineContainer = GetEngineContainer();
+		if (engineContainer == null)
+		{
+			return false;
+		}
 		if (!StartEngine(engineInfo, presetName, out IEngine? engine) || engine == null)
 		{
 			return false;
 		}
 		EngineOptions preset = engineInfo.Presets[presetName];
 		EngineConfig config = new EngineConfig() { Info = engineInfo, Options = preset };
-		EngineContainer? engineContainer = GetEngineContainer();
-		if (engineContainer == null)
-		{
-			return false;
-		}
 		_runningEngines[config] = new EngineInstance()
 		{ 
 			Engine = engine, 

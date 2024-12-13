@@ -71,7 +71,7 @@ internal class PlayerDisplay : Container
 		else
 		{
 			TreeNode? node = GameManager.GetGame().GetCurrentNode();
-			while (node != null && (!node.IsMainLine || node.Time == 0))
+			while (node != null && (!node.IsMainLine || node.Time == null))
 			{
 				node = node.Parent;
 			}
@@ -80,8 +80,8 @@ internal class PlayerDisplay : Container
 			int nextTime = node?.Children.FirstOrDefault()?.Time ?? 0;
 			if (node != null)
 			{
-				int currentTime = node.Time;
-				int opponentTime = Math.Max(previousTime, nextTime);
+				int currentTime = node.Time ?? 0;
+				int opponentTime = node.Rank < 1 ? nextTime : previousTime;
 				if (node.Color == White)
 				{
 					whiteTime = currentTime;

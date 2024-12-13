@@ -183,6 +183,18 @@ internal static partial class DialogCreator
 		return trackBar;
 	}
 
+	internal static ProgressBar AddProgressBar(Control.ControlCollection collection, int x, int y, int width, int height)
+	{
+		ProgressBar progressBar = new ProgressBar()
+		{
+			AutoSize = false,
+			Bounds = new Rectangle(x, y, width, height),
+			Style = ProgressBarStyle.Continuous
+		};
+		collection.Add(progressBar);
+		return progressBar;
+	}
+
 	internal static NumericUpDown AddNumber(Control.ControlCollection collection, bool arrows, int x, int y, int width, int height, decimal value, decimal min, decimal max, EventHandler? change)
 	{
 		NumericUpDown numericUpDown = arrows ? new NumericUpDown() : new ButtonlessNumericUpDown();

@@ -9,6 +9,7 @@ public static class StringFormats
 	public static readonly StringFormat Centered;
 	public static readonly StringFormat LeftWrapped;
 	public static readonly StringFormat LeftClipped;
+	public static readonly StringFormat CenteredClipped;
 
 	static StringFormats()
 	{
@@ -43,6 +44,13 @@ public static class StringFormats
 		LeftClipped = new StringFormat()
 		{
 			Alignment = StringAlignment.Near,
+			LineAlignment = StringAlignment.Center,
+			Trimming = StringTrimming.EllipsisWord,
+			FormatFlags = StringFormatFlags.NoWrap,
+		};
+		CenteredClipped = new StringFormat()
+		{
+			Alignment = StringAlignment.Center,
 			LineAlignment = StringAlignment.Center,
 			Trimming = StringTrimming.EllipsisWord,
 			FormatFlags = StringFormatFlags.NoWrap,

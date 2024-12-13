@@ -24,6 +24,7 @@ internal class MainScene : Scene
 		_moveListControl = new MoveListControl();
 		_engineContainer = new EngineContainer();
 		_playerDisplay = new PlayerDisplay();
+		_analyzisDisplay = new AnalyzisDisplay();
 		CreateMenu();
 	}
 
@@ -49,6 +50,7 @@ internal class MainScene : Scene
 		_boardContainer.SecondChild = _rightContainer;
 		_rightContainer.FirstChild.AddChild(_playerDisplay);
 		_rightContainer.FirstChild.AddChild(_moveListControl);
+		_rightContainer.SecondChild.AddChild(_analyzisDisplay);
 		_rightContainer.SecondChild.AddChild(_engineContainer);
 		_boardContainer.FirstChild = new SceneNode();
 		_boardContainer.FirstChild.AddChild(_boardControl);
@@ -97,4 +99,5 @@ internal class MainScene : Scene
 	private readonly MoveListControl _moveListControl;
 	private readonly EngineContainer _engineContainer;
 	private readonly PlayerDisplay _playerDisplay;
+	private readonly AnalyzisDisplay _analyzisDisplay;
 }

@@ -27,7 +27,7 @@ internal static class Play
 
 	public static double GetAnimationDuration()
 	{
-		double[] animationDurations = new double[] { 0, 0.1, 0.25, 0.5, 0.75 };
+		double[] animationDurations = new double[] { 0, 0.1, 0.2, 0.35, 0.6 };
 		return animationDurations[GetAnimationIndex()];
 	}
 

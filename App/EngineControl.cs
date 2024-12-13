@@ -120,6 +120,7 @@ internal class EngineControl : Container
 		if (_moveNumber != moveNumber && (IsAnalyzing() || MatchManager.IsEngineThinking(_engine)))
 		{
 			_moveNumber = moveNumber;
+			_evalColor = game.GetCurrentColor();
 			_analysisTime = Time.GetTime();
 			_game.SetFen(game.GetFen());
 			_depthMoves.Clear();
@@ -393,7 +394,11 @@ internal class EngineControl : Container
 
 	private string GetScoreString(int score)
 	{
-		return Scores.IsMateScore(score) ? $"Mate in {Scores.MateScore * Math.Sign(score) - score}" : $"{score / 100.0:0.00}";
+		if (_evalColor == Black)
+		{
+			score = -score;
+		}
+		return Scores.IsMateScore(score) ? $"Mate in {Scores.ToMateDistance(score)}" : $"{score / 100.0:0.00}";
 	}
 
 	private void StartThinking()
@@ -455,6 +460,7 @@ internal class EngineControl : Container
 	private IEngine _engine;
 	private bool _columnsDirty;
 	private int _reachedDepth;
+	private int _evalColor;
 	private int _nonEmptyRowCount;
 	private int _rowHeight;
 	private int _padding;

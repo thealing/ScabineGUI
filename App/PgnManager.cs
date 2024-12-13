@@ -378,15 +378,21 @@ internal static class PgnManager
 			pgn.Append(node.Color == White ? "." : "...");
 		}
 		pgn.Append(node.San);
-		if (comment && node.Time != 0)
+		if (comment && node.Time != null)
 		{
 			pgn.Append(" { ");
-			int time = node.Time - 1;
+			int time = node.Time.Value;
 			int hour = time / 3600000;
 			int minutes = time / 60000 % 60;
 			int seconds = time / 1000 % 60;
 			int milliseconds = time % 1000;
 			pgn.Append($"[%clk {hour}:{minutes:D2}:{seconds:D2}.{milliseconds:D3}]");
+			pgn.Append(" }");
+		}
+		if (comment && node.Eval != null)
+		{
+			pgn.Append(" { ");
+			pgn.Append($"[%eval {EvalToString(node.Eval.Value)}]");
 			pgn.Append(" }");
 		}
 		if (comment && node.Comment != null)
@@ -410,6 +416,7 @@ internal static class PgnManager
 	{
 		Regex regex = new Regex(@"[()]|\{[^{}]*\}|([a-h][1-8][a-h][1-8][qrbn]?|[NBRQK]?[a-h]?[1-8]?x?[a-h][1-8](=[QRBN])?|O-O-O|O-O)");
 		Regex timeRegex = new Regex(@"\[\s*%clk\s+(\d+):(\d+):(\d+)(\.(\d+))?\s*\]");
+		Regex evalRegex = new Regex(@"\[\s*%eval\s+(M?-?\d+(\.\d+)?)\s*\]");
 		Stack<TreeNode> stack = new Stack<TreeNode>();
 		foreach (Match match in regex.Matches(pgn))
 		{
@@ -441,7 +448,7 @@ internal static class PgnManager
 					Match timeMatch = timeRegex.Match(token);
 					if (timeMatch.Success)
 					{
-						node.Time = 1;
+						node.Time = 0;
 						if (int.TryParse(timeMatch.Groups[1].Value, out int hours))
 						{
 							node.Time += hours * 3600000;
@@ -458,6 +465,12 @@ internal static class PgnManager
 						{
 							node.Time += milliseconds;
 						}
+						break;
+					}
+					Match evalMatch = evalRegex.Match(token);
+					if (evalMatch.Success)
+					{
+						node.Eval = StringToEval(evalMatch.Groups[1].Value);
 						break;
 					}
 					node.Comment = token.Substring(1, token.Length - 2).Trim();
@@ -486,6 +499,30 @@ internal static class PgnManager
 				GameManager.GetGame().PlayMove(move.Value);
 			}
 		}
+	}
+
+	private static string EvalToString(int score)
+	{
+		return Scores.IsMateScore(score) ? $"M{Scores.ToMateDistance(score)}" : $"{score / 100m}";
+	}
+
+	private static int? StringToEval(string eval)
+	{
+		if (eval.StartsWith('M'))
+		{
+			if (int.TryParse(eval.Substring(1), out int result))
+			{
+				return Scores.ToMateScore(result);
+			}
+		}
+		else
+		{
+			if (decimal.TryParse(eval, out decimal result))
+			{
+				return (int)(result * 100);
+			}
+		}
+		return null;
 	}
 
 	private static string GetEnginePresetTag(int color)

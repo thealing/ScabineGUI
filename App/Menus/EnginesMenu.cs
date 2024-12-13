@@ -12,6 +12,8 @@ internal static class EnginesMenu
 		MenuCreator.AddSubMenuItem(menu, "Start engine", null, StartEngine);
 		MenuCreator.AddSubMenuSeparator(menu);
 		MenuCreator.AddSubMenuItem(menu, "Close all engines", null, StopEngines);
+		MenuCreator.AddSubMenuSeparator(menu);
+		MenuCreator.AddSubMenuItem(menu, "Run game analysis", null, RunGameAnalysis);
 	}
 
 	private static void ManageEngines()
@@ -24,6 +26,18 @@ internal static class EnginesMenu
 	{
 		StartEngineDialog dialog = new StartEngineDialog();
 		DialogHelper.ShowDialog(dialog);
+	}
+
+	private static void RunGameAnalysis()
+	{
+		AnalyzisDialog dialog = new AnalyzisDialog();
+		DialogHelper.ShowDialog(dialog);
+		if (dialog.Engine != null)
+		{
+			AnalyzingDialog analyzingDialog = new AnalyzingDialog(dialog.Engine, dialog.Depth);
+			DialogHelper.ShowDialog(analyzingDialog);
+			dialog.Engine.Dispose();
+		}
 	}
 
 	private static void StopEngines()

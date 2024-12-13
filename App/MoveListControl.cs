@@ -9,6 +9,7 @@ using static Scabine.Core.Pieces;
 using static Scabine.Core.Game;
 using static Scabine.App.GraphicsHelper;
 using Scabine.App.Prefs;
+using System.CodeDom;
 
 internal class MoveListControl : ScrollableContainer
 {
@@ -45,6 +46,7 @@ internal class MoveListControl : ScrollableContainer
 		UpdateMenu();
 		UpdateMouse();
 		UpdateKeyboard();
+		UpdateTooltip();
 		base.Update();
 	}
 
@@ -223,6 +225,17 @@ internal class MoveListControl : ScrollableContainer
 			_menuAction();
 			_menuAction = null;
 			_menuNode = null;
+		}
+	}
+
+	private void UpdateTooltip()
+	{
+		if (_hoveredNode?.Comment is string comment)
+		{
+			ToolTipManager.SetToolTip(comment);
+		}
+		else
+		{
 		}
 	}
 
