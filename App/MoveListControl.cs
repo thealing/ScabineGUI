@@ -8,8 +8,8 @@ using System.Windows.Forms;
 using static Scabine.Core.Pieces;
 using static Scabine.Core.Game;
 using static Scabine.App.GraphicsHelper;
+using static Scabine.App.MoveClassifications;
 using Scabine.App.Prefs;
-using System.CodeDom;
 
 internal class MoveListControl : ScrollableContainer
 {
@@ -22,10 +22,17 @@ internal class MoveListControl : ScrollableContainer
 		_gridPen = new Pen(Color.DarkGray);
 		_linePen = new Pen(Color.DimGray);
 		_backBrush = new SolidBrush(Color.Snow);
-		_backgroundBrush = new SolidBrush(Color.LightGray);
+		_backgroundBrush = new SolidBrush(Color.FromArgb(230, 230, 230));
 		_foregroundBrush = new SolidBrush(Color.Black);
 		_currentMoveBrush = new SolidBrush(Color.LightCyan);
 		_hoveredMoveBrush = new SolidBrush(Color.LightBlue);
+		_moveClassBrushes = new Brush[MoveClassCount];
+		_moveClassBrushes[Best] = new SolidBrush(MixColors(0.8, Color.Green, Color.Black));
+		_moveClassBrushes[Great] = new SolidBrush(MixColors(0.8, Color.GreenYellow, Color.Black));
+		_moveClassBrushes[Good] = new SolidBrush(MixColors(0.8, Color.Gray, Color.Black));
+		_moveClassBrushes[Inaccuracy] = new SolidBrush(MixColors(0.8, Color.Yellow, Color.Black));
+		_moveClassBrushes[Mistake] = new SolidBrush(MixColors(0.8, Color.Orange, Color.Black));
+		_moveClassBrushes[Blunder] = new SolidBrush(MixColors(0.8, Color.Red, Color.Black));
 		_buttons = new SceneButton[5];
 	}
 
@@ -353,7 +360,15 @@ internal class MoveListControl : ScrollableContainer
 					rectangle.Inflate(-_padding, 0);
 					rectangle.Inflate(-_padding, 0);
 					Size moveSize = Size.Round(g.MeasureString(move, _font));
-					DrawString(g, move, _font, _foregroundBrush, rectangle, moveSize.Width >= rectangle.Width ? StringFormats.Centered : StringFormats.LeftAligned);
+					StringFormat moveFormat = moveSize.Width >= rectangle.Width ? StringFormats.Centered : StringFormats.LeftAligned;
+					if (node?.Class != null && _moveClassBrushes[node.Class.Value] is Brush brush)
+					{
+						DrawString(g, move, _font, brush, rectangle, moveFormat);
+					}
+					else
+					{
+						DrawString(g, move, _font, _foregroundBrush, rectangle, moveFormat);
+					}
 				}
 				void DrawGrid()
 				{
@@ -418,6 +433,7 @@ internal class MoveListControl : ScrollableContainer
 	private readonly Brush _foregroundBrush;
 	private readonly Brush _currentMoveBrush;
 	private readonly Brush _hoveredMoveBrush;
+	private readonly Brush[] _moveClassBrushes;
 	private int _moveWidth;
 	private int _numberWidth;
 	private int _rowHeight;

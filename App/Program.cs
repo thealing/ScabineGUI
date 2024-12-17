@@ -2,6 +2,7 @@
 
 using Scabine.Scenes;
 using System;
+using System.Diagnostics;
 using System.Windows.Forms;
 
 public class Program
@@ -15,7 +16,14 @@ public class Program
 		}
 		catch (Exception exception)
 		{
-			MessageBox.Show(exception.ToString(), "Unhandled exception occurred", MessageBoxButtons.OK, MessageBoxIcon.Error);
+			if (Debugger.IsAttached)
+			{
+				throw;
+			}
+			else
+			{
+				MessageBox.Show(exception.ToString(), "Unhandled exception occurred", MessageBoxButtons.OK, MessageBoxIcon.Error);
+			}
 		}
 	}
 }

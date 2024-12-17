@@ -200,8 +200,8 @@ internal static class PgnManager
 		{
 			NewGame();
 		}
-		ParseHeader(pgn);
-		ParseMoves(pgn);
+		pgn = ParseHeader(pgn);
+		pgn = ParseMoves(pgn);
 	}
 
 	public static bool HasValue(string key)
@@ -211,7 +211,7 @@ internal static class PgnManager
 
 	public static string GetValue(string key)
 	{
-		return _values.GetValueOrDefault(key, "Unknown");
+		return _values.GetValueOrDefault(key, "?");
 	}
 
 	public static void SetValue(string key, string value)
@@ -395,13 +395,19 @@ internal static class PgnManager
 			pgn.Append($"[%eval {EvalToString(node.Eval.Value)}]");
 			pgn.Append(" }");
 		}
+		if (comment && node.Class != null)
+		{
+			pgn.Append(" { ");
+			pgn.Append($"[%cls {node.Class}]");
+			pgn.Append(" }");
+		}
 		if (comment && node.Comment != null)
 		{
 			pgn.Append(" { " + node.Comment + " }");
 		}
 	}
 
-	private static void ParseHeader(string pgn)
+	private static string ParseHeader(string pgn)
 	{
 		Regex regex = new Regex(@"\[(\w+)\s+""([^""]+)""\]");
 		foreach (Match match in regex.Matches(pgn))
@@ -410,13 +416,15 @@ internal static class PgnManager
 			string value = match.Groups[2].Value;
 			_values[key] = value;
 		}
+		return regex.Replace(pgn, "");
 	}
 
-	private static void ParseMoves(string pgn)
+	private static string ParseMoves(string pgn)
 	{
 		Regex regex = new Regex(@"[()]|\{[^{}]*\}|([a-h][1-8][a-h][1-8][qrbn]?|[NBRQK]?[a-h]?[1-8]?x?[a-h][1-8](=[QRBN])?|O-O-O|O-O)");
 		Regex timeRegex = new Regex(@"\[\s*%clk\s+(\d+):(\d+):(\d+)(\.(\d+))?\s*\]");
 		Regex evalRegex = new Regex(@"\[\s*%eval\s+(M?-?\d+(\.\d+)?)\s*\]");
+		Regex classRegex = new Regex(@"\[\s*%cls\s+(\d+)\s*\]");
 		Stack<TreeNode> stack = new Stack<TreeNode>();
 		foreach (Match match in regex.Matches(pgn))
 		{
@@ -473,6 +481,12 @@ internal static class PgnManager
 						node.Eval = StringToEval(evalMatch.Groups[1].Value);
 						break;
 					}
+					Match classMatch = classRegex.Match(token);
+					if (classMatch.Success)
+					{
+						node.Class = int.Parse(classMatch.Groups[1].Value);
+						break;
+					}
 					node.Comment = token.Substring(1, token.Length - 2).Trim();
 				}
 				while (false);
@@ -499,6 +513,7 @@ internal static class PgnManager
 				GameManager.GetGame().PlayMove(move.Value);
 			}
 		}
+		return regex.Replace(pgn, "");
 	}
 
 	private static string EvalToString(int score)

@@ -23,6 +23,7 @@ internal class TreeNode
 	internal bool IsCollapsed;
 	internal int? Time;
 	internal int? Eval;
+	internal int? Class;
 	internal string? Comment;
 
 	public TreeNode AddChild(Move move, string uci, string san)
@@ -95,6 +96,8 @@ internal class TreeNode
 			JsonSerializer.Serialize(writer, value.Time, options);
 			writer.WritePropertyName(nameof(Eval));
 			JsonSerializer.Serialize(writer, value.Eval, options);
+			writer.WritePropertyName(nameof(Class));
+			JsonSerializer.Serialize(writer, value.Class, options);
 			writer.WritePropertyName(nameof(Comment));
 			writer.WriteStringValue(value.Comment);
 			writer.WritePropertyName(nameof(Children));
@@ -121,6 +124,7 @@ internal class TreeNode
 			node.IsCollapsed = obj[nameof(IsCollapsed)]?.GetValue<bool>() ?? false;
 			node.Time = obj[nameof(Time)]?.GetValue<int>();
 			node.Eval = obj[nameof(Eval)]?.GetValue<int>();
+			node.Class = obj[nameof(Class)]?.GetValue<int>();
 			node.Comment = obj[nameof(Comment)]?.GetValue<string>();
 			JsonNode? childrenNode = obj[nameof(Children)];
 			if (childrenNode != null)

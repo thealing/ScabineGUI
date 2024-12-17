@@ -50,4 +50,13 @@ internal class GraphicsHelper
 		}
 		return resizedImage;
 	}
+
+	public static Color MixColors(double ratio, Color color, Color otherColor)
+	{
+		int a = (int)(color.A * ratio + otherColor.A * (1 - ratio));
+		int r = (int)(color.R * ratio + otherColor.R * (1 - ratio));
+		int g = (int)(color.G * ratio + otherColor.G * (1 - ratio));
+		int b = (int)(color.B * ratio + otherColor.B * (1 - ratio));
+		return Color.FromArgb(a, r, g, b);
+	}
 }

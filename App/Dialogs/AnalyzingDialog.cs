@@ -24,14 +24,14 @@ internal class AnalyzingDialog : BaseDialog
 		_label = AddLabel(Controls, "", 20, 90, 300, 40);
 		AddButton(Controls, "Cancel", 330, 90, 110, 40, Cancel);
 		TreeGame game = GameManager.GetGame();
-		int totalMoveCount = game.GetLastNode().Rank + 1;
+		int totalMoveCount = Math.Max(1, game.GetLastNode().Rank + 1);
 		int scale = 1000 / totalMoveCount;
 		var node = game.GetRootNode();
-		var moves = new List<string>();
+		var moves = new List<App.TreeNode>();
 		var bestMoves = new List<string>();
 		var bestScores = new List<int>();
 		engine.NewGame();
-		engine.SetPosition(game.GetUciPosition(), moves.ToArray());
+		engine.SetPosition(game.GetUciPosition(), moves.Select(node => node.Uci).ToArray());
 		engine.StartThinking(depth, 0, 0, 0, 0, 0);
 		_progressBar.Maximum = totalMoveCount * depth;
 		_timer = new Timer { Interval = 10 };
@@ -47,7 +47,7 @@ internal class AnalyzingDialog : BaseDialog
 					node = node.Children.First();
 					if (node.Move != null)
 					{
-						moves.Add(node.Move.Value.ToString());
+						moves.Add(node);
 					}
 					if (node == game.GetLastNode() && game.GetResult() != Result.Ongoing)
 					{
@@ -68,7 +68,7 @@ internal class AnalyzingDialog : BaseDialog
 					else
 					{
 						engine.NewGame();
-						engine.SetPosition(game.GetUciPosition(), moves.ToArray());
+						engine.SetPosition(game.GetUciPosition(), moves.Select(node => node.Uci).ToArray());
 						engine.StartThinking(depth, 0, 0, 0, 0, 0);
 					}
 				}
@@ -84,48 +84,27 @@ internal class AnalyzingDialog : BaseDialog
 		_timer.Start();
 	}
 
-	private void ProcessResults(List<string> moves, List<string> bestMoves, List<int> bestScores)
+	private void ProcessResults(List<App.TreeNode> moves, List<string> bestMoves, List<int> bestScores)
 	{
 		_timer.Stop();
-		AnalyzisResult[] results = new AnalyzisResult[ColorCount];
-		results[White].Accuracy = 1;
-		results[Black].Accuracy = 1;
+		double[] accuracies = { 100, 100 };
 		int startingColor = GameManager.GetGame().GetStartingColor();
 		for (int i = 0; i < moves.Count; i++)
 		{
 			int color = startingColor ^ i % 2;
-			if (bestMoves[i].StartsWith(moves[i]))
+			if (bestMoves[i].StartsWith(moves[i].Uci))
 			{
-				results[color].Best++;
+				moves[i].Class = MoveClassifications.Best;
 				continue;
 			}
 			double previousScore = Scores.ToWinProbability(bestScores[i]);
 			double currentScore = Scores.ToWinProbability(bestScores[i + 1]);
 			double loss = Math.Max(0, color == White ? previousScore - currentScore : currentScore - previousScore);
-			results[color].Accuracy *= 1 - loss / Math.Sqrt(moves.Count);
-			if (loss >= 0.25)
-			{
-				results[color].Blunder++;
-			}
-			else if (loss >= 0.15)
-			{
-				results[color].Mistake++;
-			}
-			else if (loss >= 0.08)
-			{
-				results[color].Inaccuracy++;
-			}
-			else if (loss >= 0.02)
-			{
-				results[color].Good++;
-			}
-			else
-			{
-				results[color].Great++;
-			}
+			accuracies[color] *= 1 - loss / Math.Sqrt(moves.Count);
+			moves[i].Class = MoveClassifications.GetClassForWinPercentageLoss(loss);
 		}
-		PgnManager.SetValue("WhiteAR", AnalyzisResult.EncodeToBase64(results[White]));
-		PgnManager.SetValue("BlackAR", AnalyzisResult.EncodeToBase64(results[Black]));
+		PgnManager.SetValue("WhiteAccuracy", accuracies[White].ToString("F1"));
+		PgnManager.SetValue("BlackAccuracy", accuracies[Black].ToString("F1"));
 		MessageBeep(0);
 		Close();
 	}

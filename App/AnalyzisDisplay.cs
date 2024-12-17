@@ -8,6 +8,8 @@ using System.Linq;
 using Scabine.Core;
 using System.Drawing.Drawing2D;
 using System.Xml.Linq;
+using static Scabine.Core.Pieces;
+using static Scabine.App.MoveClassifications;
 
 internal class AnalyzisDisplay : Container
 {
@@ -21,6 +23,7 @@ internal class AnalyzisDisplay : Container
 		_blackBrush = new SolidBrush(Color.FromArgb(20, 20, 20));
 		_nodes = new List<TreeNode>();
 		_evals = new List<int>();
+		_classCounts = new int[ColorCount, MoveClassCount];
 	}
 
 	protected override void UpdatePosition()
@@ -33,7 +36,7 @@ internal class AnalyzisDisplay : Container
 		Location = new Point((ParentSize.Width - width) / 2, _gap);
 		Size = new Size(width, height);
 		MinSize = new Size(200, height + _gap * 3 + _lineHeight * 10);
-		if (!PgnManager.HasValue("WhiteAR") && !PgnManager.HasValue("BlackAR"))
+		if (!PgnManager.HasValue("WhiteAccuracy") && !PgnManager.HasValue("BlackAccuracy") || _classCounts.Cast<int>().All(count => count == 0))
 		{
 			Size = Size.Empty;
 			MinSize = Size.Empty;
@@ -45,6 +48,7 @@ internal class AnalyzisDisplay : Container
 		int[] oldEvals = _evals.ToArray();
 		_nodes.Clear();
 		_evals.Clear();
+		Array.Clear(_classCounts, 0, _classCounts.Length);
 		TreeGame game = GameManager.GetGame();
 		for (TreeNode? node = game.GetRootNode(); node != null; node = node.Children.FirstOrDefault())
 		{
@@ -71,6 +75,10 @@ internal class AnalyzisDisplay : Container
 						break;
 				}
 			}
+			if (node.Class != null)
+			{
+				_classCounts[node.Color, node.Class.Value]++;
+			}
 		}
 		if (ContainsMouse())
 		{
@@ -92,7 +100,7 @@ internal class AnalyzisDisplay : Container
 
 	public override void Render(Graphics g)
 	{
-		if (_nodes.Count >= 1)
+		if (_nodes.Count >= 2)
 		{
 			int[] x = new int[_nodes.Count];
 			int[] y = new int[_nodes.Count];
@@ -144,19 +152,17 @@ internal class AnalyzisDisplay : Container
 			g.DrawLine(Pens.Gray, new Point(5, height + _lineHeight / 4), new Point(Size.Width - 5, height + _lineHeight / 4));
 			height += _lineHeight / 2;
 		}
-		AnalyzisResult whiteResult = AnalyzisResult.DecodeFromBase64(PgnManager.GetValue("WhiteAR"));
-		AnalyzisResult blackResult = AnalyzisResult.DecodeFromBase64(PgnManager.GetValue("BlackAR"));
 		RenderLine("", "White", "Black");
 		RenderSeparator();
 		RenderLine("Name", PgnManager.GetValue("White"), PgnManager.GetValue("Black"));
-		RenderLine("Accuracy", (int)(whiteResult.Accuracy * 100), (int)(blackResult.Accuracy * 100));
+		RenderLine("Accuracy", PgnManager.GetValue("WhiteAccuracy"), PgnManager.GetValue("BlackAccuracy"));
 		RenderSeparator();
-		RenderLine("Best", whiteResult.Best, blackResult.Best);
-		RenderLine("Great", whiteResult.Great, blackResult.Great);
-		RenderLine("Good", whiteResult.Good, blackResult.Good);
-		RenderLine("Inaccuracy", whiteResult.Inaccuracy, blackResult.Inaccuracy);
-		RenderLine("Mistake", whiteResult.Mistake, blackResult.Mistake);
-		RenderLine("Blunder", whiteResult.Blunder, blackResult.Blunder);
+		RenderLine("Best", _classCounts[White, Best], _classCounts[Black, Best]);
+		RenderLine("Great", _classCounts[White, Great], _classCounts[Black, Great]);
+		RenderLine("Good", _classCounts[White, Good], _classCounts[Black, Good]);
+		RenderLine("Inaccuracy", _classCounts[White, Inaccuracy], _classCounts[Black, Inaccuracy]);
+		RenderLine("Mistake", _classCounts[White, Mistake], _classCounts[Black, Mistake]);
+		RenderLine("Blunder", _classCounts[White, Blunder], _classCounts[Black, Blunder]);
 	}
 
 	private readonly Font _font;
@@ -166,6 +172,7 @@ internal class AnalyzisDisplay : Container
 	private readonly Brush _blackBrush;
 	private readonly List<TreeNode> _nodes;
 	private readonly List<int> _evals;
+	private readonly int[,] _classCounts;
 	private Bitmap? _graph;
 	private int _gap;
 	private int _lineHeight;
