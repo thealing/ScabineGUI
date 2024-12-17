@@ -36,13 +36,12 @@ internal class EngineControl : Container
 		_depthMoves = new Dictionary<int, IEnumerable<string>>();
 		_depthUciMoves = new Dictionary<int, IEnumerable<string>>();
 		_columnsDirty = true;
-		_moveNumber = -1;
 	}
 
 	public void SetEngine(IEngine engine)
 	{
 		_engine = engine;
-		_moveNumber = -1;
+		_currentNode = null;
 	}
 
 	public void Remove()
@@ -115,11 +114,11 @@ internal class EngineControl : Container
 				_engineFailed = !EngineManager.ReloadEngine(_engine, _presetName);
 			}
 		}
-		Game game = GameManager.GetGame();
-		int moveNumber = game.GetStartingColor() + game.GetPly();
-		if (_moveNumber != moveNumber && (IsAnalyzing() || MatchManager.IsEngineThinking(_engine)))
+		TreeGame game = GameManager.GetGame();
+		TreeNode currentNode = game.GetCurrentNode();
+		if (_currentNode != currentNode && (IsAnalyzing() || MatchManager.IsEngineThinking(_engine)))
 		{
-			_moveNumber = moveNumber;
+			_currentNode = currentNode;
 			_evalColor = game.GetCurrentColor();
 			_analysisTime = Time.GetTime();
 			_game.SetFen(game.GetFen());
@@ -359,7 +358,8 @@ internal class EngineControl : Container
 			Rectangle pvColumnRectangle = new Rectangle(_columnsTotalWidth, height, bounds.Width - _columnsTotalWidth, _rowHeight);
 			g.DrawRectangle(_borderPen, pvColumnRectangle);
 			StringBuilder pv = new StringBuilder();
-			int moveNumber = _moveNumber;
+			TreeGame game = GameManager.GetGame();
+			int moveNumber = game.GetStartingColor() + game.GetPly();
 			if (moveNumber % 2 == 1)
 			{
 				pv.Append(moveNumber / 2 + 1);
@@ -466,7 +466,7 @@ internal class EngineControl : Container
 	private int _padding;
 	private int _columnsTotalWidth;
 	private int _hoveredRow;
-	private int _moveNumber;
+	private TreeNode? _currentNode;
 	private double _analysisTime;
 	private bool _engineFailed;
 }
