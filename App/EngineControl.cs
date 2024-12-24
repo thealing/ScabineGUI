@@ -119,6 +119,7 @@ internal class EngineControl : Container
 		if (_currentNode != currentNode && (IsAnalyzing() || MatchManager.IsEngineThinking(_engine)))
 		{
 			_currentNode = currentNode;
+			_moveNumber = game.GetStartingColor() + game.GetPly();
 			_evalColor = game.GetCurrentColor();
 			_analysisTime = Time.GetTime();
 			_game.SetFen(game.GetFen());
@@ -359,7 +360,7 @@ internal class EngineControl : Container
 			g.DrawRectangle(_borderPen, pvColumnRectangle);
 			StringBuilder pv = new StringBuilder();
 			TreeGame game = GameManager.GetGame();
-			int moveNumber = game.GetStartingColor() + game.GetPly();
+			int moveNumber = _moveNumber;
 			if (moveNumber % 2 == 1)
 			{
 				pv.Append(moveNumber / 2 + 1);
@@ -466,6 +467,7 @@ internal class EngineControl : Container
 	private int _padding;
 	private int _columnsTotalWidth;
 	private int _hoveredRow;
+	private int _moveNumber;
 	private TreeNode? _currentNode;
 	private double _analysisTime;
 	private bool _engineFailed;
