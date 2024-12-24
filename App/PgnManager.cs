@@ -38,7 +38,7 @@ internal static class PgnManager
 		SetDefaults();
 		SetCurrentTime();
 		SetGameFen();
-		_values["Event"] = "Player against engine";
+		_values["Event"] = "Playing against engine";
 		_values["TimeControl"] = matchDefinition.PlayerUnlimited ? "Unlimited" : $"{matchDefinition.PlayerTime / 60}:{matchDefinition.PlayerTime % 60}";
 		switch (matchDefinition.PlayerSide)
 		{
@@ -191,6 +191,7 @@ internal static class PgnManager
 
 	public static void SetPgn(string pgn)
 	{
+		_values.Clear();
 		ParseHeader(pgn);
 		if (HasValue("FEN"))
 		{
