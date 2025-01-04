@@ -13,4 +13,5 @@ internal static class MenuIcons
 	public static readonly Image Delete = LoadImageResource("Menus.Delete.png");
 	public static readonly Image Close = LoadImageResource("Menus.Close.png");
 	public static readonly Image Reload = LoadImageResource("Menus.Reload.png");
+	public static readonly Image Logs = LoadImageResource("Menus.Logs.png");
 }

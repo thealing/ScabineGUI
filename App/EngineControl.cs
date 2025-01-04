@@ -14,6 +14,7 @@ using System.Windows.Forms;
 using System.Xml.Linq;
 using static Scabine.Core.Pieces;
 using static Scabine.Core.Game;
+using Scabine.App.Dialogs;
 
 internal class EngineControl : Container
 {
@@ -261,6 +262,7 @@ internal class EngineControl : Container
 			MenuCreator.AddMenuSeparator(menu);
 			MenuCreator.AddMenuItem(menu, "Move up", MenuIcons.Up, () => SwapWithSibling(-1));
 			MenuCreator.AddMenuItem(menu, "Move down", MenuIcons.Down, () => SwapWithSibling(1));
+			MenuCreator.AddMenuItem(menu, "View log", MenuIcons.Logs, ViewLog);
 			MenuCreator.AddMenuItem(menu, "Reload", MenuIcons.Reload, () => EngineManager.ReloadEngine(_engine, _presetName));
 			if (!MatchManager.IsEnginePlaying(_engine))
 			{
@@ -414,6 +416,15 @@ internal class EngineControl : Container
 	private bool IsAnalyzing()
 	{
 		return !GameManager.GetGame().IsFinished() && !MatchManager.IsEnginePlaying(_engine);
+	}
+
+	private void ViewLog()
+	{
+		if (_engine is ExternalEngine externalEngine)
+		{
+			ViewTextDialog dialog = new ViewTextDialog(_engine.GetName() + " log", externalEngine.GetLog());
+			DialogHelper.ShowDialog(dialog);
+		}
 	}
 
 	private class MoveList : ScrollableContainer

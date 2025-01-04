@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
+using Microsoft.VisualBasic.Logging;
 using Scabine.App;
 using Scabine.Core;
 using static Scabine.Core.Game;
@@ -25,6 +26,7 @@ public sealed class ExternalEngine : AbstractEngine
 		_bestDepth = 0;
 		_bestMoves = new string[MaxDepth];
 		_bestScores = new int[MaxDepth];
+		_log = new List<string>();
 		_process = new Process();
 		_process.StartInfo.FileName = engineParams.Path;
 		_process.StartInfo.Arguments = engineParams.Arguments;
@@ -47,6 +49,10 @@ public sealed class ExternalEngine : AbstractEngine
 					ready = true;
 				}
 				_queue.Enqueue(e.Data);
+				lock (_log)
+				{
+					_log.Add($"[E] {e.Data}");
+				}
 			};
 			SendCommand("uci");
 			SendCommand("isready");
@@ -253,6 +259,11 @@ public sealed class ExternalEngine : AbstractEngine
 		}
 	}
 
+	public string GetLog()
+	{
+		return string.Join(Environment.NewLine, _log);
+	}
+
 	private void StartThinking(string command)
 	{
 		ResumeThinking();
@@ -271,6 +282,10 @@ public sealed class ExternalEngine : AbstractEngine
 		if (!IsRunning())
 		{
 			return;
+		}
+		lock (_log)
+		{
+			_log.Add($"[G] {command}");
 		}
 		// using "_process.StandardInput.WriteLine()" occasionally freezes the application in RandomAccess.WriteAtOffset()
 		_process.StandardInput.WriteLineAsync(command).Wait();
@@ -399,6 +414,7 @@ public sealed class ExternalEngine : AbstractEngine
 	private readonly bool _failed;
 	private readonly string[] _bestMoves;
 	private readonly int[] _bestScores;
+	private readonly List<string> _log;
 	private string _name;
 	private string _author;
 	private bool _thinking;

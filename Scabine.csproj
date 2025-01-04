@@ -34,6 +34,7 @@
       <None Remove="Resources\Menus\Delete.png" />
       <None Remove="Resources\Menus\Down.png" />
       <None Remove="Resources\Menus\Expand.png" />
+      <None Remove="Resources\Menus\Logs.png" />
       <None Remove="Resources\Menus\Promote.png" />
       <None Remove="Resources\Menus\Reload.png" />
       <None Remove="Resources\Menus\Up.png" />
@@ -98,6 +99,7 @@
       <EmbeddedResource Include="Resources\Menus\Delete.png" />
       <EmbeddedResource Include="Resources\Menus\Down.png" />
       <EmbeddedResource Include="Resources\Menus\Expand.png" />
+      <EmbeddedResource Include="Resources\Menus\Logs.png" />
       <EmbeddedResource Include="Resources\Menus\Promote.png" />
       <EmbeddedResource Include="Resources\Menus\Reload.png" />
       <EmbeddedResource Include="Resources\Menus\Up.png" />
