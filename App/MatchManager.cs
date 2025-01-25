@@ -187,6 +187,11 @@ internal static class MatchManager
 		Array.Clear(_engineLimits);
 	}
 
+	public static bool HasMatch()
+	{
+		return _lastPlayerMatch != null || _lastEngineMatch != null;
+	}
+
 	public static bool RestartMatch()
 	{
 		if (_lastPlayerMatch != null)

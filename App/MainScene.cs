@@ -70,6 +70,7 @@ internal class MainScene : Scene
 		PgnManager.Update();
 		MatchManager.Update();
 		SaveManager.Update();
+		GameMenu.Update();
 		base.Update();
 	}
 

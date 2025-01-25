@@ -14,10 +14,10 @@ internal static class GameMenu
 		MenuCreator.AddSubMenuItem(menu, "Play against engine", null, PlayVsEngine);
 		MenuCreator.AddSubMenuItem(menu, "Start engine match", null, EngineVsEngine);
 		MenuCreator.AddSubMenuSeparator(menu);
-		MenuCreator.AddSubMenuItem(menu, "Cancel game", null, CancelGame);
+		_cancelItem = MenuCreator.AddSubMenuItem(menu, "Cancel game", null, CancelGame);
 		_pauseItem = MenuCreator.AddSubMenuItem(menu, "Pause game", null, TogglePausedState);
-		MenuCreator.AddSubMenuItem(menu, "Restart game", null, RestartGame, Keys.Control | Keys.A);
-		MenuCreator.AddSubMenuItem(menu, "Start rematch", null, StartRematch).ShortcutKeys = Keys.Control | Keys.R;
+		_restartItem = MenuCreator.AddSubMenuItem(menu, "Restart game", null, RestartGame, Keys.Control | Keys.A);
+		_rematchItem = MenuCreator.AddSubMenuItem(menu, "Start rematch", null, StartRematch, Keys.Control | Keys.R);
 		MenuCreator.AddSubMenuSeparator(menu);
 		MenuCreator.AddSubMenuItem(menu, "Edit game data", null, EditGameData);
 		MenuCreator.AddSubMenuItem(menu, "Edit game PGN", null, EditGamePgn);
@@ -26,6 +26,22 @@ internal static class GameMenu
 		MenuCreator.AddSubMenuItem(menu, "Copy all moves", null, CopyAllMoves);
 		MenuCreator.AddSubMenuItem(menu, "Copy main line", null, CopyMainLine);
 		MenuCreator.AddSubMenuItem(menu, "Copy current line", null, CopyCurrentLine);
+	}
+
+	public static void Update()
+	{
+		UpdateGameState();
+		UpdatePausedState();
+	}
+
+	public static void UpdateGameState()
+	{
+		bool playing = MatchManager.IsPlaying();
+		_cancelItem.Enabled = playing;
+		_pauseItem.Enabled = playing;
+		bool hasMatch = MatchManager.HasMatch();
+		_restartItem.Enabled = hasMatch;
+		_rematchItem.Enabled = hasMatch;
 	}
 
 	public static void UpdatePausedState()
@@ -41,7 +57,6 @@ internal static class GameMenu
 		}
 		PlayEngineDialog dialog = new PlayEngineDialog();
 		DialogHelper.ShowDialog(dialog);
-		UpdatePausedState();
 	}
 
 	private static void EngineVsEngine()
@@ -52,19 +67,16 @@ internal static class GameMenu
 		}
 		EngineMatchDialog dialog = new EngineMatchDialog();
 		DialogHelper.ShowDialog(dialog);
-		UpdatePausedState();
 	}
 
 	private static void CancelGame()
 	{
 		MatchManager.ResetMatch();
-		UpdatePausedState();
 	}
 
 	private static void TogglePausedState()
 	{
 		MatchManager.SetPaused(!MatchManager.IsPaused());
-		UpdatePausedState();
 	}
 
 	private static void RestartGame()
@@ -74,7 +86,6 @@ internal static class GameMenu
 			return;
 		}
 		MatchManager.RestartMatch();
-		UpdatePausedState();
 	}
 
 	private static void StartRematch()
@@ -84,7 +95,6 @@ internal static class GameMenu
 			return;
 		}
 		MatchManager.StartRematch();
-		UpdatePausedState();
 	}
 
 	private static void EditGameData()
@@ -133,5 +143,8 @@ internal static class GameMenu
 		Clipboard.SetText(stringBuilder.ToString());
 	}
 
+	private static ToolStripMenuItem _cancelItem = new ToolStripMenuItem();
 	private static ToolStripMenuItem _pauseItem = new ToolStripMenuItem();
+	private static ToolStripMenuItem _restartItem = new ToolStripMenuItem();
+	private static ToolStripMenuItem _rematchItem = new ToolStripMenuItem();
 }
