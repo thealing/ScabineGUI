@@ -154,8 +154,8 @@ internal static class SaveManager
 			catch
 			{
 			}
-			_lastSaveTime = Time.GetTime();
 		}
+		_lastSaveTime = Time.GetTime();
 	}
 
 	static SaveManager()
