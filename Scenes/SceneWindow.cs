@@ -24,4 +24,8 @@ public sealed class SceneWindow : Form
 		e.Cancel = true;
 		SceneManager.Exit();
 	}
+
+	protected override void OnPaintBackground(PaintEventArgs e)
+	{
+	}
 }

@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Threading;
+using System.Timers;
 using System.Windows.Forms;
 
 public static class SceneManager
@@ -110,9 +111,10 @@ public static class SceneManager
 			}
 			if (time > renderTime + RenderDelta)
 			{
-				if (!IsMinimized())
+				if (!_window.IsDisposed && !IsMinimized())
 				{
-					_window.Refresh();
+					InvalidateRect(_window.Handle, IntPtr.Zero, false);
+					UpdateWindow(_window.Handle);
 				}
 				renderTime = time;
 			}
@@ -274,4 +276,10 @@ public static class SceneManager
 
 	[DllImport("winmm.dll", EntryPoint = "timeEndPeriod")]
 	private static extern uint TimeEndPeriod(uint period);
+
+	[DllImport("user32.dll")]
+	private static extern bool InvalidateRect(IntPtr hWnd, IntPtr lpRect, bool bErase);
+
+	[DllImport("user32.dll")]
+	private static extern bool UpdateWindow(IntPtr hWnd);
 }
