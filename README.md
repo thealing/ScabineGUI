@@ -1,7 +1,12 @@
 # Scabine Chess GUI
-This is a Windows GUI program for playing against chess engines, or running matches between engines. The games can be analyzed with any engine, similarly to chess.com "Game Review".
+This is a Windows GUI program for playing against chess engines, running matches between engines, and analyzing games.
 
-The program has been written in Visual Stuido 2022 using .NET 6 and WinForms.
+The games are loaded from and saved to the PGN file format.
+
+The games can be evaluated with any engine, similarly to chess.com "Game Review".
+
+## Project Info
+The program has been written in Visual Studio 2022 using .NET 6 and WinForms.
 ## Highlighted Features
 - Save / open annotated PGN files
 - Variation tree (~ Lichess)
@@ -10,7 +15,7 @@ The program has been written in Visual Stuido 2022 using .NET 6 and WinForms.
   - Accuracy calculation
   - Mistake, blunder... counting
   - Colored moves based on quality
-## Features
+## Other Features
 - Configure player thinking limit
   - Game time + increment
   - Unlimited
