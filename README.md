@@ -39,4 +39,8 @@ The program has been written in Visual Stuido 2022 using .NET 6 and WinForms.
   - Auto-save
   - Various themes
 ## Screenshots
-![sca](https://github.com/user-attachments/assets/93bdeba0-5f73-407d-b624-a72ac26747e2)
+![Scabine1](https://github.com/user-attachments/assets/05c92815-26b0-4f72-afae-dc95a8afb498)
+![Scabine2](https://github.com/user-attachments/assets/a408e92f-13e8-4543-96c7-e98655c4dfa2)
+![Scabine3](https://github.com/user-attachments/assets/d1403b25-78e1-42b2-81c4-eb590e62344e)
+![Scabine4](https://github.com/user-attachments/assets/11b5e695-7b2c-4bf0-b7d4-8388f5eb420c)
+
