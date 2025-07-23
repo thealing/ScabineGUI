@@ -37,6 +37,8 @@ internal class EngineControl : Container
 		_depthMoves = new Dictionary<int, IEnumerable<string>>();
 		_depthUciMoves = new Dictionary<int, IEnumerable<string>>();
 		_columnsDirty = true;
+		_analyzing = false;
+		_rowHeight = _font.Height * 5 / 4;
 	}
 
 	public void SetEngine(IEngine engine)
@@ -83,7 +85,6 @@ internal class EngineControl : Container
 
 	protected override void UpdatePosition()
 	{
-		_rowHeight = _font.Height * 5 / 4;
 		_padding = _rowHeight / 4;
 		Size = new Size(Size.Width, Size.Height / _rowHeight * _rowHeight);
 		base.UpdatePosition();
@@ -117,6 +118,13 @@ internal class EngineControl : Container
 		}
 		TreeGame game = GameManager.GetGame();
 		TreeNode currentNode = game.GetCurrentNode();
+		bool analyzing = IsAnalyzing();
+		if (analyzing != _analyzing)
+		{
+			_analyzing = analyzing;
+			_analysisTime = Time.GetTime();
+			_currentNode = null;
+		}
 		if (_currentNode != currentNode && (IsAnalyzing() || MatchManager.IsEngineThinking(_engine)))
 		{
 			_currentNode = currentNode;
@@ -482,4 +490,5 @@ internal class EngineControl : Container
 	private TreeNode? _currentNode;
 	private double _analysisTime;
 	private bool _engineFailed;
+	private bool _analyzing;
 }
