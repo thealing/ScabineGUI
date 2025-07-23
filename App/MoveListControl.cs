@@ -33,15 +33,19 @@ internal class MoveListControl : ScrollableContainer
 		_moveClassBrushes[Inaccuracy] = new SolidBrush(MixColors(0.8, Color.Yellow, Color.Black));
 		_moveClassBrushes[Mistake] = new SolidBrush(MixColors(0.8, Color.Orange, Color.Black));
 		_moveClassBrushes[Blunder] = new SolidBrush(MixColors(0.8, Color.Red, Color.Black));
-		_buttons = new SceneButton[5];
+		_rowHeight = _font.Height * 3 / 2;
 	}
 
 	public override void Enter()
 	{
-		for (int i = 0; i < _buttons.Length; i++)
+		if (_buttons == null)
 		{
-			_buttons[i] = new SceneButton();
-			AddSibling(_buttons[i]);
+			_buttons = new SceneButton[5];
+			for (int i = 0; i < _buttons.Length; i++)
+			{
+				_buttons[i] = new SceneButton();
+				AddSibling(_buttons[i]);
+			}
 		}
 		base.Enter();
 	}
@@ -67,6 +71,10 @@ internal class MoveListControl : ScrollableContainer
 	protected override void UpdatePosition()
 	{
 		base.UpdatePosition();
+		if (_buttons == null)
+		{
+			return;
+		}
 		int gap = 20;
 		int width = Math.Max(1, Math.Min(ParentSize.Width, 500) - gap * 2);
 		int height = Math.Max(1, ParentSize.Height - gap * 2);
@@ -83,7 +91,6 @@ internal class MoveListControl : ScrollableContainer
 		_numberWidth = Math.Min(60, Size.Width / 6);
 		_moveWidth = (bounds.Width - _numberWidth) / 2;
 		_numberWidth = bounds.Width - _moveWidth * 2;
-		_rowHeight = _font.Height * 3 / 2;
 		_padding = _rowHeight / 4;
 		if (_currentRectangle != _previousRectangle && GameManager.GetGame().GetCurrentNode() != _hoveredNode)
 		{
@@ -140,6 +147,10 @@ internal class MoveListControl : ScrollableContainer
 
 	private void UpdateButtons()
 	{
+		if (_buttons == null)
+		{
+			return;
+		}
 		_buttons[0].Image = ButtonIcons.ToStart;
 		_buttons[1].Image = ButtonIcons.Backward;
 		_buttons[2].Image = _autoPlay ? ButtonIcons.Pause : ButtonIcons.Play;
@@ -443,7 +454,7 @@ internal class MoveListControl : ScrollableContainer
 	private Action? _menuAction;
 	private Rectangle _currentRectangle;
 	private Rectangle _previousRectangle;
-	private SceneButton[] _buttons;
+	private SceneButton[]? _buttons;
 	private bool _autoPlay;
 	private double _autoPlayTime;
 }

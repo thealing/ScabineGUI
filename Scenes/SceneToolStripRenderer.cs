@@ -15,6 +15,11 @@ public class SceneToolStripRenderer : ToolStripProfessionalRenderer
 
 	protected override void OnRenderMenuItemBackground(ToolStripItemRenderEventArgs e)
 	{
+		if (e.Item is ToolStripMenuItem menu && menu.DropDown.Visible)
+		{
+			base.OnRenderMenuItemBackground(e);
+			return;
+		}
 		Rectangle rectangle = new Rectangle(Point.Empty, e.Item.Size);
 		if (e.Item.Enabled)
 		{
