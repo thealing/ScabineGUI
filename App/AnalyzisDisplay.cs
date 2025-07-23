@@ -24,13 +24,13 @@ internal class AnalyzisDisplay : Container
 		_nodes = new List<TreeNode>();
 		_evals = new List<int>();
 		_classCounts = new int[ColorCount, MoveClassCount];
+		_lineHeight = _font.Height * 6 / 5;
 	}
 
 	protected override void UpdatePosition()
 	{
 		base.UpdatePosition();
 		_gap = 20;
-		_lineHeight = _font.Height * 6 / 5;
 		int width = Math.Max(1, ParentSize.Width - _gap * 2);
 		int height = 120;
 		Location = new Point((ParentSize.Width - width) / 2, _gap);
@@ -50,6 +50,7 @@ internal class AnalyzisDisplay : Container
 		_evals.Clear();
 		Array.Clear(_classCounts, 0, _classCounts.Length);
 		TreeGame game = GameManager.GetGame();
+		TreeNode lastNode = game.GetLastNode();
 		for (TreeNode? node = game.GetRootNode(); node != null; node = node.Children.FirstOrDefault())
 		{
 			if (node.Eval != null)
@@ -57,7 +58,7 @@ internal class AnalyzisDisplay : Container
 				_nodes.Add(node);
 				_evals.Add(node.Eval.Value);
 			}
-			else if (node == game.GetLastNode())
+			else if (node == lastNode)
 			{
 				switch (game.GetResult())
 				{

@@ -12,7 +12,6 @@ internal class PlayerDisplay : Container
 {
 	public PlayerDisplay()
 	{
-		MinSize = new Size(200, 100);
 		_borderPen = new Pen(Color.Transparent);
 		_nameFont = new Font("Tahoma", 12);
 		_clockFont = new Font("MS Reference Sans Serif", 20);
@@ -20,6 +19,7 @@ internal class PlayerDisplay : Container
 		_foregroundBrush = new SolidBrush(Color.Black);
 		_activeBrush = new SolidBrush(Color.LightGreen);
 		_flaggedBrush = new SolidBrush(Color.IndianRed);
+		_fontHeight = _clockFont.Height;
 	}
 
 	public override void Render(Graphics g)
@@ -119,7 +119,7 @@ internal class PlayerDisplay : Container
 		int height = Math.Max(1, ParentSize.Height - gap * 2);
 		Location = new Point((ParentSize.Width - width) / 2, (ParentSize.Height - height) / 2);
 		Size = new Size(width, height);
-		MinSize = new Size(_clockFont.Height * 8, _clockFont.Height * 6 / 2 + gap * 2);
+		MinSize = new Size(_fontHeight * 8, _fontHeight * 6 / 2 + 20);
 		if (!PgnManager.HasValue("White") && !PgnManager.HasValue("Black"))
 		{
 			Size = Size.Empty;
@@ -133,4 +133,5 @@ internal class PlayerDisplay : Container
 	private readonly Brush _foregroundBrush;
 	private readonly Brush _activeBrush;
 	private readonly Brush _flaggedBrush;
+	private readonly int _fontHeight;
 }
