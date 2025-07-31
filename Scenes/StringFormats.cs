@@ -45,14 +45,14 @@ public static class StringFormats
 		{
 			Alignment = StringAlignment.Near,
 			LineAlignment = StringAlignment.Center,
-			Trimming = StringTrimming.EllipsisWord,
+			Trimming = StringTrimming.EllipsisCharacter,
 			FormatFlags = StringFormatFlags.NoWrap,
 		};
 		CenteredClipped = new StringFormat()
 		{
 			Alignment = StringAlignment.Center,
 			LineAlignment = StringAlignment.Center,
-			Trimming = StringTrimming.EllipsisWord,
+			Trimming = StringTrimming.EllipsisCharacter,
 			FormatFlags = StringFormatFlags.NoWrap,
 		};
 	}
