@@ -246,7 +246,7 @@ internal class EngineControl : Container
 			_columnsTotalWidth += _columnWidths[column];
 		}
 		int minPvWidth = TextRenderer.MeasureText("Best line", _font).Width + _padding * 2;
-		MinSize = new Size(_columnsTotalWidth + minPvWidth + 100, 160);
+		MinSize = new Size(240, 160);
 	}
 
 	private void UpdateMouse()
@@ -289,15 +289,21 @@ internal class EngineControl : Container
 	{
 		using (new ClipChanger(g, SelfBounds))
 		{
-			int engineNameWidth = Size.Width * 2 / 3;
+			string engineName = _engine.GetName();
+			int engineNameWidth = (int)g.MeasureString(engineName, _font).Width + 12;
+			int presetNameWidth = (int)g.MeasureString(_presetName, _font).Width + 12;
+			engineNameWidth = Math.Max(engineNameWidth, Size.Width - _rowHeight - presetNameWidth);
+			engineNameWidth = Math.Min(engineNameWidth, Size.Width - _rowHeight - Size.Width / 3);
 			Rectangle engineNameRectangle = new Rectangle(0, 0, engineNameWidth, _rowHeight);
 			g.DrawRectangle(_borderPen, engineNameRectangle);
-			g.DrawString(_engine.GetName(), _font, _foregroundBrush, engineNameRectangle, StringFormats.Centered);
+			engineNameRectangle.Inflate(-5, 0);
+			g.DrawString(engineName, _font, _foregroundBrush, engineNameRectangle, StringFormats.CenteredClipped);
 			Rectangle presetNameRectangle = new Rectangle(engineNameWidth, 0, Size.Width - engineNameWidth - _rowHeight, _rowHeight);
 			g.DrawRectangle(_borderPen, presetNameRectangle);
+			presetNameRectangle.Inflate(-5, 0);
 			Rectangle indicatorRectangle = new Rectangle(Size.Width - _rowHeight, 0, _rowHeight, _rowHeight);
 			g.DrawRectangle(_borderPen, indicatorRectangle);
-			g.DrawString(_presetName, _font, _foregroundBrush, presetNameRectangle, StringFormats.Centered);
+			g.DrawString(_presetName, _font, _foregroundBrush, presetNameRectangle, StringFormats.CenteredClipped);
 			if (MatchManager.IsEnginePlaying(_engine))
 			{
 				using (new SmoothingModeChanger(g, SmoothingMode.HighQuality))
