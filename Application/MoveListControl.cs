@@ -109,7 +109,7 @@ internal class MoveListControl : ScrollableContainer
 		TreeNode? currentNode = GameManager.GetGame().GetCurrentNode();
 		if (currentNode != _previousNode && currentNode != _hoveredNode)
 		{
-			ScrollHeight = Math.Max(Math.Min(_currentRectangle.Top - Size.Height / 2, VirtualHeight - Size.Height), 0);
+			ScrollHeight = Math.Max(Math.Min(_currentRectangle.Top - Size.Height / 2, VirtualHeight - Size.Height + _rowHeight), 0);
 		}
 		_previousNode = currentNode;
 	}
