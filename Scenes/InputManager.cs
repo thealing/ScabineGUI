@@ -73,17 +73,20 @@ public static class InputManager
 
 	internal static void OnKeyDown(KeyEventArgs e)
 	{
+		SceneManager.ScheduleUpdate();
 		_currentState.Keys[(int)e.KeyCode] = true;
 		_pressedKeys[(int)e.KeyCode] = true;
 	}
 
 	internal static void OnKeyUp(KeyEventArgs e)
 	{
+		SceneManager.ScheduleUpdate();
 		_currentState.Keys[(int)e.KeyCode] = false;
 	}
 
 	internal static void OnMouseDown(MouseEventArgs e)
 	{
+		SceneManager.ScheduleUpdate();
 		if (e.Button == MouseButtons.Left)
 		{
 			_currentState.LeftButton = true;
@@ -96,6 +99,7 @@ public static class InputManager
 
 	internal static void OnMouseUp(MouseEventArgs e)
 	{
+		SceneManager.ScheduleUpdate();
 		if (e.Button == MouseButtons.Left)
 		{
 			_currentState.LeftButton = false;
@@ -108,23 +112,27 @@ public static class InputManager
 
 	internal static void OnMouseWheel(MouseEventArgs e)
 	{
+		SceneManager.ScheduleUpdate();
 		_currentState.MouseScroll += e.Delta;
 	}
 
 	internal static void OnMouseMove(MouseEventArgs e)
 	{
+		SceneManager.ScheduleUpdate();
 		_currentState.MouseX = e.X;
 		_currentState.MouseY = e.Y;
 	}
 
 	internal static void OnMouseLeave(EventArgs e)
 	{
+		SceneManager.ScheduleUpdate();
 		_currentState.MouseX = int.MinValue;
 		_currentState.MouseY = int.MinValue;
 	}
 
 	internal static void OnDeactivate(EventArgs e)
 	{
+		SceneManager.ScheduleUpdate();
 		Array.Fill(_currentState.Keys, false);
 	}
 

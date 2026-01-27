@@ -9,7 +9,7 @@ public static class SceneManager
 {
 	public static Form Window => _window;
 
-	private static readonly double UpdateDelta = 1.0 / 240.0;
+	private static readonly double UpdateDelta = 1.0 / 300.0;
 	private static readonly double RenderDelta = 1.0 / 60.0;
 	private static readonly double MeasureDelta = 1.0 / 2.0;
 
@@ -52,6 +52,7 @@ public static class SceneManager
 		_scene?.Leave();
 		_scene = scene;
 		_scene?.Enter();
+		ScheduleUpdate();
 	}
 
 	public static void SetMenu(MenuStrip? menu)
@@ -78,6 +79,11 @@ public static class SceneManager
 		return CenteredMessageBox.Show(_window, text, caption, buttons, icon);
 	}
 
+	public static void ScheduleUpdate()
+	{
+		_doUpdate = true;
+	}
+
 	internal static void FocusWindow()
 	{
 		_window.Focus();
@@ -99,24 +105,30 @@ public static class SceneManager
 			double time = Time.GetTime();
 			if (time > updateTime + UpdateDelta)
 			{
-				BeforeUpdate();
-				UpdateScene();
-				AfterUpdate();
-				updateTime = time;
-			}
-			if (time > renderTime + RenderDelta)
-			{
-				if (!_window.IsDisposed && !IsMinimized())
+				Application.DoEvents();
+				if (_doUpdate || InvalidationManager.IsInvalidated())
 				{
-					_window.Refresh();
+					_doUpdate = false;
+					BeforeUpdate();
+					UpdateScene();
+					AfterUpdate();
+					if (time > renderTime + RenderDelta)
+					{
+						renderTime = time;
+						if (!_window.IsDisposed && !IsMinimized())
+						{
+							_window.Refresh();
+						}
+					}
 				}
-				renderTime = time;
+				updateTime = time;
 			}
 			if (time > _measureTime + MeasureDelta)
 			{
 				MeasureFps();
+				ScheduleUpdate();
 			}
-			double sleepDuration = Math.Min(updateTime + UpdateDelta, renderTime + RenderDelta) - Time.GetTime();
+			double sleepDuration = updateTime + UpdateDelta - Time.GetTime();
 			Time.Sleep(sleepDuration);
 		}
 		TimeEndPeriod(timerResolution);
@@ -139,7 +151,6 @@ public static class SceneManager
 			_window.MinimumSize = _scene.GetMinSize() + _window.Size - _window.ClientSize;
 			_window.Text = _scene.GetTitle();
 		}
-		Application.DoEvents();
 		CursorManager.Commit();
 		ToolTipManager.Commit();
 	}
@@ -306,6 +317,7 @@ public static class SceneManager
 	private static int _updateFps;
 	private static int _renderFps;
 	private static bool _showFps;
+	private static bool _doUpdate;
 
 	[DllImport("winmm.dll", EntryPoint = "timeBeginPeriod")]
 	private static extern uint TimeBeginPeriod(uint period);

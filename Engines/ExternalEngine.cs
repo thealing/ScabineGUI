@@ -8,6 +8,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using ChessPanel.Core;
+using ChessPanel.Scenes;
 using static ChessPanel.Core.Game;
 using static ChessPanel.Core.Scores;
 
@@ -47,6 +48,7 @@ public sealed class ExternalEngine : AbstractEngine
 					ready = true;
 				}
 				_queue.Enqueue(e.Data);
+				SceneManager.ScheduleUpdate();
 				lock (_log)
 				{
 					_log.Add($"[E] {e.Data}");
