@@ -1,12 +1,8 @@
 # ChessPanel Chess GUI
 This is a Windows GUI program for playing against chess engines, running matches between engines, and analyzing games.
 
-The games are loaded from and saved to the PGN file format.
+The games can be evaluated with any engine, similarly to chess.com "Game Review" and Lichess "Computer Analysis".
 
-The games can be evaluated with any engine, similarly to chess.com "Game Review".
-
-## Project Info
-The program has been written in Visual Studio 2022 using .NET 6 and WinForms.
 ## Highlighted Features
 - Save / open annotated PGN files
 - Variation tree (~ Lichess)
@@ -43,9 +39,18 @@ The program has been written in Visual Studio 2022 using .NET 6 and WinForms.
   - Responsive GUI
   - Auto-save
   - Various themes
+
+## About
+
+The program has been written in Visual Studio 2022 using .NET 6 and WinForms.
+
 ## Screenshots
-![ChessPanel1](https://github.com/user-attachments/assets/05c92815-26b0-4f72-afae-dc95a8afb498)
-![ChessPanel2](https://github.com/user-attachments/assets/a408e92f-13e8-4543-96c7-e98655c4dfa2)
-![ChessPanel3](https://github.com/user-attachments/assets/d1403b25-78e1-42b2-81c4-eb590e62344e)
-![ChessPanel4](https://github.com/user-attachments/assets/11b5e695-7b2c-4bf0-b7d4-8388f5eb420c)
+<img width="1920" height="1040" alt="Chess GUI 1" src="https://github.com/user-attachments/assets/fee9a07b-e54d-4b96-a3bf-1597b24a64a3" />
+<img width="1920" height="1040" alt="Chess GUI 2" src="https://github.com/user-attachments/assets/18a5f5d0-ab4b-4316-a7c3-2ec490313d7f" />
+<img width="1920" height="1040" alt="Chess GUI 3" src="https://github.com/user-attachments/assets/c8b16100-b208-4613-8805-e8d4cd998541" />
+<img width="1920" height="1040" alt="Chess GUI 5" src="https://github.com/user-attachments/assets/9c28bcbe-e82f-4338-8584-673f605b3a4f" />
+<img width="1920" height="1040" alt="Chess GUI 6" src="https://github.com/user-attachments/assets/7f59c343-bb5c-40ca-b366-d6b49f383d94" />
+<img width="1920" height="1040" alt="Chess GUI 7" src="https://github.com/user-attachments/assets/f2b5d5a2-feb0-4161-aa17-21fc96359622" />
+
+
 
