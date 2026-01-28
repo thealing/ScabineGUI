@@ -136,6 +136,10 @@ public static class SceneManager
 				MeasureFps();
 			}
 			double sleepDuration = updateTime + UpdateDelta - Time.GetTime();
+			if (_doRender)
+			{
+				sleepDuration = Math.Min(sleepDuration, renderTime + RenderDelta - Time.GetTime() - timerResolution / 1000.0);
+			}
 			Time.Sleep(sleepDuration);
 		}
 		TimeEndPeriod(timerResolution);
