@@ -34,6 +34,7 @@ internal class MoveListControl : ScrollableContainer
 		_moveClassColors[Mistake] = MixColors(0.8, Color.Orange, Color.Black);
 		_moveClassColors[Blunder] = MixColors(0.8, Color.Red, Color.Black);
 		_rowHeight = _font.Height * 3 / 2;
+		_scrollToMove = 0;
 		InvalidationManager.RegisterInvalidatingField(this, nameof(_moveWidth));
 		InvalidationManager.RegisterInvalidatingField(this, nameof(_numberWidth));
 		InvalidationManager.RegisterInvalidatingField(this, nameof(_rowHeight));
@@ -45,6 +46,7 @@ internal class MoveListControl : ScrollableContainer
 		InvalidationManager.RegisterInvalidatingField(this, nameof(_buttons));
 		InvalidationManager.RegisterInvalidatingField(this, nameof(_autoPlay));
 		InvalidationManager.RegisterInvalidatingField(this, nameof(_autoPlayTime));
+		InvalidationManager.RegisterInvalidatingField(this, nameof(_scrollToMove));
 	}
 
 	public override void Enter()
@@ -84,6 +86,15 @@ internal class MoveListControl : ScrollableContainer
 
 	protected override void UpdatePosition()
 	{
+		if (_scrollToMove == 4)
+		{
+			_scrollToMove = 0;
+			ScrollHeight = _currentRectangle.Top + 1 - Size.Height / 2;
+		}
+		if (_scrollToMove == 3)
+		{
+			_scrollToMove = 4;
+		}
 		base.UpdatePosition();
 		if (_buttons == null)
 		{
@@ -109,7 +120,7 @@ internal class MoveListControl : ScrollableContainer
 		TreeNode? currentNode = GameManager.GetGame().GetCurrentNode();
 		if (currentNode != _previousNode && currentNode != _hoveredNode)
 		{
-			ScrollHeight = Math.Max(Math.Min(_currentRectangle.Top - Size.Height / 2, VirtualHeight - Size.Height + _rowHeight), 0);
+			_scrollToMove = 1;
 		}
 		_previousNode = currentNode;
 	}
@@ -274,6 +285,10 @@ internal class MoveListControl : ScrollableContainer
 		if (node == GameManager.GetGame().GetCurrentNode())
 		{
 			_currentRectangle = rectangle;
+			if (_scrollToMove == 1)
+			{
+				_scrollToMove = 2;
+			}
 		}
 		Point mousePosition = GetMousePosition() + new Size(0, ScrollHeight);
 		if (ContainsMouse() && rectangle.Contains(mousePosition))
@@ -441,6 +456,10 @@ internal class MoveListControl : ScrollableContainer
 		TreeNode root = GameManager.GetGame().GetRootNode();
 		RenderMainLine(root);
 		VirtualHeight = actualHeight;
+		if (_scrollToMove == 2)
+		{
+			_scrollToMove = 3;
+		}
 	}
 
 	private readonly Font _font;
@@ -457,6 +476,7 @@ internal class MoveListControl : ScrollableContainer
 	private int _numberWidth;
 	private int _rowHeight;
 	private int _padding;
+	private int _scrollToMove;
 	private TreeNode? _hoveredNode;
 	private TreeNode? _previousNode;
 	private TreeNode? _menuNode;
