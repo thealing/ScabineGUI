@@ -82,6 +82,7 @@ public static class SceneManager
 	public static void ScheduleUpdate()
 	{
 		_doUpdate = true;
+		_doRender = true;
 	}
 
 	internal static void FocusWindow()
@@ -102,31 +103,37 @@ public static class SceneManager
 		double renderTime = Time.GetTime();
 		while (!_disposed)
 		{
+			if (!_doRender && InvalidationManager.IsInvalidated())
+			{
+				ScheduleUpdate();
+			}
 			double time = Time.GetTime();
 			if (time > updateTime + UpdateDelta)
 			{
 				Application.DoEvents();
-				if (_doUpdate || InvalidationManager.IsInvalidated())
+				if (_doUpdate)
 				{
 					_doUpdate = false;
 					BeforeUpdate();
 					UpdateScene();
 					AfterUpdate();
-					if (time > renderTime + RenderDelta)
-					{
-						renderTime = time;
-						if (!_window.IsDisposed && !IsMinimized())
-						{
-							_window.Refresh();
-						}
-					}
 				}
+				UpdateFpsDisplay();
+				InputManager.Commit();
 				updateTime = time;
+			}
+			if (_doRender && time > renderTime + RenderDelta)
+			{
+				_doRender = false;
+				renderTime = time;
+				if (!_window.IsDisposed && !IsMinimized())
+				{
+					_window.Refresh();
+				}
 			}
 			if (time > _measureTime + MeasureDelta)
 			{
 				MeasureFps();
-				ScheduleUpdate();
 			}
 			double sleepDuration = updateTime + UpdateDelta - Time.GetTime();
 			Time.Sleep(sleepDuration);
@@ -158,8 +165,6 @@ public static class SceneManager
 	private static void AfterUpdate()
 	{
 		UpdateToolTip();
-		UpdateFpsDisplay();
-		InputManager.Commit();
 	}
 
 	private static void UpdateToolTip()
@@ -318,6 +323,7 @@ public static class SceneManager
 	private static int _renderFps;
 	private static bool _showFps;
 	private static bool _doUpdate;
+	private static bool _doRender;
 
 	[DllImport("winmm.dll", EntryPoint = "timeBeginPeriod")]
 	private static extern uint TimeBeginPeriod(uint period);

@@ -9,7 +9,7 @@ public static class InvalidationManager
 {
 	public static bool IsInvalidated()
 	{
-		return _invalidated;
+		return _entriesChanged || _invalidated;
 	}
 
 	public static void ForceInvalidate()

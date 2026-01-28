@@ -70,6 +70,7 @@ internal class PlayerDisplay : Container
 				{
 					g.FillRectangle(_activeBrush, blackRectangle);
 				}
+				SceneManager.ScheduleUpdate();
 			}
 		}
 		else
