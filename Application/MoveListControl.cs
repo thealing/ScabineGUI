@@ -36,7 +36,6 @@ internal class MoveListControl : ScrollableContainer
 		_moveClassColors[Mistake] = MixColors(0.8, Color.Orange, Color.Black);
 		_moveClassColors[Blunder] = MixColors(0.8, Color.Red, Color.Black);
 		_rowHeight = _font.Height * 3 / 2;
-		_scrollToMove = 0;
 		_moveFormat = TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter | TextFormatFlags.SingleLine | TextFormatFlags.NoPadding;
 		_sideLineFormat = TextFormats.LeftAligned | TextFormatFlags.NoPadding;
 		_mainLineMeasureCache = new TextMeasureCache(_font, TextFormatFlags.Left);
@@ -55,7 +54,6 @@ internal class MoveListControl : ScrollableContainer
 		InvalidationManager.RegisterInvalidatingField(this, nameof(_buttons));
 		InvalidationManager.RegisterInvalidatingField(this, nameof(_autoPlay));
 		InvalidationManager.RegisterInvalidatingField(this, nameof(_autoPlayTime));
-		InvalidationManager.RegisterInvalidatingField(this, nameof(_scrollToMove));
 	}
 
 	public override void Enter()
@@ -91,18 +89,24 @@ internal class MoveListControl : ScrollableContainer
 			RenderTree(g);
 		}
 		base.Render(g);
+		if (_moveToMove == 1)
+		{
+			_moveToMove = 2;
+		}
 	}
 
 	protected override void UpdatePosition()
 	{
-		if (_scrollToMove == 4)
+		if (_moveToMove == 2)
 		{
-			_scrollToMove = 0;
-			ScrollHeight = _currentRectangle.Top + 1 - Size.Height / 2;
+			_moveToMove = 0;
+			ScrollHeight = Math.Max(Math.Min(_currentRectangle.Top + 1 - Size.Height / 2, VirtualHeight - Size.Height + 1), 0);
+			SceneManager.ScheduleUpdate();
 		}
-		if (_scrollToMove == 3)
+		if (_currentRectangle.Bottom >= ScrollHeight + Size.Height)
 		{
-			_scrollToMove = 4;
+			ScrollHeight = Math.Max(Math.Min(_currentRectangle.Bottom - Size.Height, VirtualHeight - Size.Height + 1), 0);
+			SceneManager.ScheduleUpdate();
 		}
 		base.UpdatePosition();
 		if (_buttons == null)
@@ -126,10 +130,11 @@ internal class MoveListControl : ScrollableContainer
 		_moveWidth = (bounds.Width - _numberWidth) / 2;
 		_numberWidth = bounds.Width - _moveWidth * 2;
 		_padding = _rowHeight / 4;
-		TreeNode? currentNode = GameManager.GetGame().GetCurrentNode();
+		TreeGame game = GameManager.GetGame();
+		TreeNode? currentNode = game.GetCurrentNode();
 		if (currentNode != _previousNode && currentNode != _hoveredNode)
 		{
-			_scrollToMove = 1;
+			_moveToMove = 1;
 		}
 		_previousNode = currentNode;
 	}
@@ -294,20 +299,19 @@ internal class MoveListControl : ScrollableContainer
 		if (node == GameManager.GetGame().GetCurrentNode())
 		{
 			_currentRectangle = rectangle;
-			if (_scrollToMove == 1)
-			{
-				_scrollToMove = 2;
-			}
+		}
+		Point mousePosition = GetMousePosition() + new Size(0, ScrollHeight);
+		if (ContainsMouse() && rectangle.Contains(mousePosition))
+		{
+			_hoveredNode = node;
 		}
 		if (node == GameManager.GetGame().GetCurrentNode())
 		{
 			FillRectangle(g, _currentMoveBrush, rectangle);
 			return true;
 		}
-		Point mousePosition = GetMousePosition() + new Size(0, ScrollHeight);
 		if (ContainsMouse() && rectangle.Contains(mousePosition))
 		{
-			_hoveredNode = node;
 			FillRectangle(g, _hoveredMoveBrush, rectangle);
 			return true;
 		}
@@ -500,10 +504,6 @@ internal class MoveListControl : ScrollableContainer
 		_sideLineRenderCache.EndFrame();
 		Array.ForEach(_coloredMoveRenderCache, cache => cache.EndFrame());
 		VirtualHeight = actualHeight;
-		if (_scrollToMove == 2)
-		{
-			_scrollToMove = 3;
-		}
 	}
 
 	private readonly Font _font;
@@ -523,11 +523,11 @@ internal class MoveListControl : ScrollableContainer
 	private readonly TextRenderCache[] _coloredMoveRenderCache;
 	private readonly TextFormatFlags _sideLineFormat;
 	private readonly TextFormatFlags _moveFormat;
+	private int _moveToMove;
 	private int _moveWidth;
 	private int _numberWidth;
 	private int _rowHeight;
 	private int _padding;
-	private int _scrollToMove;
 	private TreeNode? _hoveredNode;
 	private TreeNode? _previousNode;
 	private TreeNode? _menuNode;
