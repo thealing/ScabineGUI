@@ -17,7 +17,7 @@ public static class ClipboardHelper
 			}
 			catch (Exception exception)
 			{
-				DialogResult result = SceneManager.ShowMessageBox(exception.Message, "Error", MessageBoxButtons.RetryCancel, MessageBoxIcon.Error);
+				DialogResult result = SceneManager.ShowMessageBox(exception.Message, "Clipboard Error", MessageBoxButtons.RetryCancel, MessageBoxIcon.Error);
 				if (result != DialogResult.Retry)
 				{
 					break;
