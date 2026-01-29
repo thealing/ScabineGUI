@@ -3,6 +3,7 @@
 using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.Drawing.Imaging;
 using System.Windows.Forms;
 using ChessPanel.Scenes;
 
@@ -61,7 +62,7 @@ internal class GraphicsHelper
 
 	public static Image ResizeImage(Image image, int width, int height)
 	{
-		Image resizedImage = new Bitmap(width, height);
+		Image resizedImage = new Bitmap(width, height, PixelFormat.Format32bppPArgb);
 		using (Graphics graphics = Graphics.FromImage(resizedImage))
 		using (new CompositingQualityChanger(graphics, CompositingQuality.HighQuality))
 		{
