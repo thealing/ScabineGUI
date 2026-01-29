@@ -24,8 +24,10 @@ internal class EngineControl : Container
 		_borderPen = new Pen(Color.Black);
 		_moveList = new MoveList(this);
 		_font = new Font("Segoe UI", 10);
-		_backgroundBrush = new SolidBrush(Color.FromArgb(250, 250, 250));
-		_hoveredBrush = new SolidBrush(Color.LightGray);
+		Color backgroundColor = Color.FromArgb(250, 250, 250);
+		Color hoveredColor = Color.LightGray;
+		_backgroundBrush = new SolidBrush(backgroundColor);
+		_hoveredBrush = new SolidBrush(hoveredColor);
 		_foregroundColor = Color.Black;
 		_columnPositions = new int[Columns.Length];
 		_columnWidths = new int[Columns.Length];
@@ -38,6 +40,12 @@ internal class EngineControl : Container
 		_columnsDirty = true;
 		_analyzing = false;
 		_rowHeight = _font.Height * 5 / 4;
+		_measureCache = new TextMeasureCache(_font, TextFormatFlags.Left);
+		_renderCache = new TextRenderCache(_font, TextFormats.LeftClipped, _foregroundColor, backgroundColor);
+		_hoveredRenderCache = new TextRenderCache(_font, TextFormats.LeftClipped, _foregroundColor, hoveredColor);
+		_labelRenderCache = new TextRenderCache(_font, TextFormats.RightAligned, _foregroundColor, backgroundColor);
+		_hoveredLabelRenderCache = new TextRenderCache(_font, TextFormats.RightAligned, _foregroundColor, hoveredColor);
+		_titleRenderCache = new TextRenderCache(_font, TextFormats.CenteredClipped, _foregroundColor, backgroundColor);
 		InvalidationManager.RegisterInvalidatingField(this, nameof(_engine));
 		InvalidationManager.RegisterInvalidatingField(this, nameof(_reachedDepth));
 		InvalidationManager.RegisterInvalidatingField(this, nameof(_evalColor));
@@ -239,7 +247,7 @@ internal class EngineControl : Container
 		for (int column = 0; column < Columns.Length; column++)
 		{
 			_columnPositions[column] = _columnsTotalWidth;
-			_columnWidths[column] = TextRenderer.MeasureText(Columns[column], _font).Width;
+			_columnWidths[column] = _measureCache.Measure(Columns[column]).Width;
 			int reachedDepth = _engine.GetReachedDepth();
 			_nonEmptyRowCount = reachedDepth;
 			for (int depth = reachedDepth, row = 0; depth >= 1; depth--, row++)
@@ -249,12 +257,12 @@ internal class EngineControl : Container
 					_nonEmptyRowCount--;
 					continue;
 				}
-				_columnWidths[column] = Math.Max(_columnWidths[column], TextRenderer.MeasureText(GetColumnValue(column, depth), _font).Width);
+				_columnWidths[column] = Math.Max(_columnWidths[column], _measureCache.Measure(GetColumnValue(column, depth)).Width);
 			}
 			_columnWidths[column] += _padding * 2;
 			_columnsTotalWidth += _columnWidths[column];
 		}
-		int minPvWidth = TextRenderer.MeasureText("Best line", _font).Width + _padding * 2;
+		int minPvWidth = _measureCache.Measure("Best line").Width + _padding * 2;
 		MinSize = new Size(240, 160);
 	}
 
@@ -299,20 +307,20 @@ internal class EngineControl : Container
 		using (new ClipChanger(g, SelfBounds))
 		{
 			string engineName = _engine.GetName();
-			int engineNameWidth = TextRenderer.MeasureText(engineName, _font).Width + 12;
-			int presetNameWidth = TextRenderer.MeasureText(_presetName, _font).Width + 12;
+			int engineNameWidth = _measureCache.Measure(engineName).Width + 12;
+			int presetNameWidth = _measureCache.Measure(_presetName).Width + 12;
 			engineNameWidth = Math.Max(engineNameWidth, Size.Width - _rowHeight - presetNameWidth);
 			engineNameWidth = Math.Min(engineNameWidth, Size.Width - _rowHeight - Size.Width / 3);
 			Rectangle engineNameRectangle = new Rectangle(0, 0, engineNameWidth, _rowHeight);
 			g.DrawRectangle(_borderPen, engineNameRectangle);
 			engineNameRectangle.Inflate(-5, 0);
-			GraphicsHelper.DrawString(g, engineName, _font, engineNameRectangle, _foregroundColor, TextFormats.CenteredClipped);
+			_titleRenderCache.Render(g, engineName, engineNameRectangle);
 			Rectangle presetNameRectangle = new Rectangle(engineNameWidth, 0, Size.Width - engineNameWidth - _rowHeight, _rowHeight);
 			g.DrawRectangle(_borderPen, presetNameRectangle);
 			presetNameRectangle.Inflate(-5, 0);
 			Rectangle indicatorRectangle = new Rectangle(Size.Width - _rowHeight, 0, _rowHeight, _rowHeight);
 			g.DrawRectangle(_borderPen, indicatorRectangle);
-			GraphicsHelper.DrawString(g, _presetName, _font, presetNameRectangle, _foregroundColor, TextFormats.CenteredClipped);
+			_titleRenderCache.Render(g, _presetName, presetNameRectangle);
 			if (MatchManager.IsEnginePlaying(_engine))
 			{
 				using (new SmoothingModeChanger(g, SmoothingMode.HighQuality))
@@ -344,6 +352,12 @@ internal class EngineControl : Container
 			Rectangle pvRectangle = new Rectangle(_columnsTotalWidth, _rowHeight, Size.Width - _columnsTotalWidth, _rowHeight);
 			g.DrawRectangle(_borderPen, pvRectangle);
 			GraphicsHelper.DrawString(g, "Best line", _font, pvRectangle, _foregroundColor, TextFormats.Centered);
+			_measureCache.Update();
+			_renderCache.Update();
+			_hoveredRenderCache.Update();
+			_labelRenderCache.Update();
+			_hoveredLabelRenderCache.Update();
+			_titleRenderCache.Update();
 		}
 	}
 
@@ -368,10 +382,12 @@ internal class EngineControl : Container
 				continue;
 			}
 			int height = _rowHeight * row;
+			bool hoveredLine = false;
 			if (row == _hoveredRow && IsAnalyzing())
 			{
 				Rectangle rowRectangle = new Rectangle(0, height, bounds.Width, _rowHeight);
 				g.FillRectangle(_hoveredBrush, rowRectangle);
+				hoveredLine = true;
 			}
 			for (int column = 0; column < Columns.Length; column++)
 			{
@@ -379,7 +395,14 @@ internal class EngineControl : Container
 				g.DrawRectangle(_borderPen, columnRectangle);
 				string value = GetColumnValue(column, depth);
 				columnRectangle.Width -= _padding;
-				GraphicsHelper.DrawString(g, value, _font, columnRectangle, _foregroundColor, TextFormats.RightAligned);
+				if (hoveredLine)
+				{
+					_hoveredLabelRenderCache.Render(g, value, columnRectangle);
+				}
+				else
+				{
+					_labelRenderCache.Render(g, value, columnRectangle);
+				}
 			}
 			Rectangle pvColumnRectangle = new Rectangle(_columnsTotalWidth, height, bounds.Width - _columnsTotalWidth, _rowHeight);
 			g.DrawRectangle(_borderPen, pvColumnRectangle);
@@ -404,7 +427,14 @@ internal class EngineControl : Container
 			}
 			pvColumnRectangle.X += _padding;
 			pvColumnRectangle.Width -= _padding;
-			GraphicsHelper.DrawString(g, pv.ToString(), _font, pvColumnRectangle, _foregroundColor, TextFormats.LeftClipped);
+			if (hoveredLine)
+			{
+				_hoveredRenderCache.Render(g, pv.ToString(), pvColumnRectangle);
+			}
+			else
+			{
+				_renderCache.Render(g, pv.ToString(), pvColumnRectangle);
+			}
 		}
 	}
 
@@ -492,6 +522,12 @@ internal class EngineControl : Container
 	private readonly Game _game;
 	private readonly Dictionary<int, IEnumerable<string>> _depthMoves;
 	private readonly Dictionary<int, IEnumerable<string>> _depthUciMoves;
+	private readonly TextMeasureCache _measureCache;
+	private readonly TextRenderCache _renderCache;
+	private readonly TextRenderCache _hoveredRenderCache;
+	private readonly TextRenderCache _labelRenderCache;
+	private readonly TextRenderCache _hoveredLabelRenderCache;
+	private readonly TextRenderCache _titleRenderCache;
 	private IEngine _engine;
 	private bool _columnsDirty;
 	private int _reachedDepth;

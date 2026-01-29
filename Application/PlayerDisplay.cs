@@ -20,6 +20,7 @@ internal class PlayerDisplay : Container
 		_flaggedBrush = new SolidBrush(Color.IndianRed);
 		_foregroundColor = Color.Black;
 		_fontHeight = _clockFont.Height;
+		_clockWidth = TextRenderer.MeasureText("99:99.9", _clockFont).Width;
 		InvalidationManager.RegisterInvalidatingField(this, nameof(_whiteSeconds));
 		InvalidationManager.RegisterInvalidatingField(this, nameof(_whiteTenths));
 		InvalidationManager.RegisterInvalidatingField(this, nameof(_blackSeconds));
@@ -29,8 +30,7 @@ internal class PlayerDisplay : Container
 	public override void Render(Graphics g)
 	{
 		int padding = Size.Height / 20;
-		Size size = TextRenderer.MeasureText("99:99.9", _clockFont);
-		int width = Size.Width - padding * 2 - size.Width;
+		int width = Size.Width - padding * 2 - _clockWidth;
 		int height = Size.Height / 2;
 		int whiteHeight = Board.Flipped ? 0 : height;
 		int blackHeight = Board.Flipped ? height : 0;
@@ -139,6 +139,7 @@ internal class PlayerDisplay : Container
 	private readonly Brush _flaggedBrush;
 	private readonly Color _foregroundColor;
 	private readonly int _fontHeight;
+	private readonly int _clockWidth;
 	private int _whiteSeconds;
 	private int _blackSeconds;
 	private int _whiteTenths;
