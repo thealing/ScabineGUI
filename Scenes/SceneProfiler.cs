@@ -18,8 +18,7 @@ internal static class SceneProfiler
 		{
 			Text = "Scene Profiler",
 			ClientSize = new Size(800, 600),
-			StartPosition = FormStartPosition.CenterScreen,
-			TopMost = true
+			StartPosition = FormStartPosition.CenterParent
 		};
 		_resultsWindow.FormClosing += (sender, e) =>
 		{
