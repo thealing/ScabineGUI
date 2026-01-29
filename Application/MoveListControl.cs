@@ -366,7 +366,7 @@ internal class MoveListControl : ScrollableContainer
 				string ellipsisText = "[...]";
 				DrawString(g, ellipsisText, _branchFont, _foregroundColor, GetNextTextRect(ellipsisText), sideLineFormat);
 			}
-			actualHeight += y + height + padding * 2 + movePadding.Height;
+			actualHeight += y + height + padding * 2;
 			depthHeights[depth + 1] = actualHeight;
 			if (!node.IsCollapsed)
 			{
