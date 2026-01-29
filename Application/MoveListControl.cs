@@ -37,8 +37,8 @@ internal class MoveListControl : ScrollableContainer
 		_moveClassColors[Blunder] = MixColors(0.8, Color.Red, Color.Black);
 		_rowHeight = _font.Height * 3 / 2;
 		_scrollToMove = 0;
-		_mainLineCache = new Dictionary<string, Size>();
-		_sideLineCache = new Dictionary<string, Size>();
+		_mainLineCache = new TextMeasureCache(_font, TextFormatFlags.Left);
+		_sideLineCache = new TextMeasureCache(_branchFont, TextFormatFlags.NoPadding);
 		InvalidationManager.RegisterInvalidatingField(this, nameof(_moveWidth));
 		InvalidationManager.RegisterInvalidatingField(this, nameof(_numberWidth));
 		InvalidationManager.RegisterInvalidatingField(this, nameof(_rowHeight));
@@ -314,28 +314,6 @@ internal class MoveListControl : ScrollableContainer
 	private void RenderTree(Graphics g)
 	{
 		TextFormatFlags sideLineFormat = TextFormats.LeftAligned | TextFormatFlags.NoPadding;
-		HashSet<string> mainLineTexts = new HashSet<string>();
-		HashSet<string> sideLineTexts = new HashSet<string>();
-		Size MeasureMainLineText(string text)
-		{
-			mainLineTexts.Add(text);
-			if (_mainLineCache.TryGetValue(text, out Size value) == false)
-			{
-				value = TextRenderer.MeasureText(text, _font);
-				_mainLineCache[text] = value;
-			}
-			return value;
-		}
-		Size MeasureSideLineText(string text)
-		{
-			sideLineTexts.Add(text);
-			if (_sideLineCache.TryGetValue(text, out Size value) == false)
-			{
-				value = Size.Ceiling(TextRenderer.MeasureText(text, _branchFont, Size.Empty, TextFormatFlags.NoPadding));
-				_sideLineCache[text] = value;
-			}
-			return value;
-		}
 		_hoveredNode = null;
 		int height = _branchFont.Height;
 		int actualHeight = 0;
@@ -358,7 +336,7 @@ internal class MoveListControl : ScrollableContainer
 			int x = 0, y = 0;
 			Rectangle GetNextTextRect(string text)
 			{
-				Size size = MeasureSideLineText(text);
+				Size size = _sideLineCache.Measure(text);
 				Size paddingSize = movePadding;
 				size += paddingSize * 2;
 				if (!string.IsNullOrWhiteSpace(text) && x != 0 && x + size.Width > rectangle.Width - padding)
@@ -423,7 +401,7 @@ internal class MoveListControl : ScrollableContainer
 					}
 					rectangle.Inflate(-_padding, 0);
 					rectangle.Inflate(-_padding, 0);
-					Size moveSize = MeasureMainLineText(move);
+					Size moveSize = _mainLineCache.Measure(move);
 					TextFormatFlags moveFormat = moveSize.Width >= rectangle.Width ? TextFormats.Centered : TextFormats.LeftAligned;
 					if (node?.Class != null && _moveClassColors[node.Class.Value] is Color color)
 					{
@@ -485,20 +463,8 @@ internal class MoveListControl : ScrollableContainer
 		}
 		TreeNode root = GameManager.GetGame().GetRootNode();
 		RenderMainLine(root);
-		foreach (string key in _mainLineCache.Keys.ToArray())
-		{
-			if (!mainLineTexts.Contains(key))
-			{
-				_mainLineCache.Remove(key);
-			}
-		}
-		foreach (string key in _sideLineCache.Keys.ToArray())
-		{
-			if (!sideLineTexts.Contains(key))
-			{
-				_sideLineCache.Remove(key);
-			}
-		}
+		_mainLineCache.Update();
+		_sideLineCache.Update();
 		VirtualHeight = actualHeight;
 		if (_scrollToMove == 2)
 		{
@@ -516,8 +482,8 @@ internal class MoveListControl : ScrollableContainer
 	private readonly Brush _backgroundBrush;
 	private readonly Brush _currentMoveBrush;
 	private readonly Brush _hoveredMoveBrush;
-	private readonly Dictionary<string, Size> _mainLineCache;
-	private readonly Dictionary<string, Size> _sideLineCache;
+	private readonly TextMeasureCache _mainLineCache;
+	private readonly TextMeasureCache _sideLineCache;
 	private int _moveWidth;
 	private int _numberWidth;
 	private int _rowHeight;
