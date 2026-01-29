@@ -4,12 +4,13 @@ using System;
 using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
+using ChessPanel.Application.Settings;
 
 public static class SceneManager
 {
 	public static Form Window => _window;
 
-	private static readonly double UpdateDelta = 1.0 / 300.0;
+	private static readonly double UpdateDelta = 1.0 / 150.0;
 	private static readonly double RenderDelta = 1.0 / 60.0;
 	private static readonly double MeasureDelta = 1.0 / 2.0;
 
@@ -111,7 +112,7 @@ public static class SceneManager
 			if (time > updateTime + UpdateDelta)
 			{
 				Application.DoEvents();
-				if (_doUpdate)
+				if (_doUpdate || !General.EnableIdleMode)
 				{
 					_doUpdate = false;
 					BeforeUpdate();
@@ -125,21 +126,22 @@ public static class SceneManager
 			if (_doRender && time > renderTime + RenderDelta)
 			{
 				_doRender = false;
-				renderTime = time;
 				if (!_window.IsDisposed && !IsMinimized())
 				{
 					_window.Refresh();
 				}
+				renderTime = time;
 			}
 			if (time > _measureTime + MeasureDelta)
 			{
 				MeasureFps();
 			}
-			double sleepDuration = updateTime + UpdateDelta - Time.GetTime();
+			double sleepDuration = updateTime + UpdateDelta;
 			if (_doRender)
 			{
-				sleepDuration = Math.Min(sleepDuration, renderTime + RenderDelta - Time.GetTime() - timerResolution / 1000.0);
+				sleepDuration = Math.Min(sleepDuration, renderTime + RenderDelta);
 			}
+			sleepDuration -=  Time.GetTime() + timerResolution / 1000.0;
 			Time.Sleep(sleepDuration);
 		}
 		TimeEndPeriod(timerResolution);
@@ -280,6 +282,7 @@ public static class SceneManager
 	{
 		InvalidationManager.ForceInvalidate();
 		_context = BufferedGraphicsManager.Current;
+		_graphics?.Dispose();
 		_graphics = _context.Allocate(_window.CreateGraphics(), _window.ClientRectangle);
 		UpdateSize();
 	}
