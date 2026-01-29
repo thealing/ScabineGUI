@@ -3,6 +3,7 @@
 using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.Drawing.Imaging;
 using ChessPanel.Application;
 
 public class SceneButton : Container
@@ -80,7 +81,7 @@ public class SceneButton : Container
 				{
 					_previousImage = Image;
 					_cachedSize = size;
-					_cachedImage = new Bitmap(size.Width, size.Height);
+					_cachedImage = new Bitmap(size.Width, size.Height, PixelFormat.Format32bppPArgb);
 					using Graphics cacheGraphics = Graphics.FromImage(_cachedImage);
 					cacheGraphics.DrawImage(Image, 0, 0, _cachedImage.Width, _cachedImage.Height);
 				}
