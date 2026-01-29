@@ -144,9 +144,11 @@ internal class AnalyzisDisplay : Container
 		int height = Size.Height + 20;
 		void RenderLine(string name, object value1, object value2)
 		{
-			GraphicsHelper.DrawString(g, name, _font, new Rectangle(0, height, Size.Width * 2 / 6, _lineHeight), Color.Black, TextFormats.LeftClipped);
-			GraphicsHelper.DrawString(g, value1.ToString(), _font, new Rectangle(Size.Width * 2 / 6, height, Size.Width * 2 / 6, _lineHeight), Color.Black, TextFormats.CenteredClipped);
-			GraphicsHelper.DrawString(g, value2.ToString(), _font, new Rectangle(Size.Width * 4 / 6, height, Size.Width * 2 / 6, _lineHeight), Color.Black, TextFormats.CenteredClipped);
+			_leftLineCache ??= new TextRenderCache(_font, TextFormats.LeftClipped, Color.Black, Color.White);
+			_centeredLineCache ??= new TextRenderCache(_font, TextFormats.CenteredClipped, Color.Black, Color.White);
+			_leftLineCache.Render(g, name, new Rectangle(0, height, Size.Width * 2 / 6, _lineHeight));
+			_centeredLineCache.Render(g, value1.ToString() ?? "", new Rectangle(Size.Width * 2 / 6, height, Size.Width * 2 / 6, _lineHeight));
+			_centeredLineCache.Render(g, value2.ToString() ?? "", new Rectangle(Size.Width * 4 / 6, height, Size.Width * 2 / 6, _lineHeight));
 			height += _lineHeight;
 		}
 		void RenderSeparator()
@@ -176,6 +178,8 @@ internal class AnalyzisDisplay : Container
 	private readonly List<TreeNode> _nodes;
 	private readonly List<int> _evals;
 	private readonly int[,] _classCounts;
+	private TextRenderCache? _leftLineCache;
+	private TextRenderCache? _centeredLineCache;
 	private Bitmap? _graph;
 	private int _gap;
 	private int _lineHeight;
