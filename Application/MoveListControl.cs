@@ -103,11 +103,6 @@ internal class MoveListControl : ScrollableContainer
 			ScrollHeight = Math.Max(Math.Min(_currentRectangle.Top + 1 - Size.Height / 2, VirtualHeight - Size.Height + 1), 0);
 			SceneManager.ScheduleUpdate();
 		}
-		if (_currentRectangle.Bottom >= ScrollHeight + Size.Height)
-		{
-			ScrollHeight = Math.Max(Math.Min(_currentRectangle.Bottom - Size.Height, VirtualHeight - Size.Height + 1), 0);
-			SceneManager.ScheduleUpdate();
-		}
 		base.UpdatePosition();
 		if (_buttons == null)
 		{
