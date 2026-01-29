@@ -83,7 +83,7 @@ internal static class BoardMenu
 	private static void CopyFen()
 	{
 		string fen = GameManager.GetGame().GetFen();
-		Clipboard.SetText(fen);
+		ClipboardHelper.CopyText(fen);
 	}
 
 	private static void SaveFen()

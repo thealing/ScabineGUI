@@ -117,28 +117,28 @@ internal static class GameMenu
 
 	private static void CopyGamePgn()
 	{
-		Clipboard.SetText(PgnManager.GetPgn());
+		ClipboardHelper.CopyText(PgnManager.GetPgn());
 	}
 
 	private static void CopyAllMoves()
 	{
 		StringBuilder stringBuilder = new StringBuilder();
 		PgnManager.FormatMoves(stringBuilder, false);
-		Clipboard.SetText(stringBuilder.ToString());
+		ClipboardHelper.CopyText(stringBuilder.ToString());
 	}
 
 	private static void CopyMainLine()
 	{
 		StringBuilder stringBuilder = new StringBuilder();
 		PgnManager.FormatLine(stringBuilder, GameManager.GetGame().GetLastNode(), false);
-		Clipboard.SetText(stringBuilder.ToString());
+		ClipboardHelper.CopyText(stringBuilder.ToString());
 	}
 
 	private static void CopyCurrentLine()
 	{
 		StringBuilder stringBuilder = new StringBuilder();
 		PgnManager.FormatLine(stringBuilder, GameManager.GetGame().GetCurrentNode(), false);
-		Clipboard.SetText(stringBuilder.ToString());
+		ClipboardHelper.CopyText(stringBuilder.ToString());
 	}
 
 	private static ToolStripMenuItem _cancelItem = new ToolStripMenuItem();
