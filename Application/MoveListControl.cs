@@ -496,11 +496,11 @@ internal class MoveListControl : ScrollableContainer
 		}
 		TreeNode root = GameManager.GetGame().GetRootNode();
 		RenderMainLine(root);
-		_mainLineMeasureCache.Update();
-		_sideLineMeasureCache.Update();
-		_mainLineRenderCache.Update();
-		_sideLineRenderCache.Update();
-		Array.ForEach(_coloredMoveRenderCache, cache => cache.Update());
+		_mainLineMeasureCache.EndFrame();
+		_sideLineMeasureCache.EndFrame();
+		_mainLineRenderCache.EndFrame();
+		_sideLineRenderCache.EndFrame();
+		Array.ForEach(_coloredMoveRenderCache, cache => cache.EndFrame());
 		VirtualHeight = actualHeight;
 		if (_scrollToMove == 2)
 		{

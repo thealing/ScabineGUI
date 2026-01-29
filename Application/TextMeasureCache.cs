@@ -26,7 +26,7 @@ public class TextMeasureCache
 		return value;
 	}
 
-	public void Update()
+	public void EndFrame()
 	{
 		foreach (string key in _cache.Keys.ToArray())
 		{

@@ -352,12 +352,12 @@ internal class EngineControl : Container
 			Rectangle pvRectangle = new Rectangle(_columnsTotalWidth, _rowHeight, Size.Width - _columnsTotalWidth, _rowHeight);
 			g.DrawRectangle(_borderPen, pvRectangle);
 			GraphicsHelper.DrawString(g, "Best line", _font, pvRectangle, _foregroundColor, TextFormats.Centered);
-			_measureCache.Update();
-			_renderCache.Update();
-			_hoveredRenderCache.Update();
-			_labelRenderCache.Update();
-			_hoveredLabelRenderCache.Update();
-			_titleRenderCache.Update();
+			_measureCache.EndFrame();
+			_renderCache.EndFrame();
+			_hoveredRenderCache.EndFrame();
+			_labelRenderCache.EndFrame();
+			_hoveredLabelRenderCache.EndFrame();
+			_titleRenderCache.EndFrame();
 		}
 	}
 

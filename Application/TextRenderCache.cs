@@ -41,7 +41,7 @@ public class TextRenderCache
 		g.DrawImage(bitmap, rectangle.Location);
 	}
 
-	public void Update()
+	public void EndFrame()
 	{
 		foreach (Tuple<string, Size> key in _cache.Keys.ToArray())
 		{
