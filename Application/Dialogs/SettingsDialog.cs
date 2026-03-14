@@ -1,4 +1,4 @@
-﻿namespace ChessPanel.Application.Dialogs;
+﻿namespace ChessBand.Application.Dialogs;
 
 using System;
 using System.Drawing;
@@ -6,8 +6,8 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using ChessPanel.Application.Settings;
-using static ChessPanel.Application.Dialogs.DialogCreator;
+using ChessBand.Application.Settings;
+using static ChessBand.Application.Dialogs.DialogCreator;
 
 internal class SettingsDialog : BaseDialog
 {

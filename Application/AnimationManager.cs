@@ -1,8 +1,8 @@
-﻿namespace ChessPanel.Application;
+﻿namespace ChessBand.Application;
 
-using ChessPanel.Application.Settings;
-using ChessPanel.Core;
-using ChessPanel.Scenes;
+using ChessBand.Application.Settings;
+using ChessBand.Core;
+using ChessBand.Scenes;
 
 internal static class AnimationManager
 {

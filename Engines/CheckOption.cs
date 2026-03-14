@@ -1,4 +1,4 @@
-﻿namespace ChessPanel.Engines;
+﻿namespace ChessBand.Engines;
 public sealed class CheckOption : UciOption
 {
 	public readonly bool Value;

@@ -1,9 +1,9 @@
-﻿namespace ChessPanel.Scenes;
+﻿namespace ChessBand.Scenes;
 
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Windows.Forms;
-using ChessPanel.Application;
+using ChessBand.Application;
 
 public class SceneToolStripRenderer : ToolStripProfessionalRenderer
 {

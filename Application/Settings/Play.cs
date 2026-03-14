@@ -1,7 +1,7 @@
-﻿namespace ChessPanel.Application.Settings;
+﻿namespace ChessBand.Application.Settings;
 
 using System;
-using ChessPanel.Scenes;
+using ChessBand.Scenes;
 
 internal static class Play
 {

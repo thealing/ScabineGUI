@@ -1,4 +1,4 @@
-﻿namespace ChessPanel.Application.Menus;
+﻿namespace ChessBand.Application.Menus;
 
 using System;
 using System.Drawing;
@@ -8,10 +8,10 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Windows.Forms;
-using ChessPanel.Application;
-using ChessPanel.Application.Dialogs;
-using ChessPanel.Application.Settings;
-using ChessPanel.Scenes;
+using ChessBand.Application;
+using ChessBand.Application.Dialogs;
+using ChessBand.Application.Settings;
+using ChessBand.Scenes;
 
 internal static class BoardMenu
 {

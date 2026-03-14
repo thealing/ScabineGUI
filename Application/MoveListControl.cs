@@ -1,15 +1,15 @@
-﻿namespace ChessPanel.Application;
+﻿namespace ChessBand.Application;
 
 using System;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
-using ChessPanel.Application.Settings;
-using ChessPanel.Scenes;
-using static ChessPanel.Application.GraphicsHelper;
-using static ChessPanel.Application.MoveClassifications;
-using static ChessPanel.Core.Game;
-using static ChessPanel.Core.Pieces;
+using ChessBand.Application.Settings;
+using ChessBand.Scenes;
+using static ChessBand.Application.GraphicsHelper;
+using static ChessBand.Application.MoveClassifications;
+using static ChessBand.Core.Game;
+using static ChessBand.Core.Pieces;
 
 internal class MoveListControl : ScrollableContainer
 {

@@ -1,14 +1,14 @@
-﻿namespace ChessPanel.Application;
+﻿namespace ChessBand.Application;
 
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Linq;
-using ChessPanel.Core;
-using ChessPanel.Scenes;
-using static ChessPanel.Application.MoveClassifications;
-using static ChessPanel.Core.Pieces;
+using ChessBand.Core;
+using ChessBand.Scenes;
+using static ChessBand.Application.MoveClassifications;
+using static ChessBand.Core.Pieces;
 
 internal class AnalyzisDisplay : Container
 {

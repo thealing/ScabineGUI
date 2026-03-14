@@ -1,8 +1,8 @@
-﻿namespace ChessPanel.Application;
+﻿namespace ChessBand.Application;
 
 using System;
 using System.Windows.Forms;
-using ChessPanel.Scenes;
+using ChessBand.Scenes;
 
 public static class ClipboardHelper
 {

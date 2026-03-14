@@ -1,4 +1,4 @@
-﻿namespace ChessPanel.Application.Dialogs;
+﻿namespace ChessBand.Application.Dialogs;
 
 using System.Windows.Forms;
 

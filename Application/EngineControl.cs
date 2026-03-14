@@ -1,4 +1,4 @@
-﻿namespace ChessPanel.Application;
+﻿namespace ChessBand.Application;
 
 using System;
 using System.Collections.Generic;
@@ -7,13 +7,13 @@ using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using ChessPanel.Application.Dialogs;
-using ChessPanel.Application.Settings;
-using ChessPanel.Core;
-using ChessPanel.Engines;
-using ChessPanel.Scenes;
-using static ChessPanel.Core.Game;
-using static ChessPanel.Core.Pieces;
+using ChessBand.Application.Dialogs;
+using ChessBand.Application.Settings;
+using ChessBand.Core;
+using ChessBand.Engines;
+using ChessBand.Scenes;
+using static ChessBand.Core.Game;
+using static ChessBand.Core.Pieces;
 
 internal class EngineControl : Container
 {

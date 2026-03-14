@@ -1,4 +1,4 @@
-﻿namespace ChessPanel.Engines;
+﻿namespace ChessBand.Engines;
 
 public abstract class AbstractEngine : IEngine
 {

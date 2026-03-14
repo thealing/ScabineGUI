@@ -1,4 +1,4 @@
-﻿namespace ChessPanel.Scenes;
+﻿namespace ChessBand.Scenes;
 using System.Windows.Forms;
 
 public sealed class SceneWindow : Form

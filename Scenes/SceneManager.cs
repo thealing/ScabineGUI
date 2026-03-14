@@ -1,10 +1,10 @@
-﻿namespace ChessPanel.Scenes;
+﻿namespace ChessBand.Scenes;
 
 using System;
 using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
-using ChessPanel.Application.Settings;
+using ChessBand.Application.Settings;
 
 public static class SceneManager
 {

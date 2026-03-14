@@ -1,6 +1,6 @@
-﻿namespace ChessPanel.Application.Settings;
+﻿namespace ChessBand.Application.Settings;
 
-using ChessPanel.Scenes;
+using ChessBand.Scenes;
 
 internal static class Board
 {

@@ -1,9 +1,9 @@
-﻿namespace ChessPanel.Application.Dialogs;
+﻿namespace ChessBand.Application.Dialogs;
 
 using System.Collections.Generic;
 using System.IO;
 using System.Windows.Forms;
-using ChessPanel.Application.Settings;
+using ChessBand.Application.Settings;
 
 internal static class FileChooser
 {

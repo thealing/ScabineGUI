@@ -1,12 +1,12 @@
-﻿namespace ChessPanel.Application;
+﻿namespace ChessBand.Application;
 
 using System;
-using ChessPanel.Application.Settings;
-using ChessPanel.Core;
-using ChessPanel.Scenes;
-using static ChessPanel.Core.Game;
-using static ChessPanel.Core.Move;
-using static ChessPanel.Core.Pieces;
+using ChessBand.Application.Settings;
+using ChessBand.Core;
+using ChessBand.Scenes;
+using static ChessBand.Core.Game;
+using static ChessBand.Core.Move;
+using static ChessBand.Core.Pieces;
 
 internal static class GameManager
 {

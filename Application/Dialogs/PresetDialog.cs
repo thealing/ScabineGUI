@@ -1,9 +1,9 @@
-﻿namespace ChessPanel.Application.Dialogs;
+﻿namespace ChessBand.Application.Dialogs;
 
 using System.Drawing;
 using System.Windows.Forms;
-using ChessPanel.Application;
-using ChessPanel.Engines;
+using ChessBand.Application;
+using ChessBand.Engines;
 
 internal class PresetDialog : BaseDialog
 {

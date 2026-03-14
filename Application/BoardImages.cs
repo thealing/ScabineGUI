@@ -1,9 +1,9 @@
-﻿namespace ChessPanel.Application;
+﻿namespace ChessBand.Application;
 
 using System.Drawing;
-using ChessPanel.Application.Settings;
+using ChessBand.Application.Settings;
 using static Resources.ResourceManager;
-using static ChessPanel.Application.GraphicsHelper;
+using static ChessBand.Application.GraphicsHelper;
 
 internal static class BoardImages
 {

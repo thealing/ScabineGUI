@@ -1,4 +1,4 @@
-﻿namespace ChessPanel.Application.Dialogs;
+﻿namespace ChessBand.Application.Dialogs;
 
 using System;
 using System.Collections.Generic;
@@ -6,10 +6,10 @@ using System.Drawing;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
-using ChessPanel.Core;
-using ChessPanel.Engines;
-using static ChessPanel.Application.Dialogs.DialogCreator;
-using static ChessPanel.Core.Pieces;
+using ChessBand.Core;
+using ChessBand.Engines;
+using static ChessBand.Application.Dialogs.DialogCreator;
+using static ChessBand.Core.Pieces;
 
 internal class AnalyzingDialog : BaseDialog
 {
@@ -25,7 +25,7 @@ internal class AnalyzingDialog : BaseDialog
 		int totalMoveCount = Math.Max(1, game.GetLastNode().Rank + 1);
 		int scale = 1000 / totalMoveCount;
 		var node = game.GetRootNode();
-		var moves = new List<ChessPanel.Application.TreeNode>();
+		var moves = new List<ChessBand.Application.TreeNode>();
 		var bestMoves = new List<string>();
 		var bestScores = new List<int>();
 		engine.NewGame();
@@ -82,7 +82,7 @@ internal class AnalyzingDialog : BaseDialog
 		_timer.Start();
 	}
 
-	private void ProcessResults(List<ChessPanel.Application.TreeNode> moves, List<string> bestMoves, List<int> bestScores)
+	private void ProcessResults(List<ChessBand.Application.TreeNode> moves, List<string> bestMoves, List<int> bestScores)
 	{
 		_timer.Stop();
 		double[] accuracies = { 100, 100 };

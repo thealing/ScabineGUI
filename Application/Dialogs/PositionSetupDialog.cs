@@ -1,16 +1,16 @@
-﻿namespace ChessPanel.Application.Dialogs;
+﻿namespace ChessBand.Application.Dialogs;
 
 using System;
 using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using ChessPanel.Application.Settings;
-using ChessPanel.Core;
-using static ChessPanel.Application.Dialogs.DialogCreator;
-using static ChessPanel.Core.Pieces;
-using static ChessPanel.Core.Position;
-using static ChessPanel.Core.Squares;
+using ChessBand.Application.Settings;
+using ChessBand.Core;
+using static ChessBand.Application.Dialogs.DialogCreator;
+using static ChessBand.Core.Pieces;
+using static ChessBand.Core.Position;
+using static ChessBand.Core.Squares;
 
 internal class PositionSetupDialog : BaseDialog
 {

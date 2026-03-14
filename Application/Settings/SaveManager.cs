@@ -1,4 +1,4 @@
-﻿namespace ChessPanel.Application.Settings;
+﻿namespace ChessBand.Application.Settings;
 
 using System;
 using System.Collections.Generic;
@@ -6,8 +6,8 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
-using ChessPanel.Engines;
-using ChessPanel.Scenes;
+using ChessBand.Engines;
+using ChessBand.Scenes;
 
 internal static class SaveManager
 {

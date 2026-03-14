@@ -1,4 +1,4 @@
-﻿namespace ChessPanel.Scenes;
+﻿namespace ChessBand.Scenes;
 
 using System.Drawing;
 using System.Windows.Forms;

@@ -1,11 +1,11 @@
-﻿namespace ChessPanel.Application;
+﻿namespace ChessBand.Application;
 
 using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.Windows.Forms;
-using ChessPanel.Scenes;
+using ChessBand.Scenes;
 
 internal class GraphicsHelper
 {

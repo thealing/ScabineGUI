@@ -1,10 +1,10 @@
-﻿namespace ChessPanel.Application.Dialogs;
+﻿namespace ChessBand.Application.Dialogs;
 
 using System;
 using System.Drawing;
 using System.Windows.Forms;
-using ChessPanel.Application;
-using static ChessPanel.Application.Dialogs.DialogCreator;
+using ChessBand.Application;
+using static ChessBand.Application.Dialogs.DialogCreator;
 
 internal class ThinkingLimitDialog : BaseDialog
 {

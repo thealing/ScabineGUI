@@ -1,4 +1,4 @@
-﻿namespace ChessPanel.Application;
+﻿namespace ChessBand.Application;
 
 internal enum ThinkingMode
 {

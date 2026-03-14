@@ -1,9 +1,9 @@
-﻿namespace ChessPanel.Application.Dialogs;
+﻿namespace ChessBand.Application.Dialogs;
 
 using System;
 using System.Drawing;
 using System.Windows.Forms;
-using static ChessPanel.Application.Dialogs.DialogCreator;
+using static ChessBand.Application.Dialogs.DialogCreator;
 
 internal class FenDialog : BaseDialog
 {

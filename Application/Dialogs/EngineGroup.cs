@@ -1,12 +1,12 @@
-﻿namespace ChessPanel.Application.Dialogs;
+﻿namespace ChessBand.Application.Dialogs;
 
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
-using ChessPanel.Application.Settings;
-using static ChessPanel.Application.Dialogs.DialogCreator;
+using ChessBand.Application.Settings;
+using static ChessBand.Application.Dialogs.DialogCreator;
 
 internal class EngineGroup : GroupBox
 {

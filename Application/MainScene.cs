@@ -1,11 +1,11 @@
-﻿namespace ChessPanel.Application;
+﻿namespace ChessBand.Application;
 
 using System.Drawing;
 using System.Windows.Forms;
-using ChessPanel.Application.Dialogs;
-using ChessPanel.Application.Menus;
-using ChessPanel.Application.Settings;
-using ChessPanel.Scenes;
+using ChessBand.Application.Dialogs;
+using ChessBand.Application.Menus;
+using ChessBand.Application.Settings;
+using ChessBand.Scenes;
 
 internal class MainScene : Scene
 {

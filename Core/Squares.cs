@@ -1,4 +1,4 @@
-﻿namespace ChessPanel.Core;
+﻿namespace ChessBand.Core;
 
 using static Pieces;
 

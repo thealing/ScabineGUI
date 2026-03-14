@@ -1,10 +1,10 @@
-﻿namespace ChessPanel.Application.Dialogs;
+﻿namespace ChessBand.Application.Dialogs;
 
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
-using static ChessPanel.Application.Dialogs.DialogCreator;
+using static ChessBand.Application.Dialogs.DialogCreator;
 
 internal class PgnHeaderDialog : BaseDialog
 {

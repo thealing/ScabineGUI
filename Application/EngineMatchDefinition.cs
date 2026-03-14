@@ -1,4 +1,4 @@
-﻿namespace ChessPanel.Application;
+﻿namespace ChessBand.Application;
 
 using System.Text.Json.Serialization;
 

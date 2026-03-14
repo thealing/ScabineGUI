@@ -1,12 +1,12 @@
-﻿namespace ChessPanel.Application;
+﻿namespace ChessBand.Application;
 
 using System;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
-using ChessPanel.Application.Settings;
-using ChessPanel.Scenes;
-using static ChessPanel.Core.Pieces;
+using ChessBand.Application.Settings;
+using ChessBand.Scenes;
+using static ChessBand.Core.Pieces;
 
 internal class PlayerDisplay : Container
 {

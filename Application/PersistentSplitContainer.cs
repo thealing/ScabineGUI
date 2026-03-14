@@ -1,7 +1,7 @@
-﻿namespace ChessPanel.Application;
+﻿namespace ChessBand.Application;
 
-using ChessPanel.Application.Settings;
-using ChessPanel.Scenes;
+using ChessBand.Application.Settings;
+using ChessBand.Scenes;
 
 internal class PersistentSplitContainer : SplitContainer
 {

@@ -1,10 +1,10 @@
-﻿namespace ChessPanel.Application.Dialogs;
+﻿namespace ChessBand.Application.Dialogs;
 
 using System.Drawing;
 using System.Windows.Forms;
-using ChessPanel.Application.Settings;
-using ChessPanel.Core;
-using static ChessPanel.Core.Pieces;
+using ChessBand.Application.Settings;
+using ChessBand.Core;
+using static ChessBand.Core.Pieces;
 
 internal class PromotionDialog : Form
 {

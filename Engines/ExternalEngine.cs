@@ -1,4 +1,4 @@
-﻿namespace ChessPanel.Engines;
+﻿namespace ChessBand.Engines;
 
 using System;
 using System.Collections.Concurrent;
@@ -7,10 +7,10 @@ using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
-using ChessPanel.Core;
-using ChessPanel.Scenes;
-using static ChessPanel.Core.Game;
-using static ChessPanel.Core.Scores;
+using ChessBand.Core;
+using ChessBand.Scenes;
+using static ChessBand.Core.Game;
+using static ChessBand.Core.Scores;
 
 public sealed class ExternalEngine : AbstractEngine
 {

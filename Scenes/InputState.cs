@@ -1,4 +1,4 @@
-﻿namespace ChessPanel.Scenes;
+﻿namespace ChessBand.Scenes;
 
 public struct InputState
 {

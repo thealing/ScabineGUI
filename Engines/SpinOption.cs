@@ -1,4 +1,4 @@
-﻿namespace ChessPanel.Engines;
+﻿namespace ChessBand.Engines;
 
 public sealed class SpinOption : UciOption
 {

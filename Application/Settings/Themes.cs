@@ -1,9 +1,9 @@
-﻿namespace ChessPanel.Application.Settings;
+﻿namespace ChessBand.Application.Settings;
 
 using System;
 using System.Linq;
-using ChessPanel.Resources;
-using ChessPanel.Scenes;
+using ChessBand.Resources;
+using ChessBand.Scenes;
 
 internal static class Themes
 {

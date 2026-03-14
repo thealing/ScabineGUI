@@ -1,8 +1,8 @@
-﻿namespace ChessPanel.Application;
+﻿namespace ChessBand.Application;
 
 using System;
 using System.Collections.Generic;
-using ChessPanel.Engines;
+using ChessBand.Engines;
 
 internal class EngineInfo : EngineParams
 {

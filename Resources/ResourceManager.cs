@@ -1,4 +1,4 @@
-﻿namespace ChessPanel.Resources;
+﻿namespace ChessBand.Resources;
 
 using System;
 using System.Collections.Generic;

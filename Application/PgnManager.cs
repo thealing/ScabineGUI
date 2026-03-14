@@ -1,4 +1,4 @@
-﻿namespace ChessPanel.Application;
+﻿namespace ChessBand.Application;
 
 using System;
 using System.Collections.Generic;
@@ -6,11 +6,11 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using ChessPanel.Application.Settings;
-using ChessPanel.Core;
-using ChessPanel.Scenes;
-using static ChessPanel.Core.Game;
-using static ChessPanel.Core.Pieces;
+using ChessBand.Application.Settings;
+using ChessBand.Core;
+using ChessBand.Scenes;
+using static ChessBand.Core.Game;
+using static ChessBand.Core.Pieces;
 
 internal static class PgnManager
 {
@@ -264,7 +264,7 @@ internal static class PgnManager
 		if (_dirty)
 		{
 			string localFolder = Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData);
-			string backupFolder = localFolder + Path.DirectorySeparatorChar + "ChessPanel";
+			string backupFolder = localFolder + Path.DirectorySeparatorChar + "ChessBand";
 			Directory.CreateDirectory(backupFolder);
 			string MakePath(int number)
 			{

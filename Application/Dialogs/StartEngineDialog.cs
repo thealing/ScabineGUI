@@ -1,13 +1,13 @@
-﻿namespace ChessPanel.Application.Dialogs;
+﻿namespace ChessBand.Application.Dialogs;
 
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
-using ChessPanel.Application;
-using ChessPanel.Application.Settings;
-using static ChessPanel.Application.Dialogs.DialogCreator;
+using ChessBand.Application;
+using ChessBand.Application.Settings;
+using static ChessBand.Application.Dialogs.DialogCreator;
 
 internal class StartEngineDialog : BaseDialog
 {

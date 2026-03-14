@@ -1,4 +1,4 @@
-﻿namespace ChessPanel.Application.Settings;
+﻿namespace ChessBand.Application.Settings;
 
 using System.Drawing;
 

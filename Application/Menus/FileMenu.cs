@@ -1,12 +1,12 @@
-﻿namespace ChessPanel.Application.Menus;
+﻿namespace ChessBand.Application.Menus;
 
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
-using ChessPanel.Application.Dialogs;
-using ChessPanel.Application.Settings;
-using ChessPanel.Scenes;
+using ChessBand.Application.Dialogs;
+using ChessBand.Application.Settings;
+using ChessBand.Scenes;
 
 internal static class FileMenu
 {

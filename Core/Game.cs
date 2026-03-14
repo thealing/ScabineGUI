@@ -1,4 +1,4 @@
-﻿namespace ChessPanel.Core;
+﻿namespace ChessBand.Core;
 
 using System;
 using System.Text;

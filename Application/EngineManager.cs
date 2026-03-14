@@ -1,4 +1,4 @@
-﻿namespace ChessPanel.Application;
+﻿namespace ChessBand.Application;
 
 using System.Collections.Generic;
 using System.IO;
@@ -6,10 +6,10 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 using System.Windows.Forms;
-using ChessPanel.Application.Dialogs;
-using ChessPanel.Application.Settings;
-using ChessPanel.Engines;
-using ChessPanel.Scenes;
+using ChessBand.Application.Dialogs;
+using ChessBand.Application.Settings;
+using ChessBand.Engines;
+using ChessBand.Scenes;
 
 internal static class EngineManager
 {

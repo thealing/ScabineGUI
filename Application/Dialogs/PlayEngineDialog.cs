@@ -1,13 +1,13 @@
-﻿namespace ChessPanel.Application.Dialogs;
+﻿namespace ChessBand.Application.Dialogs;
 
 using System;
 using System.Drawing;
 using System.Windows.Forms;
-using ChessPanel.Application;
-using ChessPanel.Application.Settings;
-using ChessPanel.Scenes;
-using static ChessPanel.Application.Dialogs.DialogCreator;
-using static ChessPanel.Core.Pieces;
+using ChessBand.Application;
+using ChessBand.Application.Settings;
+using ChessBand.Scenes;
+using static ChessBand.Application.Dialogs.DialogCreator;
+using static ChessBand.Core.Pieces;
 
 internal class PlayEngineDialog : BaseDialog
 {

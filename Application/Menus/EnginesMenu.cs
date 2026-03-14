@@ -1,8 +1,8 @@
-﻿namespace ChessPanel.Application.Menus;
+﻿namespace ChessBand.Application.Menus;
 
 using System.Windows.Forms;
-using ChessPanel.Application.Dialogs;
-using ChessPanel.Scenes;
+using ChessBand.Application.Dialogs;
+using ChessBand.Scenes;
 
 internal static class EnginesMenu
 {

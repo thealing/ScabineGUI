@@ -1,10 +1,10 @@
-﻿namespace ChessPanel.Application.Dialogs;
+﻿namespace ChessBand.Application.Dialogs;
 
 using System;
 using System.Drawing;
 using System.Windows.Forms;
-using ChessPanel.Application.Settings;
-using static ChessPanel.Application.Dialogs.DialogCreator;
+using ChessBand.Application.Settings;
+using static ChessBand.Application.Dialogs.DialogCreator;
 
 internal class QualityDialog : BaseDialog
 {

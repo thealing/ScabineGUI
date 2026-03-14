@@ -1,4 +1,4 @@
-﻿namespace ChessPanel.Engines;
+﻿namespace ChessBand.Engines;
 
 using System;
 using System.Reflection;

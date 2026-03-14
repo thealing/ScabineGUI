@@ -1,10 +1,10 @@
-﻿namespace ChessPanel.Application;
+﻿namespace ChessBand.Application;
 
 using System;
 using System.Drawing;
 using System.Linq;
-using ChessPanel.Engines;
-using ChessPanel.Scenes;
+using ChessBand.Engines;
+using ChessBand.Scenes;
 
 internal class EngineContainer : Container
 {
