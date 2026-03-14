@@ -11,6 +11,7 @@ public static class SceneManager
 	public static Form Window => _window;
 
 	private static readonly double UpdateDelta = 1.0 / 150.0;
+	private static readonly double IdleUpdateDelta = 1.0 / 20.0;
 	private static readonly double RenderDelta = 1.0 / 60.0;
 	private static readonly double MeasureDelta = 1.0 / 2.0;
 
@@ -100,8 +101,9 @@ public static class SceneManager
 	{
 		uint timerResolution = 1;
 		TimeBeginPeriod(timerResolution);
-		double updateTime = Time.GetTime();
 		double renderTime = Time.GetTime();
+		double updateTime = Time.GetTime();
+		double idleUpdateTime = Time.GetTime();
 		while (!_disposed)
 		{
 			if (!_doRender && InvalidationManager.IsInvalidated())
@@ -111,6 +113,11 @@ public static class SceneManager
 			double time = Time.GetTime();
 			if (time > updateTime + UpdateDelta)
 			{
+				if (time > idleUpdateTime + IdleUpdateDelta)
+				{
+					_doUpdate = true;
+					idleUpdateTime = time;
+				}
 				Application.DoEvents();
 				if (_doUpdate || !General.EnableIdleMode)
 				{
