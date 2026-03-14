@@ -115,7 +115,7 @@ public static class SceneManager
 			{
 				if (time > idleUpdateTime + IdleUpdateDelta)
 				{
-					_doUpdate = true;
+					ScheduleUpdate();
 					idleUpdateTime = time;
 				}
 				Application.DoEvents();
