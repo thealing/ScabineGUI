@@ -1,6 +1,7 @@
 ﻿namespace ChessBand.Application;
 
 using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
@@ -89,19 +90,26 @@ internal class MoveListControl : ScrollableContainer
 			RenderTree(g);
 		}
 		base.Render(g);
-		if (_moveToMove == 1)
-		{
-			_moveToMove = 2;
-		}
 	}
 
 	protected override void UpdatePosition()
 	{
-		if (_moveToMove == 2)
+		if (_previousRectangle != _currentRectangle)
 		{
-			_moveToMove = 0;
-			ScrollHeight = Math.Max(Math.Min(_currentRectangle.Top + 1 - Size.Height / 2, VirtualHeight - Size.Height + 1), 0);
-			SceneManager.ScheduleUpdate();
+			if (_hoveredNode != GameManager.GetGame().GetCurrentNode())
+			{
+				if (_currentRectangle.Top < ScrollHeight + _rowHeight)
+				{
+					ScrollHeight = _currentRectangle.Top - _rowHeight;
+					SceneManager.ScheduleUpdate();
+				}
+				if (_currentRectangle.Bottom >= ScrollHeight + Size.Height - _rowHeight)
+				{
+					ScrollHeight = _currentRectangle.Bottom - Size.Height + 1 + _rowHeight;
+					SceneManager.ScheduleUpdate();
+				}
+			}
+			_previousRectangle = _currentRectangle;
 		}
 		base.UpdatePosition();
 		if (_buttons == null)
@@ -125,13 +133,6 @@ internal class MoveListControl : ScrollableContainer
 		_moveWidth = (bounds.Width - _numberWidth) / 2;
 		_numberWidth = bounds.Width - _moveWidth * 2;
 		_padding = _rowHeight / 4;
-		TreeGame game = GameManager.GetGame();
-		TreeNode? currentNode = game.GetCurrentNode();
-		if (currentNode != _previousNode && currentNode != _hoveredNode)
-		{
-			_moveToMove = 1;
-		}
-		_previousNode = currentNode;
 	}
 
 	private void PopupMenu(TreeNode node)
@@ -518,15 +519,14 @@ internal class MoveListControl : ScrollableContainer
 	private readonly TextRenderCache[] _coloredMoveRenderCache;
 	private readonly TextFormatFlags _sideLineFormat;
 	private readonly TextFormatFlags _moveFormat;
-	private int _moveToMove;
 	private int _moveWidth;
 	private int _numberWidth;
 	private int _rowHeight;
 	private int _padding;
 	private TreeNode? _hoveredNode;
-	private TreeNode? _previousNode;
 	private TreeNode? _menuNode;
 	private Rectangle _currentRectangle;
+	private Rectangle _previousRectangle;
 	private Action? _menuAction;
 	private SceneButton[]? _buttons;
 	private bool _autoPlay;
