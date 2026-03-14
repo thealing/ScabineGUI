@@ -16,6 +16,7 @@ internal class PgnDialog : BaseDialog
 		_pgnEdit = AddTextBox(Controls, fen, 25, 25, 550, 400, null);
 		_pgnEdit.Multiline = true;
 		_pgnEdit.WordWrap = true;
+		_pgnEdit.ScrollBars = ScrollBars.Vertical;
 		AddButton(Controls, "Cancel", 395, ClientSize.Height - 55, 80, 30, Cancel);
 		AddButton(Controls, "Done", 495, ClientSize.Height - 55, 80, 30, Done);
 	}
