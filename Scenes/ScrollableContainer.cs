@@ -105,9 +105,10 @@ public class ScrollableContainer : Container
 		g.TranslateTransform(0, ScrollHeight);
 		if (_hasScrollbar && VirtualHeight > 0)
 		{
-			int barHeight = Math.Max(5, Size.Height * Size.Height / VirtualHeight);
+			int barHeight = Math.Clamp(Size.Height * Size.Height / VirtualHeight, 5, Size.Height);
+			int scrollPosition = Math.Clamp((int)Math.Ceiling((double)ScrollHeight * Size.Height / VirtualHeight), 0, Size.Height - barHeight);
 			_scrollRectangle = new Rectangle(Size.Width - ScrollbarWidth, 0, ScrollbarWidth, Size.Height);
-			_scrollbarRectangle = new Rectangle(Size.Width - ScrollbarWidth, Math.Max(Math.Min((int)Math.Ceiling((double)ScrollHeight * Size.Height / VirtualHeight), Size.Height - barHeight + 1), 0), ScrollbarWidth, barHeight);
+			_scrollbarRectangle = new Rectangle(Size.Width - ScrollbarWidth, scrollPosition, ScrollbarWidth, barHeight);
 			g.FillRectangle(_backgroundBrush, _scrollRectangle);
 			g.FillRectangle(_scrollbarBrush, _scrollbarRectangle);
 			g.DrawRectangle(_borderPen, _scrollRectangle);
