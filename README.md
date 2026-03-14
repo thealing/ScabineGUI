@@ -9,8 +9,8 @@ The games can be evaluated with any engine, similarly to chess.com "Game Review"
 - Engine presets
 - Game review
   - Accuracy calculation
-  - Mistake, blunder... counting
-  - Colored moves based on quality
+  - Move coloring
+  - Mistake, blunder counting
 ## Other Features
 - Configure player thinking limit
   - Game time + increment
