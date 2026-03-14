@@ -159,7 +159,7 @@ internal static class PgnManager
 	public static void SetDefaults()
 	{
 		_values["Event"] = "Custom game";
-		_values["Site"] = "ChessPanel GUI";
+		_values["Site"] = "Chess Panel";
 	}
 
 	public static void SetCurrentTime()

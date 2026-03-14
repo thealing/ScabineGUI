@@ -1,5 +1,5 @@
-# ChessPanel Chess GUI
-This is a Windows GUI program for playing against chess engines, running matches between engines, and analyzing games.
+# Chess Panel
+A Windows GUI program for playing against chess engines, running matches between engines, and analyzing games.
 
 The games can be evaluated with any engine, similarly to chess.com "Game Review" and Lichess "Computer Analysis".
 
