@@ -115,6 +115,7 @@ internal static class EngineManager
 		engine = new ExternalEngine(engineInfo);
 		if (!engine.IsRunning())
 		{
+			engine.Dispose();
 			DialogHelper.ShowMessageBox("Failed to start engine!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
 			return false;
 		}
