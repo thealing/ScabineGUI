@@ -14,6 +14,9 @@ using static ChessBand.Core.Scores;
 
 public sealed class ExternalEngine : AbstractEngine
 {
+	public static int StartTimeout = 3000;
+	public static bool AllowNonCompliantEngines = true;
+
 	public ExternalEngine(EngineParams engineParams)
 	{
 		_queue = new ConcurrentQueue<string>();
@@ -47,6 +50,10 @@ public sealed class ExternalEngine : AbstractEngine
 				{
 					ready = true;
 				}
+				if (AllowNonCompliantEngines && e.Data.Contains("uciok"))
+				{
+					ready = true;
+				}
 				_queue.Enqueue(e.Data);
 				SceneManager.ScheduleUpdate();
 				lock (_log)
@@ -61,7 +68,7 @@ public sealed class ExternalEngine : AbstractEngine
 				SendCommand(command);
 			}
 			DateTime startTime = DateTime.Now;
-			TimeSpan timeout = TimeSpan.FromMilliseconds(1000);
+			TimeSpan timeout = TimeSpan.FromMilliseconds(StartTimeout);
 			while (DateTime.Now - startTime < timeout)
 			{
 				if (ready)

@@ -7,6 +7,7 @@ using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using ChessBand.Application.Settings;
+using ChessBand.Engines;
 using static ChessBand.Application.Dialogs.DialogCreator;
 
 internal class SettingsDialog : BaseDialog
@@ -42,6 +43,8 @@ internal class SettingsDialog : BaseDialog
 		AddValue(page, nameof(Board.HighlightMoves));
 		AddValue(page, nameof(Board.HighlightCheck));
 		page = AddTab(typeof(Engines));
+		AddValue(page, nameof(ExternalEngine.AllowNonCompliantEngines), "Allow non-compliant engines");
+		AddValue(page, nameof(ExternalEngine.StartTimeout), "Start timeout (ms)");
 		AddValue(page, nameof(Engines.ResetBeforeEveryMove));
 		AddValue(page, nameof(Engines.PauseWhenInBackground));
 		AddValue(page, nameof(Engines.MaxAnalysisTime), "Max analysis time (ms)");
@@ -80,12 +83,14 @@ internal class SettingsDialog : BaseDialog
 		int padding = 25;
 		int height = Font.Height * 5 / 4;
 		int labelWidth = TextRenderer.MeasureText(label, Font).Width;
-		int width = Math.Min(page.Width / 2, page.Width - padding * 3 - labelWidth) - padding;
+		int width = Math.Min(page.Width * 2 / 5, page.Width - padding * 3 - labelWidth) - padding;
 		int x = page.Width - padding - width;
 		int y = page.Controls.Cast<Control>().Select(c => c.Bottom).DefaultIfEmpty(0).Max() + padding;
 		AddLabel(page.Controls, label, padding, y, labelWidth, height);
 		if (value is string stringValue)
 		{
+			width = Math.Min(page.Width / 2, page.Width - padding * 3 - labelWidth) - padding;
+			x = page.Width - padding - width;
 			TextBox textBox = AddTextBox(page.Controls, stringValue, x, y, width, height, null);
 			Save += (sender, e) =>
 			{
