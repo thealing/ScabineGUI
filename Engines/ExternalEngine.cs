@@ -80,7 +80,7 @@ public sealed class ExternalEngine : AbstractEngine
 
 	public override void Dispose()
 	{
-		if (!IsRunning())
+		if (_disposed || WaitForSingleObject(_process.Handle, 0) == 0)
 		{
 			return;
 		}
