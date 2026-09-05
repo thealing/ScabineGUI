@@ -70,7 +70,8 @@ internal static partial class DialogCreator
 		{
 			Text = text,
 			Bounds = new Rectangle(x, y, width, height),
-			UseCompatibleTextRendering = true
+			UseCompatibleTextRendering = true,
+			CheckAlign = ContentAlignment.TopLeft
 		};
 		if (click != null)
 		{

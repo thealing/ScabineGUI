@@ -28,8 +28,8 @@ internal class PlayEngineDialog : BaseDialog
 		_playerMinutesControl = AddNumber(playerGroup.Controls, true, 180, 40, 60, 30, _playerTime / 60, 0, 999, UpdatePlayer);
 		_playerSecondsControl = AddNumber(playerGroup.Controls, true, 370, 40, 60, 30, _playerTime % 60, 0, 59, UpdatePlayer);
 		_playerIncrementControl = AddNumber(playerGroup.Controls, true, 370, 90, 60, 30, _playerIncrement, 0, 999, UpdatePlayer);
-		_unlimitedTimeCheckBox = AddCheckBox(playerGroup.Controls, "Unlimited time", 30, 140, 155, 30, UpdatePlayer);
-		_unlimitedTimeCheckBox.CheckAlign = ContentAlignment.MiddleRight;
+		AddLabel(playerGroup.Controls, "Unlimited time", 30, 140, 140, 30);
+		_unlimitedTimeCheckBox = AddBigCheckBox(playerGroup.Controls, "", 170, 140, 32, 32, UpdatePlayer);
 		_unlimitedTimeCheckBox.Checked = _playerUnlimited;
 		_whiteSideButton = AddRadioButton(playerGroup.Controls, "White", 140, 190, 90, 40, UpdatePlayer, Appearance.Button);
 		_blackSideButton = AddRadioButton(playerGroup.Controls, "Black", 250, 190, 90, 40, UpdatePlayer, Appearance.Button);
