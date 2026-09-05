@@ -142,10 +142,10 @@ internal static class BoardMenu
 			{
 				long quality = dialog.Quality;
 				string fen = GameManager.GetGame().GetFen();
-				byte[] fenBytes = Encoding.UTF8.GetBytes(fen);
+				byte[] fenBytes = Encoding.UTF8.GetBytes(fen + "\0");
 				PropertyItem propertyItem = (PropertyItem)FormatterServices.GetUninitializedObject(typeof(PropertyItem));
 				propertyItem.Id = 0x010E;
-				propertyItem.Type = 1;
+				propertyItem.Type = 2;
 				propertyItem.Len = fenBytes.Length;
 				propertyItem.Value = fenBytes;
 				bitmap.SetPropertyItem(propertyItem);
@@ -167,11 +167,17 @@ internal static class BoardMenu
 		if (path != null)
 		{
 			using Bitmap bitmap = new Bitmap(path);
-			PropertyItem? propertyItem = bitmap.GetPropertyItem(0x010E);
-			if (propertyItem?.Value != null)
+			try
 			{
-				string fen = Encoding.UTF8.GetString(propertyItem.Value);
-				PgnManager.NewGame(fen);
+				PropertyItem? propertyItem = bitmap.GetPropertyItem(0x010E);
+				if (propertyItem?.Value != null)
+				{
+					string fen = Encoding.UTF8.GetString(propertyItem.Value);
+					PgnManager.NewGame(fen);
+				}
+			}
+			catch
+			{
 			}
 		}
 	}

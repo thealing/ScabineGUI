@@ -22,7 +22,7 @@ internal class QualityDialog : BaseDialog
 		_trackBar.Maximum = 100;
 		_trackBar.TickFrequency = 10;
 		_trackBar.Value = _lastQuality;
-		AddButton(Controls, "Ok", 240, 70, 80, 30, Ok);
+		AddButton(Controls, "OK", 240, 70, 80, 30, Ok);
 		_success = false;
 	}
 
