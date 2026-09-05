@@ -102,7 +102,7 @@ internal class AnalyzisDisplay : Container
 
 	public override void Render(Graphics g)
 	{
-		if (_nodes.Count >= 2)
+		if (_nodes.Count >= 2 && Size.Width >= 2)
 		{
 			int[] x = new int[_nodes.Count];
 			int[] y = new int[_nodes.Count];
@@ -123,6 +123,10 @@ internal class AnalyzisDisplay : Container
 						graphics.FillPolygon(_blackBrush, new Point[] { new Point(x[i], 0), new Point(x[i + 1] + 1, 0), new Point(x[i + 1] + 1, y[i + 1]), new Point(x[i], y[i]) });
 					}
 				}
+			}
+			for (int i = 1; i < x.Length; i++)
+			{
+				x[i] = Math.Clamp(x[i], 1, Size.Width - 1);
 			}
 			g.DrawImage(_graph, 0, 0);
 			if (_hoveredIndex >= 0 && _hoveredIndex < _nodes.Count)
