@@ -24,7 +24,7 @@ public class Program
 			}
 			else
 			{
-				MessageBox.Show(exception.ToString(), "Unhandled exception occurred", MessageBoxButtons.OK, MessageBoxIcon.Error);
+				MessageBox.Show(exception.ToString(), "Unhandled Exception", MessageBoxButtons.OK, MessageBoxIcon.Error);
 			}
 		}
 	}

@@ -14,7 +14,7 @@ internal class PlayEngineDialog : BaseDialog
 	public PlayEngineDialog()
 	{
 		ClientSize = new Size(580, 580);
-		Text = "Play Against Engine";
+		Text = "Game Against Engine";
 		Font = new Font("Segoe UI", 14);
 		_engineGroup = new EngineGroup("eg") { Text = "Engine", Location = new Point(20, 20) };
 		Controls.Add(_engineGroup);

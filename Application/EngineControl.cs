@@ -127,7 +127,7 @@ internal class EngineControl : Container
 		if (!_engine.IsRunning() && !_engineFailed)
 		{
 			_engineFailed = true;
-			DialogResult result = SceneManager.ShowMessageBox($"{_engine.GetName()} has failed. Reload it?", "Engine error", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+			DialogResult result = SceneManager.ShowMessageBox($"{_engine.GetName()} has failed. Reload it?", "Engine Error", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
 			if (result == DialogResult.Yes)
 			{
 				_engineFailed = !EngineManager.ReloadEngine(_engine, _presetName);
