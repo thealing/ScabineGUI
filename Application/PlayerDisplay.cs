@@ -14,7 +14,7 @@ internal class PlayerDisplay : Container
 	{
 		_borderPen = new Pen(Color.Transparent);
 		_nameFont = new Font("Tahoma", 12);
-		_clockFont = new Font("MS Reference Sans Serif", 20);
+		_clockFont = new Font("Verdana", 20);
 		_backgroundBrush = new SolidBrush(Color.FromArgb(250, 250, 250));
 		_activeBrush = new SolidBrush(Color.LightGreen);
 		_flaggedBrush = new SolidBrush(Color.IndianRed);
