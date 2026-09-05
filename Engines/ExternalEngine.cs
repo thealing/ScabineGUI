@@ -102,7 +102,6 @@ public sealed class ExternalEngine : AbstractEngine
 
 	public override bool IsRunning()
 	{
-		// using "_process.HasExited" causes the main window to be stuck in minimized state
 		return !_failed && !_disposed && WaitForSingleObject(_process.Handle, 0) != 0;
 	}
 

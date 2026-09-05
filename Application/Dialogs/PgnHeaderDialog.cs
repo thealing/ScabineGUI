@@ -10,7 +10,6 @@ internal class PgnHeaderDialog : BaseDialog
 {
 	public PgnHeaderDialog()
 	{
-		// Form settings
 		ClientSize = new Size(600, 500);
 		Text = "Edit Game Data";
 		Font = new Font("Segoe UI", 12);
