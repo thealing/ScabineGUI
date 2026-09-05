@@ -148,7 +148,7 @@ public static class SceneManager
 			{
 				sleepDuration = Math.Min(sleepDuration, renderTime + RenderDelta);
 			}
-			sleepDuration -=  Time.GetTime() + timerResolution / 1000.0;
+			sleepDuration -= Time.GetTime() + timerResolution / 1000.0;
 			Time.Sleep(sleepDuration);
 		}
 		TimeEndPeriod(timerResolution);
