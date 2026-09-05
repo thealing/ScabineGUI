@@ -305,6 +305,13 @@ internal static partial class DialogCreator
 		protected override void OnTextBoxResize(object source, EventArgs e)
 		{
 			Controls[1].Width = Width - 10;
+			Invalidate();
+		}
+
+		protected override void OnPaint(PaintEventArgs e)
+		{
+			e.Graphics.Clear(BackColor);
+			base.OnPaint(e);
 		}
 	}
 }
