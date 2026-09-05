@@ -3,6 +3,7 @@
 using ChessPanel.Application.Settings;
 using ChessPanel.Core;
 using ChessPanel.Scenes;
+using System;
 
 internal static class AnimationManager
 {
@@ -26,7 +27,7 @@ internal static class AnimationManager
 
 	public static double GetAnimationProgress()
 	{
-		double progress = (Time.GetTime() - AnimationStartTime) / AnimationDuration;
+		double progress = Math.Min(Time.GetTime() - AnimationStartTime, AnimationDuration) / AnimationDuration;
 		return EaseInOutQuad(progress);
 	}
 
