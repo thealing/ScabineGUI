@@ -126,8 +126,6 @@ public static class InputManager
 	internal static void OnMouseLeave(EventArgs e)
 	{
 		SceneManager.ScheduleUpdate();
-		_currentState.MouseX = int.MinValue;
-		_currentState.MouseY = int.MinValue;
 	}
 
 	internal static void OnDeactivate(EventArgs e)
