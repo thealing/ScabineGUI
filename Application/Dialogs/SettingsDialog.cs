@@ -32,10 +32,10 @@ internal class SettingsDialog : BaseDialog
 		AddValue(page, nameof(Themes.Pieces));
 		AddValue(page, nameof(Themes.Board));
 		page = AddTab(typeof(Play));
-		AddValue(page, nameof(Play.AutoQueen));
+		AddValue(page, nameof(Play.AutoQueen), "Auto-promote pawns");
 		AddValue(page, nameof(Play.MoveMethod));
 		AddValue(page, nameof(Play.MoveAnimation));
-		AddValue(page, nameof(Play.AutoPlayInterval), "Auto-play interval (ms)");
+		AddValue(page, nameof(Play.AutoPlayInterval), "Replay interval (ms)");
 		page = AddTab(typeof(Board));
 		AddValue(page, nameof(Board.ShowCoordinates));
 		AddValue(page, nameof(Board.ShowLegalMoves));
@@ -44,7 +44,7 @@ internal class SettingsDialog : BaseDialog
 		AddValue(page, nameof(Board.HighlightCheck));
 		page = AddTab(typeof(Engines));
 		AddValue(page, nameof(ExternalEngine.AllowNonCompliantEngines), "Allow non-compliant engines");
-		AddValue(page, nameof(ExternalEngine.StartTimeout), "Start timeout (ms)");
+		AddValue(page, nameof(ExternalEngine.StartTimeout), "Startup timeout (ms)");
 		AddValue(page, nameof(Engines.ResetBeforeEveryMove));
 		AddValue(page, nameof(Engines.PauseWhenInBackground));
 		AddValue(page, nameof(Engines.MaxAnalysisTime), "Max analysis time (ms)");

@@ -28,7 +28,7 @@ internal class EngineMatchDialog : BaseDialog
 		}
 		AddButton(Controls, "Switch Sides", 20, 460, 180, 40, SwitchSides);
 		AddButton(Controls, "Cancel", 20, 520, 150, 45, Cancel);
-		AddButton(Controls, "Play", 410, 520, 150, 45, Play);
+		AddButton(Controls, "Start", 410, 520, 150, 45, Start);
 	}
 
 	private void Cancel(object? sender, EventArgs e)
@@ -36,7 +36,7 @@ internal class EngineMatchDialog : BaseDialog
 		Close();
 	}
 
-	private void Play(object? sender, EventArgs e)
+	private void Start(object? sender, EventArgs e)
 	{
 		EngineInfo? whiteEngine = _engineGroups[White].SelectedEngine;
 		EngineInfo? blackEngine = _engineGroups[Black].SelectedEngine;

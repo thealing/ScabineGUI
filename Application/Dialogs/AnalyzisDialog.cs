@@ -17,7 +17,7 @@ internal class AnalyzisDialog : BaseDialog
 	public AnalyzisDialog()
 	{
 		ClientSize = new Size(590, 280);
-		Text = "Auto game analysis";
+		Text = "Automatic game analysis";
 		Font = new Font("Segoe UI", 14);
 		AddLabel(Controls, "Program", 20, 20, 110, 30);
 		AddLabel(Controls, "Preset", 20, 80, 110, 30);
