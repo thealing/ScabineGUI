@@ -13,7 +13,7 @@ internal class PgnHeaderDialog : BaseDialog
 		// Form settings
 		ClientSize = new Size(600, 500);
 		Text = "Edit Game Data";
-		Font = new Font("Segoe UI", 13);
+		Font = new Font("Segoe UI", 12);
 		AddButton(Controls, "Cancel", 20, ClientSize.Height - 60, 100, 40, Cancel);
 		AddButton(Controls, "Done", ClientSize.Width - 120, ClientSize.Height - 60, 100, 40, Done);
 		dataGridView = new DataGridView

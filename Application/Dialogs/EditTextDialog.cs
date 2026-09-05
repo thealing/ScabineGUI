@@ -13,7 +13,7 @@ internal class EditTextDialog : BaseDialog
 	{
 		ClientSize = new Size(500, 135);
 		Text = title;
-		Font = new Font("Segoe UI", 13);
+		Font = new Font("Segoe UI", 11);
 		_box = AddTextBox(Controls, name, 25, 25, 450, 30, null);
 		_box.KeyDown += (sender, e) =>
 		{
