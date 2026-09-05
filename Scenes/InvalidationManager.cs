@@ -152,13 +152,4 @@ public static class InvalidationManager
 		private readonly Func<object?, object?> _getValue;
 		private object? _lastValue;
 	}
-
-	public static void WriteDebugMessage(string message)
-	{
-		AllocConsole();
-		Console.WriteLine(Time.GetTime() + ": " + message);
-	}
-
-	[DllImport("kernel32.dll", SetLastError = true)]
-	private static extern bool AllocConsole();
 }
