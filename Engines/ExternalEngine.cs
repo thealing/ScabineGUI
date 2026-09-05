@@ -40,6 +40,7 @@ public sealed class ExternalEngine : AbstractEngine
 		{
 			_process.Start();
 			_process.BeginOutputReadLine();
+			_started = true;
 			using ManualResetEventSlim readySignal = new ManualResetEventSlim(false);
 			_process.OutputDataReceived += (sender, e) =>
 			{
@@ -83,7 +84,7 @@ public sealed class ExternalEngine : AbstractEngine
 
 	public override void Dispose()
 	{
-		if (_disposed || WaitForSingleObject(_process.Handle, 0) == 0)
+		if (_disposed || !_started || WaitForSingleObject(_process.Handle, 0) == 0)
 		{
 			return;
 		}
@@ -429,6 +430,7 @@ public sealed class ExternalEngine : AbstractEngine
 	private bool _stopped;
 	private bool _restarted;
 	private bool _paused;
+	private bool _started;
 	private bool _disposed;
 	private bool _failed;
 	private string? _playedMove;
