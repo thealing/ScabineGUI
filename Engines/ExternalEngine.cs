@@ -1,5 +1,7 @@
 ﻿namespace ChessPanel.Engines;
 
+using ChessPanel.Core;
+using ChessPanel.Scenes;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -7,8 +9,7 @@ using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
-using ChessPanel.Core;
-using ChessPanel.Scenes;
+using System.Threading;
 using static ChessPanel.Core.Game;
 using static ChessPanel.Core.Scores;
 
@@ -39,7 +40,7 @@ public sealed class ExternalEngine : AbstractEngine
 		{
 			_process.Start();
 			_process.BeginOutputReadLine();
-			bool ready = false;
+			using ManualResetEventSlim readySignal = new ManualResetEventSlim(false);
 			_process.OutputDataReceived += (sender, e) =>
 			{
 				if (string.IsNullOrEmpty(e.Data))
@@ -48,11 +49,11 @@ public sealed class ExternalEngine : AbstractEngine
 				}
 				if (e.Data.Contains("readyok"))
 				{
-					ready = true;
+					readySignal.Set();
 				}
 				if (AllowNonCompliantEngines && e.Data.Contains("uciok"))
 				{
-					ready = true;
+					readySignal.Set();
 				}
 				_queue.Enqueue(e.Data);
 				SceneManager.ScheduleUpdate();
@@ -67,15 +68,10 @@ public sealed class ExternalEngine : AbstractEngine
 			{
 				SendCommand(command);
 			}
-			DateTime startTime = DateTime.Now;
-			TimeSpan timeout = TimeSpan.FromMilliseconds(StartTimeout);
-			while (DateTime.Now - startTime < timeout)
+			if (readySignal.Wait(StartTimeout))
 			{
-				if (ready)
-				{
-					_failed = false;
-					return;
-				}
+				_failed = false;
+				return;
 			}
 			_failed = true;
 		}
