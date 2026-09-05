@@ -28,7 +28,7 @@ internal static class EngineManager
 		string hash = GetFileHash(path);
 		if (_installedEngines.Any(engine => engine.Hash == hash))
 		{
-			DialogHelper.ShowMessageBox("Engine already installed!", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+			DialogHelper.ShowMessageBox("Engine is already installed!", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
 			return false;
 		}
 		using IEngine engine = new ExternalEngine(new EngineParams(path, "", ""));

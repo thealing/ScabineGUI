@@ -171,7 +171,7 @@ internal class MoveListControl : ScrollableContainer
 		}
 		if (!_menuNode.IsMainLine)
 		{
-			AddOption("Make main line", MenuIcons.Promote, Promote);
+			AddOption("Promote line", MenuIcons.Promote, Promote);
 			AddOption("Move up", MenuIcons.Up, MoveUp);
 			AddOption("Move down", MenuIcons.Down, MoveDown);
 			AddOption("Expand variations", MenuIcons.Expand, Expand);
