@@ -34,14 +34,20 @@ internal class GraphicsHelper
 
 	public static void DrawText(Graphics g, string? text, Font font, Rectangle layoutRectangle, Color color, TextFormatFlags format)
 	{
-		layoutRectangle.Offset((int)g.Transform.OffsetX, (int)g.Transform.OffsetY);
-		TextRenderer.DrawText(g, text, font, layoutRectangle, color, format);
+		if (g.ClipBounds.IntersectsWith(layoutRectangle))
+		{
+			layoutRectangle.Offset((int)g.Transform.OffsetX, (int)g.Transform.OffsetY);
+			TextRenderer.DrawText(g, text, font, layoutRectangle, color, format);
+		}
 	}
 
 	public static void DrawText(Graphics g, string? text, Font font, Color color, Rectangle layoutRectangle, TextFormatFlags format)
 	{
-		layoutRectangle.Offset((int)g.Transform.OffsetX, (int)g.Transform.OffsetY);
-		TextRenderer.DrawText(g, text, font, layoutRectangle, color, format);
+		if (g.ClipBounds.IntersectsWith(layoutRectangle))
+		{
+			layoutRectangle.Offset((int)g.Transform.OffsetX, (int)g.Transform.OffsetY);
+			TextRenderer.DrawText(g, text, font, layoutRectangle, color, format);
+		}
 	}
 
 	public static void FillRectangle(Graphics g, Brush brush, Rectangle rect)
