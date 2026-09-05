@@ -403,7 +403,7 @@ internal class BoardControl : SceneNode
 		{
 			return;
 		}
-		Font font = new Font("Arial", Math.Max(1, _gapSize / 3));
+		using Font font = new Font("Arial", Math.Max(1, _gapSize / 3));
 		for (int rank = 0; rank < RankCount; rank++)
 		{
 			int x = -_gapSize / 2;
