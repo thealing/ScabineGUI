@@ -203,6 +203,7 @@ internal class BoardControl : SceneNode
 
 	private void RenderPieces(Graphics g)
 	{
+		bool animating = AnimationManager.IsAnimating();
 		using (new CompositingQualityChanger(g, CompositingQuality.HighQuality))
 		{
 			for (int rank = 0; rank < RankCount; rank++)
@@ -214,7 +215,7 @@ internal class BoardControl : SceneNode
 					{
 						continue;
 					}
-					if (AnimationManager.IsAnimating() && AnimationManager.AnimatedMove is Move move)
+					if (animating && AnimationManager.AnimatedMove is Move move)
 					{
 						if (square == move.SourceSquare || square == move.TargetSquare)
 						{
@@ -257,7 +258,7 @@ internal class BoardControl : SceneNode
 					}
 				}
 			}
-			if (AnimationManager.IsAnimating() && AnimationManager.AnimatedMove != null)
+			if (animating && AnimationManager.AnimatedMove != null)
 			{
 				InvalidationManager.ForceInvalidate();
 				Move move = AnimationManager.AnimatedMove.Value;
