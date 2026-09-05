@@ -287,7 +287,7 @@ internal class EngineControl : Container
 			MenuCreator.AddMenuSeparator(menu);
 			MenuCreator.AddMenuItem(menu, "Move up", MenuIcons.Up, () => SwapWithSibling(-1));
 			MenuCreator.AddMenuItem(menu, "Move down", MenuIcons.Down, () => SwapWithSibling(1));
-			MenuCreator.AddMenuItem(menu, "View log", MenuIcons.Logs, ViewLog);
+			MenuCreator.AddMenuItem(menu, "View log", MenuIcons.Log, ViewLog);
 			MenuCreator.AddMenuItem(menu, "Reload", MenuIcons.Reload, () => EngineManager.ReloadEngine(_engine, _presetName));
 			if (!MatchManager.IsEnginePlaying(_engine))
 			{
