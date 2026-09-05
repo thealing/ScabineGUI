@@ -106,7 +106,7 @@ internal static class SceneProfiler
 			return;
 		}
 		e.Graphics.Clear(SystemColors.Control);
-		Font font = new Font("Segoe UI", 9);
+		using Font font = new Font("Segoe UI", 9);
 		int padding = 10;
 		int lineHeight = font.Height + padding;
 		int y = 0;

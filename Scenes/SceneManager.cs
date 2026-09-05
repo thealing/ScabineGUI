@@ -225,8 +225,8 @@ public static class SceneManager
 	{
 		if (_showFps)
 		{
-			Font font = new Font("Segoe UI", 15, FontStyle.Bold);
-			Brush brush = new SolidBrush(Color.FromArgb(170, Color.Green));
+			using Font font = new Font("Segoe UI", 15, FontStyle.Bold);
+			using Brush brush = new SolidBrush(Color.FromArgb(170, Color.Green));
 			StringFormat format = new StringFormat()
 			{
 				Alignment = StringAlignment.Far,
