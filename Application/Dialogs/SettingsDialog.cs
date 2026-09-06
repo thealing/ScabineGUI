@@ -16,7 +16,7 @@ internal class SettingsDialog : BaseDialog
 
 	public SettingsDialog()
 	{
-		ClientSize = new Size(500, 480);
+		ClientSize = new Size(500, 500);
 		Text = "Settings";
 		Font = new Font("Segoe UI", 14);
 		_tabControl = AddTabControl(Controls, 0, 0, ClientSize.Width + 2, ClientSize.Height - 80);
@@ -28,6 +28,7 @@ internal class SettingsDialog : BaseDialog
 		AddValue(page, nameof(General.ConfirmExit));
 		AddValue(page, nameof(General.AutoSaveInterval), "Auto-save interval (ms)");
 		AddValue(page, nameof(General.EnableIdleMode));
+		AddValue(page, nameof(General.EnableClipping));
 		page = AddTab(typeof(Themes));
 		AddValue(page, nameof(Themes.Pieces));
 		AddValue(page, nameof(Themes.Board));

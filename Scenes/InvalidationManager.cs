@@ -16,6 +16,11 @@ public static class InvalidationManager
 		return _entriesChanged || _invalidated;
 	}
 
+	public static void Invalidate()
+	{
+		_staticChanged = true;
+	}
+
 	public static void ForceRender()
 	{
 		_entriesChanged = true;

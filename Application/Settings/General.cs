@@ -9,6 +9,7 @@ internal static class General
 	public static bool ConfirmExit = true;
 	public static int AutoSaveInterval = 1000;
 	public static bool EnableIdleMode = true;
+	public static bool EnableClipping = true;
 
 	static General()
 	{
@@ -17,10 +18,12 @@ internal static class General
 		SaveManager.Save += () => SaveManager.Sync(nameof(ConfirmExit), ref ConfirmExit);
 		SaveManager.Save += () => SaveManager.Sync(nameof(AutoSaveInterval), ref AutoSaveInterval);
 		SaveManager.Save += () => SaveManager.Sync(nameof(EnableIdleMode), ref EnableIdleMode);
+		SaveManager.Save += () => SaveManager.Sync(nameof(EnableClipping), ref EnableClipping);
 		InvalidationManager.RegisterInvalidatingStaticField(typeof(General), nameof(Name));
 		InvalidationManager.RegisterInvalidatingStaticField(typeof(General), nameof(PlaySounds));
 		InvalidationManager.RegisterInvalidatingStaticField(typeof(General), nameof(ConfirmExit));
 		InvalidationManager.RegisterInvalidatingStaticField(typeof(General), nameof(AutoSaveInterval));
 		InvalidationManager.RegisterInvalidatingStaticField(typeof(General), nameof(EnableIdleMode));
+		InvalidationManager.RegisterInvalidatingStaticField(typeof(General), nameof(EnableClipping));
 	}
 }
