@@ -225,6 +225,7 @@ internal class TreeGame : UciGame
 			node.IsMainLine = mainLine;
 			node = node.Children.ElementAtOrDefault(0);
 		}
+		InvalidationManager.ForceInvalidate(this);
 	}
 
 	private void SwapWithSiblingNode(TreeNode node, int delta)
@@ -241,6 +242,7 @@ internal class TreeGame : UciGame
 				{
 					parent.Children[siblingIndex] = node;
 					parent.Children[index] = sibling;
+					InvalidationManager.ForceInvalidate(this);
 				}
 			}
 		}

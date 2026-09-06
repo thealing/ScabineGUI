@@ -35,7 +35,6 @@ internal static class BoardMenu
 	private static void FlipBoard()
 	{
 		Board.Flipped ^= true;
-		InvalidationManager.ForceInvalidate();
 	}
 
 	private static void SetStartPosition()

@@ -88,6 +88,16 @@ public class ScrollableContainer : Container
 		}
 	}
 
+	public override void RenderFree(Graphics g)
+	{
+		g.TranslateTransform(0, -ScrollHeight);
+		using (new ClipChanger(g, GetRenderBounds()))
+		{
+			base.RenderFree(g);
+		}
+		g.TranslateTransform(0, ScrollHeight);
+	}
+
 	protected override void BeforeRender(Graphics g)
 	{
 		base.BeforeRender(g);

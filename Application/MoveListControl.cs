@@ -92,6 +92,12 @@ internal class MoveListControl : ScrollableContainer
 		base.Render(g);
 	}
 
+	public override void RenderFree(Graphics g)
+	{
+		RenderTree(null);
+		base.RenderFree(g);
+	}
+
 	protected override void UpdatePosition()
 	{
 		if (_previousRectangle != _currentRectangle)
@@ -290,7 +296,7 @@ internal class MoveListControl : ScrollableContainer
 		}
 	}
 
-	private bool RenderNode(Graphics g, TreeNode node, Rectangle rectangle)
+	private bool RenderNode(Graphics? g, TreeNode node, Rectangle rectangle)
 	{
 		if (node == GameManager.GetGame().GetCurrentNode())
 		{
@@ -303,12 +309,18 @@ internal class MoveListControl : ScrollableContainer
 		}
 		if (node == GameManager.GetGame().GetCurrentNode())
 		{
-			FillRectangle(g, _currentMoveBrush, rectangle);
+			if (g != null)
+			{
+				FillRectangle(g, _currentMoveBrush, rectangle);
+			}
 			return true;
 		}
 		if (ContainsMouse() && rectangle.Contains(mousePosition))
 		{
-			FillRectangle(g, _hoveredMoveBrush, rectangle);
+			if (g != null)
+			{
+				FillRectangle(g, _hoveredMoveBrush, rectangle);
+			}
 			return true;
 		}
 		return false;
@@ -319,7 +331,7 @@ internal class MoveListControl : ScrollableContainer
 		FillRectangle(g, _backBrush, GetRenderBounds());
 	}
 
-	private void RenderTree(Graphics g)
+	private void RenderTree(Graphics? g)
 	{
 		_hoveredNode = null;
 		int height = _branchFont.Height;
@@ -336,8 +348,11 @@ internal class MoveListControl : ScrollableContainer
 			Point branchBottom = new Point(branchStart, actualHeight + branchLength + padding);
 			Point branchLeft = new Point(branchStart, actualHeight + height / 2 + padding);
 			Point branchRight = new Point(branchEnd - padding, actualHeight + height / 2 + padding);
-			DrawLine(g, _linePen, branchTop, branchBottom);
-			DrawLine(g, _linePen, branchLeft, branchRight);
+			if (g != null)
+			{
+				DrawLine(g, _linePen, branchTop, branchBottom);
+				DrawLine(g, _linePen, branchLeft, branchRight);
+			}
 			depthHeights[depth] = actualHeight;
 			Rectangle rectangle = new Rectangle(branchEnd, actualHeight + padding, GetRenderBounds().Width - branchEnd, int.MaxValue);
 			int x = 0, y = 0;
@@ -360,6 +375,10 @@ internal class MoveListControl : ScrollableContainer
 				Rectangle rectangle = GetNextTextRect(text);
 				bool colored = RenderNode(g, node, rectangle);
 				rectangle.Offset(movePadding.Width, 0);
+				if (g == null)
+				{
+					return;
+				}
 				if (colored)
 				{
 					DrawString(g, text, _branchFont, _foregroundColor, rectangle, _sideLineFormat);
@@ -377,8 +396,11 @@ internal class MoveListControl : ScrollableContainer
 			}
 			if (node.IsCollapsed && node.Children.Count != 0)
 			{
-				string ellipsisText = "[...]";
-				_sideLineRenderCache.Render(g, ellipsisText, GetNextTextRect(ellipsisText));
+				if (g != null)
+				{
+					string ellipsisText = "[...]";
+					_sideLineRenderCache.Render(g, ellipsisText, GetNextTextRect(ellipsisText));
+				}
 			}
 			actualHeight += y + height + padding * 2;
 			depthHeights[depth + 1] = actualHeight;
@@ -404,8 +426,11 @@ internal class MoveListControl : ScrollableContainer
 				Rectangle whiteRectangle = new Rectangle(_numberWidth, actualHeight, _moveWidth, _rowHeight);
 				Rectangle blackRectangle = new Rectangle(_numberWidth + _moveWidth, actualHeight, _moveWidth, _rowHeight);
 				actualHeight += _rowHeight;
-				FillRectangle(g, _backgroundBrush, rowRectangle);
-				_mainLineRenderCache.Render(g, $"{next.Rank / 2 + 1}", numberRectangle);
+				if (g != null)
+				{
+					FillRectangle(g, _backgroundBrush, rowRectangle);
+					_mainLineRenderCache.Render(g, $"{next.Rank / 2 + 1}", numberRectangle);
+				}
 				void DrawMove(TreeNode? node, string move, Rectangle rectangle)
 				{
 					bool colored = false;
@@ -419,6 +444,10 @@ internal class MoveListControl : ScrollableContainer
 					if (indent >= 0)
 					{
 						rectangle.Width -= indent;
+					}
+					if (g == null)
+					{
+						return;
 					}
 					if (colored)
 					{
@@ -445,6 +474,10 @@ internal class MoveListControl : ScrollableContainer
 				}
 				void DrawGrid()
 				{
+					if (g == null)
+					{
+						return;
+					}
 					DrawRectangle(g, _gridPen, numberRectangle);
 					DrawRectangle(g, _gridPen, whiteRectangle);
 					DrawRectangle(g, _gridPen, blackRectangle);
@@ -494,11 +527,14 @@ internal class MoveListControl : ScrollableContainer
 		}
 		TreeNode root = GameManager.GetGame().GetRootNode();
 		RenderMainLine(root);
-		_mainLineMeasureCache.EndFrame();
-		_sideLineMeasureCache.EndFrame();
-		_mainLineRenderCache.EndFrame();
-		_sideLineRenderCache.EndFrame();
-		Array.ForEach(_coloredMoveRenderCache, cache => cache.EndFrame());
+		if (g != null)
+		{
+			_mainLineMeasureCache.EndFrame();
+			_sideLineMeasureCache.EndFrame();
+			_mainLineRenderCache.EndFrame();
+			_sideLineRenderCache.EndFrame();
+			Array.ForEach(_coloredMoveRenderCache, cache => cache.EndFrame());
+		}
 		VirtualHeight = actualHeight;
 	}
 

@@ -41,6 +41,15 @@ internal class GraphicsHelper
 		}
 	}
 
+	public static void DrawText(Graphics g, string? text, Font font, Rectangle layoutRectangle, Color color, Color backgroundColor, TextFormatFlags format)
+	{
+		if (g.ClipBounds.IntersectsWith(layoutRectangle) || (layoutRectangle.Width == 0 && layoutRectangle.Height == 0))
+		{
+			layoutRectangle.Offset((int)g.Transform.OffsetX, (int)g.Transform.OffsetY);
+			TextRenderer.DrawText(g, text, font, layoutRectangle, color, backgroundColor, format);
+		}
+	}
+
 	public static void DrawText(Graphics g, string? text, Font font, Color color, Rectangle layoutRectangle, TextFormatFlags format)
 	{
 		if (g.ClipBounds.IntersectsWith(layoutRectangle))

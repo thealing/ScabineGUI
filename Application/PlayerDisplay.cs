@@ -25,23 +25,14 @@ internal class PlayerDisplay : Container
 		InvalidationManager.RegisterInvalidatingField(this, nameof(_whiteTenths));
 		InvalidationManager.RegisterInvalidatingField(this, nameof(_blackSeconds));
 		InvalidationManager.RegisterInvalidatingField(this, nameof(_blackTenths));
+		InvalidationManager.RegisterInvalidatingField(this, nameof(_whiteFlagged));
+		InvalidationManager.RegisterInvalidatingField(this, nameof(_blackFlagged));
+		InvalidationManager.RegisterInvalidatingField(this, nameof(_activeSide));
 	}
 
-	public override void Render(Graphics g)
+	public override void Update()
 	{
-		int padding = Size.Height / 20;
-		int width = Size.Width - padding * 2 - _clockWidth;
-		int height = Size.Height / 2;
-		int whiteHeight = Board.Flipped ? 0 : height;
-		int blackHeight = Board.Flipped ? height : 0;
-		GraphicsHelper.DrawText(g, PgnManager.GetValue("White"), _nameFont, new Rectangle(padding, whiteHeight, width - padding * 2, height), _foregroundColor, TextFormats.LeftClipped);
-		GraphicsHelper.DrawText(g, PgnManager.GetValue("Black"), _nameFont, new Rectangle(padding, blackHeight, width - padding * 2, height), _foregroundColor, TextFormats.LeftClipped);
-		Rectangle whiteRectangle = new Rectangle(width, whiteHeight, Size.Width - width, height);
-		Rectangle blackRectangle = new Rectangle(width, blackHeight, Size.Width - width, height);
-		whiteRectangle.Inflate(-padding, -padding);
-		blackRectangle.Inflate(-padding, -padding);
-		g.FillRectangle(_backgroundBrush, whiteRectangle);
-		g.FillRectangle(_backgroundBrush, blackRectangle);
+		base.Update();
 		int whiteTime = 0;
 		int blackTime = 0;
 		if (MatchManager.IsPlaying())
@@ -50,31 +41,23 @@ internal class PlayerDisplay : Container
 			blackTime = MatchManager.GetBlackClock();
 			TreeNode lastNode = GameManager.GetGame().GetLastNode();
 			int turn = lastNode.Color ^ 1;
-			if (whiteTime < 0)
+			_whiteFlagged = whiteTime < 0;
+			_blackFlagged = blackTime < 0;
+			if (_whiteFlagged || _blackFlagged)
 			{
 				turn = -1;
-				g.FillRectangle(_flaggedBrush, whiteRectangle);
 			}
-			if (blackTime < 0)
+			_activeSide = (!MatchManager.IsPaused() && !MatchManager.IsFinished()) ? turn : -1;
+			if (_activeSide != -1)
 			{
-				turn = -1;
-				g.FillRectangle(_flaggedBrush, blackRectangle);
-			}
-			if (!MatchManager.IsPaused() && !MatchManager.IsFinished())
-			{
-				if (turn == White)
-				{
-					g.FillRectangle(_activeBrush, whiteRectangle);
-				}
-				if (turn == Black)
-				{
-					g.FillRectangle(_activeBrush, blackRectangle);
-				}
 				SceneManager.ScheduleUpdate();
 			}
 		}
 		else
 		{
+			_whiteFlagged = false;
+			_blackFlagged = false;
+			_activeSide = -1;
 			TreeNode? node = GameManager.GetGame().GetCurrentNode();
 			while (node != null && (!node.IsMainLine || node.Time == null))
 			{
@@ -99,14 +82,47 @@ internal class PlayerDisplay : Container
 				}
 			}
 		}
-		g.DrawRectangle(Pens.Black, whiteRectangle);
-		g.DrawRectangle(Pens.Black, blackRectangle);
 		whiteTime = Math.Max(whiteTime, 0);
 		blackTime = Math.Max(blackTime, 0);
 		_whiteSeconds = whiteTime / 1000;
 		_blackSeconds = blackTime / 1000;
 		_whiteTenths = whiteTime / 100 % 10;
 		_blackTenths = blackTime / 100 % 10;
+	}
+
+	public override void Render(Graphics g)
+	{
+		int padding = Size.Height / 20;
+		int width = Size.Width - padding * 2 - _clockWidth;
+		int height = Size.Height / 2;
+		int whiteHeight = Board.Flipped ? 0 : height;
+		int blackHeight = Board.Flipped ? height : 0;
+		GraphicsHelper.DrawText(g, PgnManager.GetValue("White"), _nameFont, new Rectangle(padding, whiteHeight, width - padding * 2, height), _foregroundColor, TextFormats.LeftClipped);
+		GraphicsHelper.DrawText(g, PgnManager.GetValue("Black"), _nameFont, new Rectangle(padding, blackHeight, width - padding * 2, height), _foregroundColor, TextFormats.LeftClipped);
+		Rectangle whiteRectangle = new Rectangle(width, whiteHeight, Size.Width - width, height);
+		Rectangle blackRectangle = new Rectangle(width, blackHeight, Size.Width - width, height);
+		whiteRectangle.Inflate(-padding, -padding);
+		blackRectangle.Inflate(-padding, -padding);
+		g.FillRectangle(_backgroundBrush, whiteRectangle);
+		g.FillRectangle(_backgroundBrush, blackRectangle);
+		if (_whiteFlagged)
+		{
+			g.FillRectangle(_flaggedBrush, whiteRectangle);
+		}
+		if (_blackFlagged)
+		{
+			g.FillRectangle(_flaggedBrush, blackRectangle);
+		}
+		if (_activeSide == White)
+		{
+			g.FillRectangle(_activeBrush, whiteRectangle);
+		}
+		if (_activeSide == Black)
+		{
+			g.FillRectangle(_activeBrush, blackRectangle);
+		}
+		g.DrawRectangle(Pens.Black, whiteRectangle);
+		g.DrawRectangle(Pens.Black, blackRectangle);
 		string whiteText = $"{_whiteSeconds / 60,2}:{_whiteSeconds % 60:D2}.{_whiteTenths}";
 		string blackText = $"{_blackSeconds / 60,2}:{_blackSeconds % 60:D2}.{_blackTenths}";
 		whiteRectangle.Inflate(-padding, -padding);
@@ -144,4 +160,7 @@ internal class PlayerDisplay : Container
 	private int _blackSeconds;
 	private int _whiteTenths;
 	private int _blackTenths;
+	private bool _whiteFlagged;
+	private bool _blackFlagged;
+	private int _activeSide;
 }

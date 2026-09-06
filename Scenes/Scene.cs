@@ -56,7 +56,8 @@ public class Scene
 	protected internal virtual void Render(Graphics g)
 	{
 		SceneProfiler.BeforeRender();
-		_root.Render(g);
+		bool windowChanged = InvalidationManager.IsInvalidated(SceneManager.Window);
+		_root.Render(g, windowChanged);
 		SceneProfiler.AfterRender();
 	}
 

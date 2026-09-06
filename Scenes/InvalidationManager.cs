@@ -3,32 +3,62 @@
 using System;
 using System.Collections.Generic;
 using System.Reflection;
-using System.Runtime.InteropServices;
 
 public static class InvalidationManager
 {
+	public static bool IsInvalidated(object obj)
+	{
+		return _staticInvalidated || _changedObjects.Contains(obj);
+	}
+
 	public static bool IsInvalidated()
 	{
 		return _entriesChanged || _invalidated;
 	}
 
+	public static void ForceRender()
+	{
+		_entriesChanged = true;
+	}
+
 	public static void ForceInvalidate()
 	{
 		_entriesChanged = true;
+		_staticChanged = true;
+	}
+
+	public static void ForceInvalidate(object obj)
+	{
+		_entriesChanged = true;
+		_invalidatedObjects.Add(obj);
 	}
 
 	public static void Update()
 	{
 		_invalidated = _entriesChanged;
 		_entriesChanged = false;
+		_staticInvalidated = _staticChanged;
+		_staticChanged = false;
 		_entries.RemoveAll(entry => !entry.IsAlive());
+		_changedObjects.Clear();
 		foreach (Entry entry in _entries)
 		{
 			if (entry.HasValueChanged())
 			{
+				object? target = entry.GetObject();
+				if (target != null)
+				{
+					_changedObjects.Add(target);
+				}
+				else
+				{
+					_staticChanged = true;
+				}
 				_invalidated = true;
 			}
 		}
+		_changedObjects.UnionWith(_invalidatedObjects);
+		_invalidatedObjects.Clear();
 	}
 
 	public static void RegisterInvalidatingField(object target, string fieldName)
@@ -107,14 +137,20 @@ public static class InvalidationManager
 
 	static InvalidationManager()
 	{
+		_changedObjects = new HashSet<object>();
+		_invalidatedObjects = new HashSet<object>();
 		_entries = new List<Entry>();
 		_entriesChanged = true;
 		_invalidated = true;
 	}
 
+	private static readonly HashSet<object> _changedObjects;
+	private static readonly HashSet<object> _invalidatedObjects;
 	private static readonly List<Entry> _entries;
 	private static bool _entriesChanged;
 	private static bool _invalidated;
+	private static bool _staticChanged;
+	private static bool _staticInvalidated;
 
 	private class Entry
 	{
@@ -128,6 +164,11 @@ public static class InvalidationManager
 			_lastValue = getValue(target);
 		}
 
+		public object? GetObject()
+		{
+			return _targetReference?.Target;
+		}
+
 		public bool IsAlive()
 		{
 			return _targetReference?.IsAlive ?? true;
@@ -135,15 +176,16 @@ public static class InvalidationManager
 
 		public bool HasValueChanged()
 		{
-			object? target = _targetReference?.Target;
-			if (target != null)
+			if (_targetReference != null && _targetReference.Target == null)
 			{
-				object? value = _getValue(target);
-				if (!Equals(value, _lastValue))
-				{
-					_lastValue = value;
-					return true;
-				}
+				return false;
+			}
+			object? target = _targetReference?.Target;
+			object? value = _getValue(target);
+			if (!Equals(value, _lastValue))
+			{
+				_lastValue = value;
+				return true;
 			}
 			return false;
 		}

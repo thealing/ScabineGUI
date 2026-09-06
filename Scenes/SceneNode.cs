@@ -102,7 +102,7 @@ public class SceneNode
 		}
 	}
 
-	public virtual void Render(Graphics g)
+	public virtual void Render(Graphics g, bool stale)
 	{
 		foreach (SceneNode child in CloneChildren())
 		{
@@ -114,9 +114,16 @@ public class SceneNode
 			SceneProfiler.RenderDurations[child] = 0;
 			using (TransformChanger.Translate(g, child._location.X, child._location.Y))
 			{
-				child.BeforeRender(g);
-				child.Render(g);
-				child.AfterRender(g);
+				if (stale || InvalidationManager.IsInvalidated(child))
+				{
+					child.BeforeRender(g);
+					child.Render(g);
+					child.AfterRender(g);
+				}
+				else
+				{
+					child.RenderFree(g);
+				}
 			}
 			double timeAfterRender = Time.GetTime();
 			double updateDuration = timeAfterRender - timeBeforeRender;
@@ -126,6 +133,16 @@ public class SceneNode
 				SceneProfiler.RenderDurations[child.Parent] -= updateDuration;
 			}
 		}
+	}
+
+	public virtual void Render(Graphics g)
+	{
+		Render(g, true);
+	}
+
+	public virtual void RenderFree(Graphics g)
+	{
+		Render(g, false);
 	}
 
 	public virtual void AddChild(SceneNode node)

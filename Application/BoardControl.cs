@@ -1,12 +1,12 @@
 ﻿namespace ChessPanel.Application;
 
-using System;
-using System.Drawing;
-using System.Drawing.Drawing2D;
 using ChessPanel.Application.Dialogs;
 using ChessPanel.Application.Settings;
 using ChessPanel.Core;
 using ChessPanel.Scenes;
+using System;
+using System.Drawing;
+using System.Drawing.Drawing2D;
 using static ChessPanel.Core.Move;
 using static ChessPanel.Core.Pieces;
 using static ChessPanel.Core.Squares;
@@ -103,6 +103,30 @@ internal class BoardControl : SceneNode
 			_selectedSquare = NoSquare;
 			_hoveredSquare = NoSquare;
 			_dragging = false;
+		}
+		if (_draggingOutside)
+		{
+			InvalidationManager.ForceInvalidate();
+		}
+		if (_dragging)
+		{
+			Point location = GetMousePosition();
+			Point lowerBound = location - new Size(_squareSize / 2, _squareSize / 2);
+			Rectangle pieceBounds = new Rectangle(lowerBound, new Size(_squareSize, _squareSize));
+			pieceBounds.Inflate(2, 2);
+			if (!SelfBounds.Contains(pieceBounds))
+			{
+				_draggingOutside = true;
+				InvalidationManager.ForceInvalidate();
+			}
+			else
+			{
+				_draggingOutside = false;
+			}
+		}
+		else
+		{
+			_draggingOutside = false;
 		}
 		base.Update();
 	}
@@ -260,7 +284,7 @@ internal class BoardControl : SceneNode
 			}
 			if (animating && AnimationManager.AnimatedMove != null)
 			{
-				InvalidationManager.ForceInvalidate();
+				InvalidationManager.ForceInvalidate(this);
 				Move move = AnimationManager.AnimatedMove.Value;
 				double progress = AnimationManager.GetAnimationProgress();
 				void DrawPiece(int piece, PointF point)
@@ -416,7 +440,7 @@ internal class BoardControl : SceneNode
 				}
 				else
 				{
-					GraphicsHelper.DrawText(g, GetRankChar(rank).ToString(), font, new Rectangle(x, y, 0, 0), Color.Black, TextFormats.Centered);
+					GraphicsHelper.DrawText(g, GetRankChar(rank).ToString(), font, new Rectangle(x, y, 0, 0), Color.Black, Color.White, TextFormats.Centered);
 				}
 				x = _boardSize - x;
 			}
@@ -433,7 +457,7 @@ internal class BoardControl : SceneNode
 				}
 				else
 				{
-					GraphicsHelper.DrawText(g, GetFileChar(file).ToString(), font, new Rectangle(x, y, 0, 0), Color.Black, TextFormats.Centered);
+					GraphicsHelper.DrawText(g, GetFileChar(file).ToString(), font, new Rectangle(x, y, 0, 0), Color.Black, Color.White, TextFormats.Centered);
 				}
 				y = _boardSize - y;
 			}
@@ -510,5 +534,6 @@ internal class BoardControl : SceneNode
 	private int _hoveredSquare;
 	private int _activeSquare;
 	private bool _dragging;
+	private bool _draggingOutside;
 	private Point _draggedLocation;
 }

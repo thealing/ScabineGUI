@@ -79,6 +79,11 @@ internal class MainScene : Scene
 		{
 			_windowSettings.Size = SceneManager.Window.ClientSize;
 		}
+		TreeGame game = GameManager.GetGame();
+		if (InvalidationManager.IsInvalidated(game))
+		{
+			InvalidationManager.ForceInvalidate(SceneManager.Window);
+		}
 		base.Update();
 	}
 

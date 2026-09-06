@@ -135,7 +135,9 @@ public static class SceneManager
 				_doRender = false;
 				if (!_window.IsDisposed && !IsMinimized())
 				{
+					_inPaint = true;
 					_window.Refresh();
+					_inPaint = false;
 				}
 				renderTime = time;
 			}
@@ -213,18 +215,21 @@ public static class SceneManager
 
 	private static void BeforeRender(Graphics g)
 	{
-		g.Clear(Color.White);
+		if (_showFps)
+		{
+			Rectangle updateFpsArea = new Rectangle(5, _window.ClientSize.Height - 30, 45, 20);
+			Rectangle renderFpsArea = new Rectangle(55, _window.ClientSize.Height - 30, 45, 20);
+			g.FillRectangle(Brushes.White, updateFpsArea);
+			g.FillRectangle(Brushes.White, renderFpsArea);
+		}
 	}
 
 	private static void AfterRender(Graphics g)
 	{
-		RenderFpsDisplay(g);
-	}
-
-	private static void RenderFpsDisplay(Graphics g)
-	{
 		if (_showFps)
 		{
+			Rectangle updateFpsArea = new Rectangle(5, _window.ClientSize.Height - 30, 45, 20);
+			Rectangle renderFpsArea = new Rectangle(55, _window.ClientSize.Height - 30, 45, 20);
 			using Font font = new Font("Segoe UI", 15, FontStyle.Bold);
 			using Brush brush = new SolidBrush(Color.FromArgb(170, Color.Green));
 			StringFormat format = new StringFormat()
@@ -232,10 +237,10 @@ public static class SceneManager
 				Alignment = StringAlignment.Far,
 				LineAlignment = StringAlignment.Center,
 				Trimming = StringTrimming.None,
-				FormatFlags = StringFormatFlags.NoWrap | StringFormatFlags.NoClip
+				FormatFlags = StringFormatFlags.NoWrap
 			};
-			g.DrawString(GetUpdateFps().ToString(), font, brush, new Point(50, _window.ClientSize.Height - 20), format);
-			g.DrawString(GetRenderFps().ToString(), font, brush, new Point(100, _window.ClientSize.Height - 20), format);
+			g.DrawString(GetUpdateFps().ToString(), font, brush, updateFpsArea, format);
+			g.DrawString(GetRenderFps().ToString(), font, brush, renderFpsArea, format);
 		}
 	}
 
@@ -249,7 +254,7 @@ public static class SceneManager
 		_measureTime += elapsed;
 		if (_showFps)
 		{
-			InvalidationManager.ForceInvalidate();
+			InvalidationManager.ForceRender();
 		}
 	}
 
@@ -265,6 +270,10 @@ public static class SceneManager
 
 	private static void OnPaint(PaintEventArgs e)
 	{
+		if (!_inPaint)
+		{
+			return;
+		}
 		Graphics g = _graphics.Graphics;
 		InvalidationManager.Update();
 		if (InvalidationManager.IsInvalidated())
@@ -338,6 +347,7 @@ public static class SceneManager
 	private static bool _showFps;
 	private static bool _doUpdate;
 	private static bool _doRender;
+	private static bool _inPaint;
 
 	[DllImport("winmm.dll", EntryPoint = "timeBeginPeriod")]
 	private static extern uint TimeBeginPeriod(uint period);

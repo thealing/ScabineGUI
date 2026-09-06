@@ -10,6 +10,7 @@ internal class EngineContainer : Container
 {
 	public EngineControl AddEngine(IEngine engine, string presetName)
 	{
+		InvalidationManager.ForceInvalidate(this);
 		EngineControl control = new EngineControl(engine, presetName);
 		AddChild(control);
 		return control;
@@ -17,6 +18,7 @@ internal class EngineContainer : Container
 
 	public void RemoveEngine(EngineControl control)
 	{
+		InvalidationManager.ForceInvalidate(this);
 		RemoveChild(control);
 	}
 
