@@ -104,30 +104,6 @@ internal class BoardControl : SceneNode
 			_hoveredSquare = NoSquare;
 			_dragging = false;
 		}
-		if (_draggingOutside)
-		{
-			InvalidationManager.ForceInvalidate();
-		}
-		if (_dragging)
-		{
-			Point location = GetMousePosition();
-			Point lowerBound = location - new Size(_squareSize / 2, _squareSize / 2);
-			Rectangle pieceBounds = new Rectangle(lowerBound, new Size(_squareSize, _squareSize));
-			pieceBounds.Inflate(2, 2);
-			if (!SelfBounds.Contains(pieceBounds))
-			{
-				_draggingOutside = true;
-				InvalidationManager.ForceInvalidate();
-			}
-			else
-			{
-				_draggingOutside = false;
-			}
-		}
-		else
-		{
-			_draggingOutside = false;
-		}
 		base.Update();
 	}
 
@@ -174,6 +150,24 @@ internal class BoardControl : SceneNode
 				g.DrawImage(pieceImage, Point.Round(_draggedLocation) - new Size(_squareSize / 2, _squareSize / 2));
 			}
 		}
+	}
+
+	public Rectangle GetGrabbedPieceBounds()
+	{
+		if (!_dragging)
+		{
+			return Rectangle.Empty;
+		}
+		Point location = GetMousePosition();
+		Point lowerBound = location - new Size(_squareSize / 2, _squareSize / 2);
+		Rectangle pieceBounds = new Rectangle(lowerBound, new Size(_squareSize, _squareSize));
+		pieceBounds.Inflate(2, 2);
+		if (SelfBounds.Contains(pieceBounds))
+		{
+			return Rectangle.Empty;
+		}
+		pieceBounds.Offset(SceneLocation);
+		return pieceBounds;
 	}
 
 	protected override void UpdatePosition()
@@ -534,6 +528,5 @@ internal class BoardControl : SceneNode
 	private int _hoveredSquare;
 	private int _activeSquare;
 	private bool _dragging;
-	private bool _draggingOutside;
 	private Point _draggedLocation;
 }

@@ -1,5 +1,6 @@
 ﻿namespace ChessPanel.Application;
 
+using System.Collections.Generic;
 using System.Drawing;
 using System.Windows.Forms;
 using ChessPanel.Application.Dialogs;
@@ -18,6 +19,7 @@ internal class MainScene : Scene
 		_engineContainer = new EngineContainer();
 		_playerDisplay = new PlayerDisplay();
 		_analyzisDisplay = new AnalyzisDisplay();
+		_hoveredContainers = new HashSet<SceneNode>();
 		_windowSettings = new WindowSettings();
 		_windowSettings.Size = new Size(1280, 720);
 		SaveManager.Sync(nameof(_windowSettings), ref _windowSettings);
@@ -50,7 +52,7 @@ internal class MainScene : Scene
 		_rightContainer.FirstChild.AddChild(_moveListControl);
 		_rightContainer.SecondChild.AddChild(_analyzisDisplay);
 		_rightContainer.SecondChild.AddChild(_engineContainer);
-		_boardContainer.FirstChild = new SceneNode();
+		_boardContainer.FirstChild = new Container();
 		_boardContainer.FirstChild.AddChild(_boardControl);
 		base.Enter();
 	}
@@ -91,6 +93,26 @@ internal class MainScene : Scene
 		{
 			InvalidationManager.Invalidate();
 		}
+		foreach (SceneNode container in _hoveredContainers)
+		{
+			InvalidationManager.ForceInvalidate(container);
+		}
+		_hoveredContainers.Clear();
+		Rectangle grabbedPieceBounds = _boardControl.GetGrabbedPieceBounds();
+		if (!grabbedPieceBounds.IsEmpty)
+		{
+			SceneNode[] containers = { _boardContainer.FirstChild, _rightContainer.FirstChild, _rightContainer.SecondChild };
+			foreach (SceneNode container in containers)
+			{
+				Rectangle rectangle = grabbedPieceBounds;
+				rectangle.Offset(-container.SceneLocation.X, -container.SceneLocation.Y);
+				if (container.SelfBounds.IntersectsWith(rectangle))
+				{
+					_hoveredContainers.Add(container);
+					InvalidationManager.ForceInvalidate(container);
+				}
+			}
+		}
 		base.Update();
 	}
 
@@ -121,5 +143,6 @@ internal class MainScene : Scene
 	private readonly EngineContainer _engineContainer;
 	private readonly PlayerDisplay _playerDisplay;
 	private readonly AnalyzisDisplay _analyzisDisplay;
+	private readonly HashSet<SceneNode> _hoveredContainers;
 	private WindowSettings _windowSettings;
 }
