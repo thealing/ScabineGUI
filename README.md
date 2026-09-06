@@ -1,10 +1,10 @@
 # Chess Panel
 A Windows GUI program for playing against chess engines, running matches between engines, and analyzing games.
 
-The games can be evaluated with any engine, similarly to chess.com "Game Review".
+Games can be evaluated with any engine, similar to chess.com "Game Review".
 
 ## Highlighted Features
-- Save / open annotated PGN files
+- Save/open annotated PGN files
 - Variation tree (~ Lichess)
 - Engine presets
 - Game review
@@ -12,7 +12,7 @@ The games can be evaluated with any engine, similarly to chess.com "Game Review"
   - Move coloring
   - Mistake, blunder counting
 ## Other Features
-- Configure player thinking limit
+- Configure thinking limit
   - Game time + increment
   - Unlimited
 - Configure engine level
@@ -21,20 +21,20 @@ The games can be evaluated with any engine, similarly to chess.com "Game Review"
   - Fixed depth
   - Fixed nodes
 - Game management
-  - Restart / rematch
+  - Restart/rematch
   - Edit PGN
   - Annotate PGN
 - Position setup
   - Full FEN support
   - Validation
-  - Export to image
-  - Import from image
 - Engine management
-  - Install any uci engine
-  - Custom arguments, commands
+  - Install any UCI engine
+  - Custom arguments
+  - Startup commands
   - Unlimited number of presets
-  - Live analyzis
-  - Auto game analyzis
+  - Graphical preset editor
+  - Live analysis
+  - Auto game analysis
 - Convenience features
   - Responsive GUI
   - Auto-save
