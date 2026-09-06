@@ -18,8 +18,7 @@ internal static class SceneProfiler
 		{
 			Text = "Scene Profiler",
 			ClientSize = new Size(800, 600),
-			StartPosition = FormStartPosition.CenterParent,
-			TopMost = true
+			StartPosition = FormStartPosition.CenterParent
 		};
 		_resultsWindow.FormClosing += (sender, e) =>
 		{
@@ -55,6 +54,7 @@ internal static class SceneProfiler
 		AddResults(UpdateDurations, _updateCounters);
 		if (InputManager.IsKeyPressed(Keys.N))
 		{
+			_resultsWindow.Owner = SceneManager.Window;
 			_resultsWindow.Show();
 		}
 	}
