@@ -48,8 +48,7 @@ The program has been written in Visual Studio 2022 using .NET 6 and WinForms.
 <img width="1920" height="1040" alt="Chess GUI 1" src="https://github.com/user-attachments/assets/fee9a07b-e54d-4b96-a3bf-1597b24a64a3" />
 <img width="1920" height="1040" alt="Chess GUI 2" src="https://github.com/user-attachments/assets/18a5f5d0-ab4b-4316-a7c3-2ec490313d7f" />
 <img width="1920" height="1040" alt="Chess GUI 3" src="https://github.com/user-attachments/assets/c8b16100-b208-4613-8805-e8d4cd998541" />
-<img width="1920" height="1040" alt="Chess GUI 5" src="https://github.com/user-attachments/assets/9c28bcbe-e82f-4338-8584-673f605b3a4f" />
-<img width="1920" height="1040" alt="Chess GUI 7" src="https://github.com/user-attachments/assets/f2b5d5a2-feb0-4161-aa17-21fc96359622" />
-
+<img width="1920" height="1040" alt="Chess GUI 5" src="https://github.com/user-attachments/assets/7c2392ca-61cd-4f7a-b528-ceb7c53c7dfe" />
+<img width="1920" height="1040" alt="Chess GUI 7" src="https://github.com/user-attachments/assets/cf789d9e-5a58-42ad-b625-01fd640e1d5d" />
 
 
