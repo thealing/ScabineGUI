@@ -27,6 +27,10 @@ public class SceneButton : Container
 		InvalidationManager.RegisterInvalidatingField(this, nameof(_hovered));
 		InvalidationManager.RegisterInvalidatingField(this, nameof(_pressed));
 		InvalidationManager.RegisterInvalidatingField(this, nameof(_clicked));
+		InvalidationManager.RegisterInvalidatingField(this, nameof(Disabled));
+		InvalidationManager.RegisterInvalidatingField(this, nameof(Font));
+		InvalidationManager.RegisterInvalidatingField(this, nameof(Text));
+		InvalidationManager.RegisterInvalidatingField(this, nameof(Image));
 	}
 
 	public override void Update()
