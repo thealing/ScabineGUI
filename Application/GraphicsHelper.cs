@@ -43,7 +43,7 @@ internal class GraphicsHelper
 
 	public static void DrawText(Graphics g, string? text, Font font, Rectangle layoutRectangle, Color color, Color backgroundColor, TextFormatFlags format)
 	{
-		if (g.ClipBounds.IntersectsWith(layoutRectangle) || (layoutRectangle.Width == 0 && layoutRectangle.Height == 0))
+		if (g.ClipBounds.IntersectsWith(layoutRectangle))
 		{
 			layoutRectangle.Offset((int)g.Transform.OffsetX, (int)g.Transform.OffsetY);
 			TextRenderer.DrawText(g, text, font, layoutRectangle, color, backgroundColor, format);
