@@ -1,11 +1,9 @@
 # Chess Panel
 A Windows GUI program for playing against chess engines, running matches between engines, and analyzing games.
 
-Games can be evaluated with any engine, similar to chess.com "Game Review".
-
 ## Highlighted Features
 - Save/open annotated PGN files
-- Variation tree (~ Lichess)
+- Variation tree
 - Engine presets
 - Game review
   - Accuracy calculation
