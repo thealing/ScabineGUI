@@ -52,6 +52,7 @@ internal class AnalyzisDisplay : Container
 		Array.Clear(_classCounts, 0, _classCounts.Length);
 		TreeGame game = GameManager.GetGame();
 		TreeNode lastNode = game.GetLastNode();
+		bool ended = false;
 		for (TreeNode? node = game.GetRootNode(); node != null; node = node.Children.FirstOrDefault())
 		{
 			if (node.Eval != null)
@@ -59,22 +60,26 @@ internal class AnalyzisDisplay : Container
 				_nodes.Add(node);
 				_evals.Add(node.Eval.Value);
 			}
-			else if (node == lastNode)
+			else if (!ended)
 			{
-				switch (game.GetResult())
+				ended = true;
+				if (node == lastNode)
 				{
-					case Result.WhiteWon:
-						_nodes.Add(node);
-						_evals.Add(Scores.MateScore);
-						break;
-					case Result.BlackWon:
-						_nodes.Add(node);
-						_evals.Add(-Scores.MateScore);
-						break;
-					case Result.Draw:
-						_nodes.Add(node);
-						_evals.Add(Scores.DrawScore);
-						break;
+					switch (game.GetResult())
+					{
+						case Result.WhiteWon:
+							_nodes.Add(node);
+							_evals.Add(Scores.MateScore);
+							break;
+						case Result.BlackWon:
+							_nodes.Add(node);
+							_evals.Add(-Scores.MateScore);
+							break;
+						case Result.Draw:
+							_nodes.Add(node);
+							_evals.Add(Scores.DrawScore);
+							break;
+					}
 				}
 			}
 			if (node.Class != null)
