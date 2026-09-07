@@ -1,5 +1,5 @@
 # Chess Panel
-A Windows GUI program for playing against chess engines, running matches between engines, and analyzing games.
+A Windows GUI program for playing against chess engines, running engine matches, and analyzing games.
 
 ## Highlighted Features
 - Save/open annotated PGN files
